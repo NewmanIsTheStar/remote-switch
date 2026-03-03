@@ -71,7 +71,7 @@ THERMOSTAT_INITIALIZATION_T initialization_table[] =
     {initialize_hvac_control,                   false},    
     {powerwall_init,                            false}, 
     {thermostat_initialize_buttons,             false}, 
-    {thermostat_display_initialize,             false}, 
+    {display_initialize,             false}, 
     {thermostat_initialize_temperature_sensor,  false}             
 };
 bool buttons_initialized = false;

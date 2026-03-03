@@ -96,14 +96,15 @@ void enable_irq(bool state);
 void gpio_isr(uint gpio, uint32_t events);
 void hvac_update_display(int temperaturex10, THERMOSTAT_MODE_T hvac_mode, int hvac_setpoint);
 int initialize_physical_buttons(int mode_button_gpio, int increase_button_gpio, int decrease_button_gpio);
-THERMOSTAT_MODE_T get_front_panel_mode(void);
-int thermostat_display_initialize(void);
+int display_initialize(void);
 int display_gpio_enable(bool enable);
 int button_gpio_enable(bool enable);
 int display_brightness(int brightness);
 int display_set_base_temperature(int base_temperature);
 int display_get_setpoint_offset(void);
 int display_set_setpoint_offset(int new_offset);
+THERMOSTAT_MODE_T get_front_panel_mode(void);
+int display_set_mode(THERMOSTAT_MODE_T new_mode);
 
 // thermostat_web_ui.c
 int get_free_schedule_row(void);

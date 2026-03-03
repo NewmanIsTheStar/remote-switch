@@ -63,10 +63,10 @@ extern WEB_VARIABLES_T web;
 // global variables
 static THERMOSTAT_MODE_T front_panel_mode = HVAC_AUTO;
 static TickType_t front_panel_mode_change_tick = 0;
-static int front_panel_base_temperaturex10;
-static int display_setpoint_offset;
+static int front_panel_base_temperaturex10 = 0;
+static int display_setpoint_offset = 0;
 static QueueHandle_t irq_queue = NULL;
-static uint8_t passed_value;
+static uint8_t passed_value = 0;
 static bool display_gpio_ok = false;
 static bool button_gpio_ok = false;
 
@@ -324,7 +324,7 @@ THERMOSTAT_MODE_T get_front_panel_mode(void)
 }
 
 //TODO: allow user to set pins back to "none"in UI and disable display.  Also investigate why display fails to initialize when pins are defined (without a reboot).
-int thermostat_display_initialize(void)
+int display_initialize(void)
 {
     int err = 0;
 
@@ -390,6 +390,13 @@ int display_get_setpoint_offset(void)
 int display_set_setpoint_offset(int new_offset)
 {
     display_setpoint_offset = new_offset;
+
+    return(0);
+}
+
+int display_set_mode(THERMOSTAT_MODE_T new_mode)
+{
+     front_panel_mode = new_mode;
 
     return(0);
 }

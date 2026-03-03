@@ -581,6 +581,8 @@ void altcp_free_arg(struct altcp_callback_arg* arg){
 // Establish TCP + TLS connection with server
 bool connect_to_host(ip_addr_t* ipaddr, struct altcp_pcb** pcb){
 
+    int connection_wait_loop_count = 0;
+
     // Instantiate connection configuration
     u8_t ca_cert[] = PICOHTTPS_CA_ROOT_CERT;
     cyw43_arch_lwip_begin();
@@ -717,8 +719,24 @@ bool connect_to_host(ip_addr_t* ipaddr, struct altcp_pcb** pcb){
         //  Sucessful connection will be confirmed shortly in
         //  callback_altcp_connect.
         //
+        connection_wait_loop_count = 0;
         while(!(arg->connected))
+        {
             sleep_ms(PICOHTTPS_ALTCP_CONNECT_POLL_INTERVAL);
+            
+            if (connection_wait_loop_count++ > 1000)
+            {
+                // failed to connect
+                lwip_err = ERR_TIMEOUT;
+
+                // Free allocated resources -- we are FUBAR so gamble: leak memory or use after free
+                altcp_free_pcb(*pcb);
+                altcp_free_config(config);
+                altcp_free_arg(arg);                
+                break;
+            } 
+        }                                
+            
 
     } else {
 

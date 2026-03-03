@@ -554,7 +554,7 @@ void vTimerCallback(TimerHandle_t xTimer)
         {
             climate_timers[i].timer_handle = xTimerCreate("Timer", 1000, pdFALSE, (void *)i, vTimerCallback);  
 
-            printf("Created timer with handle = %p\n", climate_timers[i].timer_handle);
+            //printf("Created timer with handle = %p\n", climate_timers[i].timer_handle);
         }
 
         //initialize hvac gpios
@@ -637,8 +637,12 @@ int update_current_setpoints(THERMOSTAT_STATE_T last_active, long int temperatur
     {
         current_start_mow = candidate_start_mow;
 
-        // zero out temporary offset
+        // cancel temporary temperature offset that was set via front panel
         temporary_set_point_offsetx10 = 0;
+        display_set_setpoint_offset(0);
+
+        // cancel temporary mode that was set via front panel
+        display_set_mode(HVAC_AUTO);
     }  
 
     // sanitize setpoints
