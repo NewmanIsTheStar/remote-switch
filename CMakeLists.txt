@@ -48,7 +48,7 @@ add_compile_definitions(FAKE_RTC)
 include(pico-sdk/pico_sdk_init.cmake)
 
 # set the project name ${PROJECT_NAME}
-project(thermostat C CXX ASM)
+project(remote-switch C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
@@ -131,17 +131,17 @@ endif()
 
 
 # ====================================================================================
-# Thermostat
+# remote-switch
 
-message("Creating HTML binary blob for THERMOSTAT")
+message("Creating HTML binary blob for remote-switch")
 execute_process(COMMAND
         ../makefsdata.py
-        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/thermostat/
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/remote-switch/
         )
 
 if(NOT PICO_BOARD STREQUAL "pico_w")
-        set(thermostat_source_files ${common_source_files}
-                thermostat/worker_tasks.c        
+        set(remote-switch_source_files ${common_source_files}
+                remote-switch/worker_tasks.c        
                 thermostat_task.c
                 thermostat_aht10.c
                 thermostat_metrics.c
@@ -153,27 +153,27 @@ if(NOT PICO_BOARD STREQUAL "pico_w")
                 tm1637.c)        
 endif()  
 
-add_executable(thermostat ${thermostat_source_files})  
-target_compile_definitions(thermostat PRIVATE APP_NAME="Thermostat" HTTPD_FSDATA_FILE="thermostat/htmldata.c")
+add_executable(remote-switch ${remote-switch_source_files})  
+target_compile_definitions(remote-switch PRIVATE APP_NAME="remote-switch" HTTPD_FSDATA_FILE="remote-switch/htmldata.c")
 if(NOT PICO_BOARD STREQUAL "pico_w") 
-target_compile_definitions(thermostat PRIVATE INCORPORATE_THERMOSTAT)
+target_compile_definitions(remote-switch PRIVATE INCORPORATE_REMOTE_SWITCH)
 endif()
 
-pico_generate_pio_header(thermostat ${CMAKE_CURRENT_LIST_DIR}/tm1637.pio OUTPUT_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)
+pico_generate_pio_header(remote-switch ${CMAKE_CURRENT_LIST_DIR}/tm1637.pio OUTPUT_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)
 
-pico_set_program_name(thermostat "thermostat")
-pico_set_program_version(thermostat ${APP_VERSION})
+pico_set_program_name(remote-switch "remote-switch")
+pico_set_program_version(remote-switch ${APP_VERSION})
 
 # enable/disable output over UART/USB  ***TODO: had to disable stdio over usb in Release builds as it causes random crashes/resets during startup
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        pico_enable_stdio_usb(thermostat 0)
-        pico_enable_stdio_uart(thermostat 0)        
+        pico_enable_stdio_usb(remote-switch 0)
+        pico_enable_stdio_uart(remote-switch 0)        
 else() 
-        pico_enable_stdio_usb(thermostat 0)
-        pico_enable_stdio_uart(thermostat 1)        
+        pico_enable_stdio_usb(remote-switch 0)
+        pico_enable_stdio_uart(remote-switch 1)        
 endif()
 
-target_include_directories(thermostat PRIVATE
+target_include_directories(remote-switch PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/pico-sdk/lib/lwip/contrib/ports/freertos/include/ 
         if(PICO_BOARD STREQUAL "pico_w")
@@ -190,12 +190,12 @@ target_include_directories(thermostat PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/pico-sdk/lib/lwip/contrib/apps/ping/
         )
 
-target_link_libraries(thermostat ${pluto_link_libraries})
+target_link_libraries(remote-switch ${pluto_link_libraries})
 
-#pico_set_linker_script(thermostat ${CMAKE_CURRENT_LIST_DIR}/memmap_thermostat_hi.ld)
+#pico_set_linker_script(remote-switch ${CMAKE_CURRENT_LIST_DIR}/memmap_remote-switch_hi.ld)
 
 # create uf2 
-pico_add_extra_outputs(thermostat)
+pico_add_extra_outputs(remote-switch)
 
 
 
@@ -213,7 +213,7 @@ pico_add_extra_outputs(thermostat)
 # )
 
 # set(WEB_FILES)
-# file(GLOB WEB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/thermostat/html_files/*.shtml")
+# file(GLOB WEB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/remote-switch/html_files/*.shtml")
 # pico_set_lwip_httpd_content(pico_httpd_content INTERFACE ${WEB_FILES})
 
-#pico_set_lwip_httpd_content(pico_httpd_content INTERFACE ${CMAKE_CURRENT_LIST_DIR}/thermostat/html_files/t_gpio.shtml)
+#pico_set_lwip_httpd_content(pico_httpd_content INTERFACE ${CMAKE_CURRENT_LIST_DIR}/remote-switch/html_files/t_gpio.shtml)
