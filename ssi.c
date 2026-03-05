@@ -19,7 +19,7 @@
 #include "calendar.h"
 #include "utility.h"
 #include "config.h"
-#include "thermostat.h"
+#include "rmtsw.h"
 
 #include "pluto.h"
 #include "powerwall.h"

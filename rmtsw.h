@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-#ifndef THERMOSTAT_H
-#define THERMOSTAT_H
+#ifndef REMOTE_SWITCH_H
+#define REMOTE_SWITCH_H
 
 #include "FreeRTOS.h"
 
@@ -68,43 +68,11 @@ typedef struct
 } CLIMATE_DATAPOINT_T;
 
 // thermostat_task.c
-void thermostat_task(__unused void *params);
+void rmtsw_task(__unused void *params);
 int make_schedule_grid(void);
 //int update_current_setpoints(void);
 int copy_schedule(int source_day, int destination_day);
-void sanatize_schedule_temperatures(void);
 
-// thermostat_metrics.c
-int initialize_climate_metrics(void);
-int accumlate_metrics(uint32_t unix_time, long int temperaturex10, long int humidityx10);
-void mark_hvac_off(CLIMATE_LAG_T lag_type, long int temperaturex10);
-void track_hvac_extrema(CLIMATE_LAG_T lag_type, long int temperaturex10);
-void set_hvac_lag(CLIMATE_LAG_T lag_type);
-void log_climate_change(int temperaturex10, int humidityx10);
-int print_temperature_history(char *buffer, int length, int start_position, int num_data_points);
-int predicted_time_to_temperature(long int target_temperature);
-int filter_temperature_noise(long int temperaturex10);
-
-// thermostat_aht10.c
-int aht10_initialize(int clock_gpio, int data_gpio);
-int aht10_measurement(long int *temperaturex10, long int *humidityx10);
-int ath10_gpio_enable(bool enable);
-
-// thermostat_physcial_ui.c
-bool handle_button_press_with_timeout(TickType_t timeout);
-void enable_irq(bool state);
-void gpio_isr(uint gpio, uint32_t events);
-void hvac_update_display(int temperaturex10, THERMOSTAT_MODE_T hvac_mode, int hvac_setpoint);
-int initialize_physical_buttons(int mode_button_gpio, int increase_button_gpio, int decrease_button_gpio);
-int display_initialize(void);
-int display_gpio_enable(bool enable);
-int button_gpio_enable(bool enable);
-int display_brightness(int brightness);
-int display_set_base_temperature(int base_temperature);
-int display_get_setpoint_offset(void);
-int display_set_setpoint_offset(int new_offset);
-THERMOSTAT_MODE_T get_front_panel_mode(void);
-int display_set_mode(THERMOSTAT_MODE_T new_mode);
 
 // thermostat_web_ui.c
 int get_free_schedule_row(void);
@@ -115,10 +83,10 @@ bool schedule_setpoint_valid(long int temperaturex10, long int heating_temperatu
 bool schedule_mow_valid(int mow);
 bool schedule_mode_valid(int mode);
 
-// thermostat_hvac.c
-int initialize_hvac_control(void);
-THERMOSTAT_STATE_T control_thermostat_relays(long int temperaturex10);
-int relay_gpio_enable(bool enable);
+// rmtsw_relay.c
+int rmtsw_relay_initialize(void);
+THERMOSTAT_STATE_T rmtsw_relay_control(long int temperaturex10);
+int rmtsw_relay_gpio_enable(bool enable);
 
 
 

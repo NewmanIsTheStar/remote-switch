@@ -36,6 +36,7 @@ void config_v7_to_v8(void);
 void config_v8_to_v9(void);
 void config_v9_to_v10(void);
 void config_v10_to_v11(void);
+void config_v11_to_v12(void);
 
 NON_VOL_VARIABLES_T config;
 static int config_dirty_flag = 0;
@@ -51,8 +52,10 @@ static NON_VOL_CONVERSION_T config_info[] =
     {8,      offsetof(NON_VOL_VARIABLES_T_VERSION_8, version),   offsetof(NON_VOL_VARIABLES_T_VERSION_8, crc),   &config_v7_to_v8},  
     {9,      offsetof(NON_VOL_VARIABLES_T_VERSION_9, version),   offsetof(NON_VOL_VARIABLES_T_VERSION_9, crc),   &config_v8_to_v9},    
     {10,     offsetof(NON_VOL_VARIABLES_T_VERSION_10, version),  offsetof(NON_VOL_VARIABLES_T_VERSION_10, crc),  &config_v9_to_v10},   
-    {11,     offsetof(NON_VOL_VARIABLES_T, version),             offsetof(NON_VOL_VARIABLES_T, crc),             &config_v10_to_v11},                         
-};
+    {11,     offsetof(NON_VOL_VARIABLES_T_VERSION_11, version),  offsetof(NON_VOL_VARIABLES_T_VERSION_11, crc),  &config_v10_to_v11},                         
+    {12,     offsetof(NON_VOL_VARIABLES_T, version),             offsetof(NON_VOL_VARIABLES_T, crc),             &config_v11_to_v12},                         
+}
+;
 
 
 
@@ -431,6 +434,29 @@ void config_v10_to_v11(void)
     config.thermostat_hysteresis = 10;
 }
 
+ /*!
+ * \brief Convert configuration from v11 to v12 and set default values for new parameters
+ * 
+ * \return 0 on success, -1 on error
+ */
+void config_v11_to_v12(void)
+{
+    int i;
+
+    printf("Converting configuration from version 11 to version 12\n"); 
+    config.version = 12;     
+    
+    config.rmtsw_relay_max = NUM_ROWS(config.rmtsw_relay_normally_closed);
+ 
+    for(i=0; i<NUM_ROWS(config.rmtsw_relay_normally_closed); i++)
+    {
+        config.rmtsw_relay_normally_closed[i] = 0;
+        config.rmtsw_relay_default_active[i]  = 0;
+        config.rmtsw_relay_name[i][0] = 0;  
+        config.rmtsw_relay_gpio[i] = -1;  
+       
+    }
+}
 
 // ************************************************************************************************************************
 // ************************************************************************************************************************

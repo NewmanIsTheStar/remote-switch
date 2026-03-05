@@ -27,7 +27,7 @@
 #include "utility.h"
 #include "config.h"
 #include "led_strip.h"
-#include "thermostat.h"
+#include "rmtsw.h"
 #include "worker_tasks.h"
 #include "pluto.h"
 
@@ -1288,6 +1288,9 @@ const char * cgi_units_handler(int iIndex, int iNumParams, char *pcParam[], char
 #ifdef INCORPORATE_THERMOSTAT
         // convert thermostat scheduled temperatures
         sanatize_schedule_temperatures();
+        make_schedule_grid();
+#endif
+#ifdef INCORPORATE_REMOTE_SWITCH
         make_schedule_grid();
 #endif
     }     

@@ -142,15 +142,10 @@ execute_process(COMMAND
 if(NOT PICO_BOARD STREQUAL "pico_w")
         set(remote-switch_source_files ${common_source_files}
                 remote-switch/worker_tasks.c        
-                thermostat_task.c
-                thermostat_aht10.c
-                thermostat_metrics.c
-                thermostat_physical_ui.c
-                thermostat_web_ui.c
-                thermostat_hvac.c
-                powerwall.c
-                json_parser.c
-                tm1637.c)        
+                rmtsw_task.c
+                rmtsw_web_ui.c
+                rmtsw_relay.c
+        )        
 endif()  
 
 add_executable(remote-switch ${remote-switch_source_files})  

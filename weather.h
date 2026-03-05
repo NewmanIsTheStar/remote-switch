@@ -6,7 +6,7 @@
 #ifndef WEATHER_H
 #define WEATHER_H
 
-#include "thermostat.h"
+#include "rmtsw.h"
 
 //prototypes
 void weather_task(__unused void *params);

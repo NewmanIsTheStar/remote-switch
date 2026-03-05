@@ -18,7 +18,7 @@
 #include "weather.h"
 #include "led_strip.h"
 #include "message.h"
-#include "thermostat.h"
+#include "rmtsw.h"
 #include "hc_task.h"
 #include "discovery_task.h"
 

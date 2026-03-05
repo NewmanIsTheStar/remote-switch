@@ -31,7 +31,7 @@
 
 #include "watchdog.h"
 #include "weather.h"
-#include "thermostat.h"
+#include "rmtsw.h"
 #include "flash.h"
 #include "calendar.h"
 #include "utility.h"
