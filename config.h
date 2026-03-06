@@ -161,9 +161,10 @@ typedef struct
     int thermostat_display_num_digits;
     int setpoint_heating_temperaturex10[32]; 
     int setpoint_cooling_temperaturex10[32];
+    int rmtsw_enable;
     int rmtsw_relay_max;
-    int rmtsw_relay_normally_closed[8];  // hardware property
-    int rmtsw_relay_default_active[8];   // software property
+    int rmtsw_relay_normally_closed[8];
+    int rmtsw_relay_default_active[8]; 
     int rmtsw_relay_name[8][16];  
     int rmtsw_relay_gpio[8];  
     uint16_t crc;

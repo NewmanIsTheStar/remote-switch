@@ -8,7 +8,7 @@
 
 #include "FreeRTOS.h"
 
-#define THERMOSTAT_TASK_LOOP_DELAY       (10000)
+#define REMOTE_SWITCH_TASK_LOOP_DELAY    (10000)
 #define SETPOINT_DEFAULT_CELSIUS_X_10    (210)      // 21.0 C
 #define SETPOINT_MAX_CELSIUS_X_10        (320)      // 32.0 C
 #define SETPOINT_MIN_CELSIUS_X_10        (150)      // 15.0 C 
@@ -85,7 +85,7 @@ bool schedule_mode_valid(int mode);
 
 // rmtsw_relay.c
 int rmtsw_relay_initialize(void);
-THERMOSTAT_STATE_T rmtsw_relay_control(long int temperaturex10);
+uint32_t rmtsw_relay_control(void);
 int rmtsw_relay_gpio_enable(bool enable);
 
 

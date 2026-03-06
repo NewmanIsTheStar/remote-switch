@@ -24,6 +24,7 @@
 #define FLASH_TARGET_OFFSET (PICO_FLASH_SIZE_BYTES - FLASH_SECTOR_SIZE)
 //#define DISABLE_CONFIG_VALIDATION (1)
 //#define DISABLE_CONFIG_UPGRADE (1)
+#define DISABLE_CONFIG_WRITE [1]
 
 int config_validate(void);
 void config_v1_to_v2(void);
@@ -524,6 +525,9 @@ int config_write(void)
 {
     int err = 0;
 
+    #ifdef DISABLE_CONFIG_WRITE
+    printf("Configuration Writes are disabled!\n");
+    #else
     // write configuration to flash if altered recently
     if (config_dirty(true))
     {
@@ -561,6 +565,7 @@ int config_write(void)
             err = -1;
         }          
     }  
+    #endif
 
     return(err);
 }

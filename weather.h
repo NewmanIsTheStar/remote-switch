@@ -224,6 +224,8 @@ typedef struct WEB_VARIABLES
   int thermostat_temperature_gradient;
   int thermostat_temperature_prediction;
   THERMOSTAT_MODE_T thermostat_effective_mode;
+  int rmtsw_relay_enabled[8];
+  int rmtsw_relay_active[8];
 } WEB_VARIABLES_T;                  //remember to add initialization code when adding to this structure !!!
 
 #endif

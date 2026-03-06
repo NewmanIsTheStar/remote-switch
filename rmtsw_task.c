@@ -67,7 +67,7 @@ THERMOSTAT_INITIALIZATION_T initialization_table[] =
 {
     {rmtsw_initialize_relays,                false},           
 };
-bool buttons_initialized = false;
+bool relays_initialized = false;
 
 /*!
  * \brief Monitor temperature and control hvac system based on schedule
@@ -78,30 +78,21 @@ bool buttons_initialized = false;
  */
 void rmtsw_task(void *params)
 {
-    int ath10_error = 0;
-    int tm1637_error = 0;
-    int i2c_bytes_written = 0;
-    int i2c_bytes_read = 0;
-    long int temperaturex10 = 0;
-    long int humidityx10 = 0;
-    long int moving_avaerage_temperaturex10;
     int retry = 0;
     int oneshot = false;
     int i;
-    bool button_pressed = false;
 
     if (strcasecmp(APP_NAME, "remote-switch") == 0)
     {
         // single purpose application -- force personality and enable
         config.personality = REMOTE_SWITCH;
-        config.thermostat_enable = 1;
+        config.rmtsw_enable = 1;
     }
 
     printf("Remote Switch (rmtsw) task started!\n");
 
     // set initial status
-    // temperaturex10 = thermostat_get_default_temperature();   
-    // web.powerwall_grid_status = GRID_UNKNOWN;
+    memset(web.rmtsw_relay_active, 0, sizeof(web.rmtsw_relay_active));
 
     // check and correct critical user configuration settings
     rmtsw_sanitize_user_config();
@@ -120,18 +111,10 @@ void rmtsw_task(void *params)
             rmtsw_initialize();
 
             // set hvac relays
-            rmtsw_relay_control(temperaturex10);
+            rmtsw_relay_control();
 
-            // if (buttons_initialized)
-            // {
-            //     // process button presses until a period of inactivity occurs
-            //     button_pressed = handle_button_press_with_timeout(THERMOSTAT_TASK_LOOP_DELAY);
-            // }
-            // else
-            {
-                SLEEP_MS(THERMOSTAT_TASK_LOOP_DELAY); 
-            }
-
+            SLEEP_MS(THERMOSTAT_TASK_LOOP_DELAY); 
+            
             // update web schedule
             make_schedule_grid();
         }
@@ -154,95 +137,47 @@ void rmtsw_task(void *params)
  */
 int rmtsw_validate_gpio_set(void)
 {
-    // int gpio_list[10];
-    // bool relay_gpio_valid = false;
-    // bool ath10_gpio_valid = false;
-    // bool display_gpio_valid = false;
-    // bool button_gpio_valid = false;    
+    int i;
+    int j;
+    bool relay_gpio_valid = false;
 
-    // // relays
-    // gpio_list[0] = config.cooling_gpio;
-    // gpio_list[1] = config.heating_gpio;
-    // gpio_list[2] = config.fan_gpio;
+    // check for gpio conflicts
+    if (!gpio_conflict(config.rmtsw_relay_gpio, NUM_ROWS(config.rmtsw_relay_gpio)))
+    {
+        // no conflicts
+        i = NUM_ROWS(config.rmtsw_relay_gpio);
+    }
+    else
+    {
+        // conflicts found
+        relay_gpio_valid = false;
 
-    // // temperature sensor
-    // gpio_list[3] = config.thermostat_temperature_sensor_clock_gpio;
-    // gpio_list[4] = config.thermostat_temperature_sensor_data_gpio;
+        // search for first conflict
+        for(i=0; i<NUM_ROWS(config.rmtsw_relay_gpio); i++)
+        {
+            if (gpio_conflict(config.rmtsw_relay_gpio, i))
+            {
+                break;
+            }
+        }
+    }
 
-    // // display
-    // gpio_list[5] = config.thermostat_seven_segment_display_clock_gpio;
-    // gpio_list[6] = config.thermostat_seven_segment_display_data_gpio;
+    // enable all gpios prior to first conflict
+    for (j=0; j<NUM_ROWS(config.rmtsw_relay_gpio); j++)
+    {
+        if ((j < i) && gpio_valid(config.rmtsw_relay_gpio[j]))
+        {
+            web.rmtsw_relay_enabled[j] = 1;
+            relay_gpio_valid = true;            
+        }
+        else
+        {
+            web.rmtsw_relay_enabled[j] = 0;
+        }
+    } 
 
-    // // front panel buttons
-    // gpio_list[7] = config.thermostat_increase_button_gpio;
-    // gpio_list[8] = config.thermostat_decrease_button_gpio;
-    // gpio_list[9] = config.thermostat_mode_button_gpio;
-
-    // // check for gpio conflicts
-    // if (!gpio_conflict(gpio_list, 10))
-    // {
-    //     // no conflicts
-    //     relay_gpio_valid = true;
-    //     ath10_gpio_valid = true;
-    //     display_gpio_valid = true;
-    //     button_gpio_valid = true;
-    // }
-    // else
-    // {
-    //     // conflicts found
-    //     relay_gpio_valid = false;
-    //     ath10_gpio_valid = false;
-    //     display_gpio_valid = false;
-    //     button_gpio_valid = false;
-
-    //     // incrementally expand list to find non-conflicting functions
-    //     if (gpio_conflict(gpio_list, 3))
-    //     {
-    //         relay_gpio_valid = true;
-    //     } 
-
-    //     if (gpio_conflict(gpio_list, 5))
-    //     {
-    //         ath10_gpio_valid = true;
-    //     }   
-        
-    //     if (gpio_conflict(gpio_list, 7))
-    //     {
-    //         display_gpio_valid = true;
-    //     }  
-        
-    //     if (gpio_conflict(gpio_list, 10))
-    //     {
-    //         button_gpio_valid = true;
-    //     }         
-    // }
-
-    // // check gpios are valid
-    // if (!gpio_valid(config.cooling_gpio) || !gpio_valid(config.heating_gpio) || !gpio_valid(config.fan_gpio))
-    // {
-    //     relay_gpio_valid = false;
-    // }
-
-    // if (!gpio_valid(config.thermostat_temperature_sensor_clock_gpio) || !gpio_valid(config.thermostat_temperature_sensor_data_gpio))
-    // {
-    //     ath10_gpio_valid = false;
-    // }
-
-    // if (!gpio_valid(config.thermostat_seven_segment_display_clock_gpio) || !gpio_valid(config.thermostat_seven_segment_display_data_gpio))
-    // {
-    //     display_gpio_valid = false;
-    // }
-
-    // if (!gpio_valid(config.thermostat_increase_button_gpio) || !gpio_valid(config.thermostat_decrease_button_gpio) || !gpio_valid(config.thermostat_mode_button_gpio))
-    // {
-    //     button_gpio_valid = false;
-    // }    
-
-    // // tell subsystems they can use gpio
-    // rmtsw_relay_gpio_enable(relay_gpio_valid);
-    // ath10_gpio_enable(ath10_gpio_valid);
-    // display_gpio_enable(display_gpio_valid);
-    // button_gpio_enable(button_gpio_valid);
+    // tell subsystems they can use gpio
+    rmtsw_relay_gpio_enable(relay_gpio_valid);
 
     return(0);
 }
@@ -262,9 +197,11 @@ int rmtsw_initialize_relays(void)
 
     //button_error = initialize_relays(config.thermostat_mode_button_gpio, config.thermostat_increase_button_gpio, config.thermostat_decrease_button_gpio);    
 
+    //TODO: set GPIOs to output
+
     if (!relay_error)
     {
-        buttons_initialized = true;
+        relays_initialized = true;
     }
 
     return(relay_error);
