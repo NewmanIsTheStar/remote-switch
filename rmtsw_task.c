@@ -113,7 +113,7 @@ void rmtsw_task(void *params)
             // set hvac relays
             rmtsw_relay_control();
 
-            SLEEP_MS(THERMOSTAT_TASK_LOOP_DELAY); 
+            SLEEP_MS(REMOTE_SWITCH_TASK_LOOP_DELAY); 
             
             // update web schedule
             make_schedule_grid();
