@@ -249,40 +249,32 @@ void vTimerCallback(TimerHandle_t xTimer)
     }
  }
 
- int rmtsw_relay_initialize(void)
+int rmtsw_relay_initialize(void)
 {
     int err = 0;
     int i;
 
     if (relay_gpio_ok)
     {
-        // create hvac timers
-        for (i=0; i < NUM_HVAC_TIMERS; i++)
+        // // create hvac timers
+        // for (i=0; i < NUM_HVAC_TIMERS; i++)
+        // {
+        //     climate_timers[i].timer_handle = xTimerCreate("Timer", 1000, pdFALSE, (void *)i, vTimerCallback);  
+
+        //     //printf("Created timer with handle = %p\n", climate_timers[i].timer_handle);
+        // }
+
+        CLIP(config.rmtsw_relay_max, 0, 8);
+
+        for(i=0; i<config.rmtsw_relay_max; i++)
         {
-            climate_timers[i].timer_handle = xTimerCreate("Timer", 1000, pdFALSE, (void *)i, vTimerCallback);  
-
-            //printf("Created timer with handle = %p\n", climate_timers[i].timer_handle);
-        }
-
-    //     //initialize hvac gpios
-    //     gpio_init(config.heating_gpio);
-    //     gpio_put(config.heating_gpio, 0);
-    //     gpio_set_dir(config.heating_gpio, true);
-
-    //     gpio_init(config.cooling_gpio);
-    //     gpio_put(config.cooling_gpio, 0);
-    //     gpio_set_dir(config.cooling_gpio, true); 
-        
-    //     gpio_init(config.fan_gpio);
-    //     gpio_put(config.fan_gpio, 0);
-    //     gpio_set_dir(config.fan_gpio, true);
-
-    // int rmtsw_relay_max;
-    // int rmtsw_relay_normally_closed[8];  // hardware property
-    // int rmtsw_relay_default_active[8];   // software property
-    // int rmtsw_relay_name[8][16];  
-    // int rmtsw_relay_gpio[8];  
-
+            if (web.rmtsw_relay_enabled[i])
+            {
+                gpio_init(config.rmtsw_relay_gpio[i]);
+                gpio_put(config.rmtsw_relay_gpio[i], 0);
+                gpio_set_dir(config.rmtsw_relay_gpio[i], true);                
+            }
+        }        
         err = 0;
     }
     else

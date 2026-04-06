@@ -110,7 +110,7 @@ void rmtsw_task(void *params)
             // initialize all subsystems that are not already up
             rmtsw_initialize();
 
-            // set hvac relays
+            // set relays
             rmtsw_relay_control();
 
             SLEEP_MS(REMOTE_SWITCH_TASK_LOOP_DELAY); 
@@ -195,9 +195,7 @@ int rmtsw_initialize_relays(void)
 {
     int relay_error = 0;
 
-    //button_error = initialize_relays(config.thermostat_mode_button_gpio, config.thermostat_increase_button_gpio, config.thermostat_decrease_button_gpio);    
-
-    //TODO: set GPIOs to output
+    relay_error = rmtsw_relay_initialize();
 
     if (!relay_error)
     {
