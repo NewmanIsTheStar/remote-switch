@@ -119,7 +119,9 @@ set(pluto_link_libraries
         FreeRTOS-Kernel-Heap4
         pico_flash
         hardware_pio
-        hardware_i2c)
+        hardware_i2c
+        pico_httpd_content
+        )
 
 
 # pico_w has insufficent RAM to incorporate HTTPS web client (thus tesla powerwall monitoring is disabled on pico_w)
@@ -132,29 +134,21 @@ endif()
 
 # ====================================================================================
 # remote-switch
+set(WEB_FILES)
+file(GLOB WEB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/remote-switch/html_files/*.shtml")
+pico_add_library(pico_httpd_content NOFLAG)
+pico_set_lwip_httpd_content(pico_httpd_content INTERFACE ${WEB_FILES})
 
-message("Creating HTML binary blob for remote-switch")
-execute_process(COMMAND
-        ../makefsdata.py
-        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/remote-switch/
-        )
-
-if(NOT PICO_BOARD STREQUAL "pico_w")
-        set(remote-switch_source_files ${common_source_files}
-                remote-switch/worker_tasks.c        
-                rmtsw_task.c
-                rmtsw_web_ui.c
-                rmtsw_relay.c
-        )        
-endif()  
+set(remote-switch_source_files ${common_source_files}
+        remote-switch/worker_tasks.c        
+        rmtsw_task.c
+        rmtsw_web_ui.c
+        rmtsw_relay.c
+)        
 
 add_executable(remote-switch ${remote-switch_source_files})  
-target_compile_definitions(remote-switch PRIVATE APP_NAME="remote-switch" HTTPD_FSDATA_FILE="remote-switch/htmldata.c")
-if(NOT PICO_BOARD STREQUAL "pico_w") 
+target_compile_definitions(remote-switch PRIVATE APP_NAME="remote-switch")
 target_compile_definitions(remote-switch PRIVATE INCORPORATE_REMOTE_SWITCH)
-endif()
-
-pico_generate_pio_header(remote-switch ${CMAKE_CURRENT_LIST_DIR}/tm1637.pio OUTPUT_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)
 
 pico_set_program_name(remote-switch "remote-switch")
 pico_set_program_version(remote-switch ${APP_VERSION})
@@ -187,28 +181,8 @@ target_include_directories(remote-switch PRIVATE
 
 target_link_libraries(remote-switch ${pluto_link_libraries})
 
-#pico_set_linker_script(remote-switch ${CMAKE_CURRENT_LIST_DIR}/memmap_remote-switch_hi.ld)
-
 # create uf2 
 pico_add_extra_outputs(remote-switch)
 
 
 
-
-# ====================================================================================
-
-# TODO -- rebuild modified html without running cmake again
-# pico_set_lwip_httpd_content(pico_httpd_content INTERFACE
-# ${CMAKE_CURRENT_LIST_DIR}/html_files/index.shtml
-# ${CMAKE_CURRENT_LIST_DIR}/html_files/config.shtml
-# ${CMAKE_CURRENT_LIST_DIR}/html_files/page2.shtml
-# ${CMAKE_CURRENT_LIST_DIR}/html_files/ip_config.js
-# ${CMAKE_CURRENT_LIST_DIR}/html_files/sprajax.js
-# ${CMAKE_CURRENT_LIST_DIR}/html_files/favicon.ico
-# )
-
-# set(WEB_FILES)
-# file(GLOB WEB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/remote-switch/html_files/*.shtml")
-# pico_set_lwip_httpd_content(pico_httpd_content INTERFACE ${WEB_FILES})
-
-#pico_set_lwip_httpd_content(pico_httpd_content INTERFACE ${CMAKE_CURRENT_LIST_DIR}/remote-switch/html_files/t_gpio.shtml)

@@ -3267,6 +3267,74 @@ const char * cgi_advanced_settings(int iIndex, int iNumParams, char *pcParam[], 
 }
  
 
+/*!
+ * \brief cgi handler
+ *
+ * \param[in]  iIndex       index of cgi handler in cgi_handlers table
+ * \param[in]  iNumParams   number of parameters
+ * \param[in]  pcParam      parameter name
+ * \param[in]  pcValue      parameter value 
+ * 
+ * \return nothing
+ */
+const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
+{
+    int i = 0;
+    char *param = NULL;
+    char *value = NULL;
+    int new_relay_normally_open = 0; 
+    int new_irrigation_test_enable = 0;      
+    int new_gpio = 0;
+    int relay_num = -1;  
+    int new_zone_max = 0;
+    char value_string[32];
+       
+    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+ 
+    i = 0;
+    while (i < iNumParams)
+    {
+        param = pcParam[i];
+        value = pcValue[i];
+
+        if (param && value)
+        {
+            printf("Parameter: %s has Value: %s\n", param, value);  
+
+
+            sscanf(param, "rsrly%d", &relay_num);
+            if ((relay_num >= 1) && (relay_num <= 8))  //TODO: fix condition on sprinkler controller should be <= 8
+            {
+                // adjust to zero base
+                relay_num--;
+
+                sscanf(value, "%s", &value_string);  
+
+                printf("Got relay_default[%d] = %s\n", relay_num, value_string);
+
+                if (strcasecmp("Active", value_string) == 0)
+                {
+                    config.rmtsw_relay_default_active[relay_num] = 1;
+                }
+                else
+                {
+                    config.rmtsw_relay_default_active[relay_num] = 0;
+                }
+            }   
+        }
+        i++;
+    }
+
+
+
+    config_changed();
+
+
+    return "/rs_relay_default.shtml";
+    
+}
+
+
 // CGI requests and their respective handlers  --Add new entires at bottom--
 static const tCGI cgi_handlers[] = {
     {"/schedule.cgi",                   cgi_schedule_handler},
@@ -3315,8 +3383,8 @@ static const tCGI cgi_handlers[] = {
     {"/t_gpio.cgi",                     cgi_thermostat_gpio_handler},   
     {"/gpio_default.cgi",               cgi_gpio_default_handler},  
     {"/t_sensors.cgi",                  cgi_temperature_sensors},
-    {"/t_advanced.cgi",                 cgi_advanced_settings},       
-     
+    {"/t_advanced.cgi",                 cgi_advanced_settings}, 
+    {"/rs_default.cgi",                 cgi_remote_switch_relay_handler},          
 };
 
 /*!

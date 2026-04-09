@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: "Lato", sans-serif;
+  font-size: 25px;
+}
+
+.sidenav {
+  height: 100%;
+  width: 160px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  padding-top: 120px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.main {
+  margin-left: 160px; /* Same as the width of the sidenav */
+  font-size: 28px; /* Increased text to enable scrolling */
+  input[type='text'] { font-size: 28px; }
+  input[type='password'] { font-size: 28px; }
+  padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>
+</head>
+<body>
+
+  <div class="sidenav">
+    <a href="/network.shtml">Network</a>   
+    <a href="/time.shtml">Time</a>
+    <a href="/t_gpio.shtml">GPIO</a>   
+    <a href="/syslog.shtml">Syslog</a>    
+    <a href="/units.shtml">Foibles</a>     
+    <a href="/status.shtml">Status</a>   
+    <p><a href="/index.shtml">&#8629</a></p>    
+  </div>
+
+<div class="main">
+
+  <h2>Relay Control</h2>  
+  <table>
+      <form action="/rs_default.cgi">
+          <tr>
+              <td><label for="wind" <!--#rs1viz--> ><b>Relay 1</b> &emsp;</label></td>
+              <!--#rsrly1-->
+              <!--#rsoff1-->
+              <!--#rsnme1-->
+          </tr>
+          <tr>
+              <td><label for="wind" <!--#rs2viz--> ><b>Relay 2</b> &emsp;</label></td>
+              <!--#rsrly2-->
+              <!--#rsoff2-->
+              <!--#rsnme2-->              
+          </tr>
+          <tr>
+              <td><label for="wind" <!--#rs3viz--> ><b>Relay 3</b> &emsp;</label></td>
+              <!--#rsrly3-->
+              <!--#rsoff3-->
+              <!--#rsnme3-->  
+          </tr>
+          <tr>
+              <td><label for="wind" <!--#rs4viz--> ><b>Relay 4</b> &emsp;</label></td>
+              <!--#rsrly4-->
+              <!--#rsoff4-->
+              <!--#rsnme4-->  
+          </tr>
+          <tr>
+              <td><label for="wind" <!--#rs5viz--> ><b>Relay 5</b> &emsp;</label></td>
+              <!--#rsrly5-->
+              <!--#rsoff5-->
+              <!--#rsnme5-->  
+          </tr>
+          <tr>
+              <td><label for="wind" <!--#rs6viz--> ><b>Relay 6</b> &emsp;</label></td>
+              <!--#rsrly6-->
+              <!--#rsoff6-->
+              <!--#rsnme6-->  
+          </tr>
+          <tr>
+              <td><label for="wind" <!--#rs7viz--> ><b>Relay 7</b> &emsp;</label></td>
+              <!--#rsrly7-->
+              <!--#rsoff7-->
+              <!--#rsnme7-->  
+          </tr>
+          <tr>
+              <td><label for="wind" <!--#rs8viz--> ><b>Relay 8</b> &emsp;</label></td>
+              <!--#rsrly8-->
+              <!--#rsoff8-->
+              <!--#rsnme8-->  
+          </tr>                                        
+          <tr>            
+              <td>
+                  <button type="submit" style="font-size: 25px;">Save</button>
+              </td>
+          </tr>
+      </form>
+  </table>  
+</div>
+   
+</body>
+</html> 
+
+  

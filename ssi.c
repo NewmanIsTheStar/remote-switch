@@ -734,9 +734,41 @@ extern NON_VOL_VARIABLES_T config;
     x(ttma)      \
     x(ttgrd)     \
     x(ttpred)    \
-    x(disdig)
+    x(disdig)    \
+    x(rs1viz)    \
+    x(rs2viz)    \
+    x(rs3viz)    \
+    x(rs4viz)    \
+    x(rs5viz)    \
+    x(rs6viz)    \
+    x(rs7viz)    \
+    x(rs8viz)    \
+    x(rsrly1)    \
+    x(rsrly2)    \
+    x(rsrly3)    \
+    x(rsrly4)    \
+    x(rsrly5)    \
+    x(rsrly6)    \
+    x(rsrly7)    \
+    x(rsrly8)    \
+    x(rsnme1)    \
+    x(rsnme2)    \
+    x(rsnme3)    \
+    x(rsnme4)    \
+    x(rsnme5)    \
+    x(rsnme6)    \
+    x(rsnme7)    \
+    x(rsnme8)    \
+    x(rsoff1)    \
+    x(rsoff2)    \
+    x(rsoff3)    \
+    x(rsoff4)    \
+    x(rsoff5)    \
+    x(rsoff6)    \
+    x(rsoff7)    \
+    x(rsoff8)    
+                
 
-  
 //enum used to index array of pointers to SSI string constants  e.g. index 0 is SSI_usurped
 enum ssi_index
 {
@@ -2759,9 +2791,88 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         {
             printed = snprintf(pcInsert, iInsertLen, "%d", config.thermostat_display_num_digits);                           
         }
-        break;           
-        
-#endif                                        
+        break;                   
+#endif                   
+        case SSI_rs1viz:
+        case SSI_rs2viz:
+        case SSI_rs3viz:
+        case SSI_rs4viz:
+        case SSI_rs5viz:
+        case SSI_rs6viz:
+        case SSI_rs7viz:
+        case SSI_rs8viz:
+        {
+            if ((iIndex-SSI_rs1viz)%8 >= config.rmtsw_relay_max)
+            {     
+                printed = snprintf(pcInsert, iInsertLen, "style=\"display:none;\"");
+            }
+            else
+            {
+                printed = 0;
+            }             
+        }
+        break; 
+        case SSI_rsrly1:
+        case SSI_rsrly2:
+        case SSI_rsrly3:
+        case SSI_rsrly4:
+        case SSI_rsrly5:
+        case SSI_rsrly6:
+        case SSI_rsrly7:
+        case SSI_rsrly8:
+        {  
+            if ((iIndex-SSI_rsrly1)%8 >= config.rmtsw_relay_max)
+            {     
+                printed = snprintf(pcInsert, iInsertLen, "");
+            }
+            else
+            {
+                
+                printed =  snprintf(pcInsert, iInsertLen, "<td><input type=\"radio\" id=\"rs%d\" name=\"rsrly%d\" value=\"ON\" %s></td>", (iIndex-SSI_rsrly1)%8+1, (iIndex-SSI_rsrly1)%8+1, config.rmtsw_relay_default_active[(iIndex-SSI_rsrly1)%8]?"checked":"");
+                printed += snprintf(pcInsert+printed, iInsertLen-printed, "<td><label for=\"inact\">ON</label></td>");
+            }                       
+        }
+        break; 
+        case SSI_rsoff1:
+        case SSI_rsoff2:
+        case SSI_rsoff3:
+        case SSI_rsoff4:
+        case SSI_rsoff5:
+        case SSI_rsoff6:
+        case SSI_rsoff7:
+        case SSI_rsoff8:
+        {  
+            if ((iIndex-SSI_rsrly1)%8 >= config.rmtsw_relay_max)
+            {     
+                printed = snprintf(pcInsert, iInsertLen, "");
+            }
+            else
+            {                
+                printed += snprintf(pcInsert, iInsertLen, "<td><input type=\"radio\" id=\"rs%d\" name=\"rsrly%d\" value=\"OFF\" %s></td>", (iIndex-SSI_rsrly1)%8+1, (iIndex-SSI_rsrly1)%8+1, config.rmtsw_relay_default_active[(iIndex-SSI_rsrly1)%8]?"":"checked");                
+                printed += snprintf(pcInsert+printed, iInsertLen-printed, "<td><label for=\"inact\">OFF</label></td>");
+            }                       
+        }
+        break;         
+        case SSI_rsnme1:
+        case SSI_rsnme2:
+        case SSI_rsnme3:
+        case SSI_rsnme4:
+        case SSI_rsnme5:
+        case SSI_rsnme6:
+        case SSI_rsnme7:
+        case SSI_rsnme8:
+        {  
+            if ((iIndex-SSI_rsrly1)%8 >= config.rmtsw_relay_max)
+            {     
+                printed = snprintf(pcInsert, iInsertLen, "");
+            }
+            else
+            {                
+                printed = snprintf(pcInsert, iInsertLen, "<td><label for=\"rlynme\">&emsp;%s</label></td>", config.rmtsw_relay_name[(iIndex-SSI_rsrly1)%8]);
+            }                       
+        }
+        break;                  
+
         default:
         {
             printed = snprintf(pcInsert, iInsertLen, "Unhandled SSI tag");    

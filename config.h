@@ -165,7 +165,7 @@ typedef struct
     int rmtsw_relay_max;
     int rmtsw_relay_normally_closed[8];
     int rmtsw_relay_default_active[8]; 
-    int rmtsw_relay_name[8][16];  
+    char rmtsw_relay_name[8][16];  
     int rmtsw_relay_gpio[8];  
     uint16_t crc;
 } NON_VOL_VARIABLES_T;
