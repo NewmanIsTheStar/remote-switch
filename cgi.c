@@ -3461,8 +3461,404 @@ const char * cgi_rs_names_handler(int iIndex, int iNumParams, char *pcParam[], c
     
 }
 
+/*!
+ * \brief cgi handler
+ *
+ * \param[in]  iIndex       index of cgi handler in cgi_handlers table
+ * \param[in]  iNumParams   number of parameters
+ * \param[in]  pcParam      parameter name
+ * \param[in]  pcValue      parameter value 
+ * 
+ * \return nothing
+ */
+const char * cgi_relay_schedule_change_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
+{
+    int i = 0;
+    int j = 0;
+    int key_mow = 0;
+    int key_temp = 0;
+    int key_heat_temp = 0;
+    int key_cool_temp = 0;
+    THERMOSTAT_MODE_T key_mode = HVAC_AUTO;
+    char *param = NULL;
+    char *value = NULL;
+    int new_relay_normally_open = 0; 
+    int new_irrigation_test_enable = 0;      
+    int new_gpio = 0;
+    int period_number = -1;  
+    int setpoint_index = -1;
+    int new_zone_max = 0;
+    int len = 0;
+       
+    printf("Got request to change schedule\n");
+
+    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+ 
+    i = 0;
+    while (i < iNumParams)
+    {
+        param = pcParam[i];
+        value = pcValue[i];
+
+        if (param && value)
+        {
+            printf("Parameter: %s has Value: %s\n", param, value);  
+
+            len = strlen(param);
+            if ((len >= 1) && (param[0] == 'x'))
+            { 
+                sscanf(value, "%d", &(web.thermostat_period_row));
+                CLIP(web.thermostat_period_row, 0, NUM_ROWS(config.setpoint_start_mow));  
+            } 
+
+            len = strlen(param);
+            if ((len >= 4) && (param[0] == 't') && (param[1] == 'p') && (param[2] == 's') && (param[3] == 't'))
+            {
+                CLIP(web.thermostat_period_row, 0, NUM_ROWS(config.setpoint_start_mow)); 
+                config.setpoint_start_mow[web.thermostat_period_row] = time_string_to_mow(value, 32, web.thermostat_day);
+            } 
+
+            len = strlen(param);
+            if ((len >= 5) && (param[0] == 't') && (param[1] == 'p') && (param[2] == 't') && (param[3] == 'm') && (param[4] == 'p'))
+            {
+                CLIP(web.thermostat_period_row, 0, NUM_ROWS(config.setpoint_start_mow)); 
+
+                if(isdigit(value[0]))
+                {
+                    sscanf(value, "%d", &(config.setpoint_temperaturex10[web.thermostat_period_row]));
+                    config.setpoint_temperaturex10[web.thermostat_period_row] *= 10; 
+                }
+
+                if (config.setpoint_mode[web.thermostat_period_row] == HVAC_OFF)
+                {
+                    config.setpoint_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_INVALID_OFF; 
+                }
+
+                if (config.setpoint_mode[web.thermostat_period_row] == HVAC_FAN_ONLY)
+                {
+                    config.setpoint_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_INVALID_FAN; 
+                }
+
+            }   
+
+            len = strlen(param);
+            if ((len >= 5) && (param[0] == 't') && (param[1] == 'p') && (param[2] == 'h') && (param[3] == 't') && (param[4] == 'm') && (param[5] == 'p'))
+            {
+                CLIP(web.thermostat_period_row, 0, NUM_ROWS(config.setpoint_start_mow)); 
+
+                if(isdigit(value[0]))
+                {
+                    sscanf(value, "%d", &(config.setpoint_heating_temperaturex10[web.thermostat_period_row]));
+                    config.setpoint_heating_temperaturex10[web.thermostat_period_row] *= 10; 
+                }
+
+                if (config.setpoint_mode[web.thermostat_period_row] == HVAC_OFF)
+                {
+                    config.setpoint_heating_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_INVALID_OFF; 
+                }
+
+                if (config.setpoint_mode[web.thermostat_period_row] == HVAC_FAN_ONLY)
+                {
+                    config.setpoint_heating_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_INVALID_FAN; 
+                }
+
+            }  
+            
+            len = strlen(param);
+            if ((len >= 5) && (param[0] == 't') && (param[1] == 'p') && (param[2] == 'c') && (param[3] == 't') && (param[4] == 'm') && (param[5] == 'p'))
+            {
+                CLIP(web.thermostat_period_row, 0, NUM_ROWS(config.setpoint_start_mow)); 
+
+                if(isdigit(value[0]))
+                {
+                    sscanf(value, "%d", &(config.setpoint_cooling_temperaturex10[web.thermostat_period_row]));
+                    config.setpoint_cooling_temperaturex10[web.thermostat_period_row] *= 10; 
+                }
+
+                if (config.setpoint_mode[web.thermostat_period_row] == HVAC_OFF)
+                {
+                    config.setpoint_cooling_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_INVALID_OFF; 
+                }
+
+                if (config.setpoint_mode[web.thermostat_period_row] == HVAC_FAN_ONLY)
+                {
+                    config.setpoint_cooling_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_INVALID_FAN; 
+                }
+            }              
+
+            len = strlen(param);
+            if ((len >= 4) && (param[0] == 't') && (param[1] == 'p') && (param[2] == 's') && (param[3] == 'm'))
+            {
+                CLIP(web.thermostat_period_row, 0, NUM_ROWS(config.setpoint_mode)); 
+                sscanf(value, "%d", &(config.setpoint_mode[web.thermostat_period_row]));
+                CLIP(config.setpoint_mode[web.thermostat_period_row], 0, NUM_HVAC_MODES-1);
+
+                if (config.setpoint_mode[web.thermostat_period_row] == HVAC_OFF)
+                {
+
+                    config.setpoint_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_INVALID_OFF; 
+                }
+                else
+                {
+                    switch(config.setpoint_temperaturex10[web.thermostat_period_row])
+                    {
+                    case SETPOINT_TEMP_INVALID_FAN:
+                    case SETPOINT_TEMP_INVALID_OFF:
+                    case SETPOINT_TEMP_UNDEFINED:
+                        if (config.use_archaic_units)
+                        {
+                            config.setpoint_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_DEFAULT_F;
+                        }
+                        else
+                        {
+                            config.setpoint_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_DEFAULT_C;
+                        }
+                        break;
+                    default:  // reject temps below absolute zero
+                        if (config.use_archaic_units)
+                        {
+                            if (config.setpoint_temperaturex10[web.thermostat_period_row] < 4600)
+                            {
+                                config.setpoint_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_DEFAULT_F;
+                            }
+                        }
+                        else
+                        {
+                            if (config.setpoint_temperaturex10[web.thermostat_period_row] < 2800)
+                            {                            
+                                config.setpoint_temperaturex10[web.thermostat_period_row] = SETPOINT_TEMP_DEFAULT_C;
+                            }
+                        }                                            
+                        break;
+                    }
+                }
+            }  
+
+            len = strlen(param);
+            if ((len >= 3) && (param[0] == 'd') && (param[1] == 'a') && (param[2] == 'y'))
+            { 
+                sscanf(value, "%d", &(web.thermostat_day));
+                CLIP(web.thermostat_day, 0, 6);  
+            } 
+
+            len = strlen(param);
+            if ((len > 4) && (param[len-1] == 't') && (param[len-2] == 's'))
+            { 
+                period_number = -1;
+                sscanf(param, "ts%dst", &period_number);
+                if ((period_number >= 1) && (period_number <= NUM_ROWS(config.setpoint_start_mow)))
+                {
+                    // adjust to zero base
+                    period_number--;
+
+                    //sscanf(value, "%s", &config.setpoint_name[period_number]);
+                    config.setpoint_start_mow[period_number] = string_to_mow(value, 32);
+
+                }
+            } 
+
+            // len = strlen(param);
+            // if ((len > 4) && (param[len-1] == 'n') && (param[len-2] == 'i'))
+            // { 
+            //     period_number = -1;
+            //     sscanf(param, "ts%din", &period_number);
+            //     if ((period_number >= 1) && (period_number <= NUM_ROWS(config.thermostat_period_setpoint_index)))
+            //     {
+            //         // adjust to zero base
+            //         period_number--;
+
+            //         sscanf(value, "%d", &(config.thermostat_period_setpoint_index[period_number]));  
+            //     }
+            // } 
+
+            // len = strlen(param);
+            // if ((len > 5) && (param[len-1] == 'p') && (param[len-2] == 'm') && (param[len-2] == 't'))
+            // { 
+            //     period_number = -1;
+            //     sscanf(param, "ts%dtmp", &period_number);
+            //     if ((period_number >= 0) && (period_number < NUM_ROWS(config.thermostat_period_setpoint_index)))
+            //     {
+            //         sscanf(value, "%d", &(config.thermostat_period_setpoint_index[period_number]));  
+            //     }
+            // }             
 
 
+        }
+        i++;
+    }
+
+    // check for duplicates and remove
+    CLIP(web.thermostat_period_row, 0, NUM_ROWS(config.setpoint_start_mow));
+    for(i=0; i<NUM_ROWS(config.setpoint_start_mow); i++)
+    {
+        if ((i != web.thermostat_period_row) &&
+            (config.setpoint_start_mow[i] >= 0) &&
+            (config.setpoint_start_mow[i] == config.setpoint_start_mow[web.thermostat_period_row]))
+        {
+            printf("Duplicate thermostat period deleted\n");
+            config.setpoint_start_mow[i] = -1;
+        }
+    }    
+
+    // sort the schedule into ascending order by mow
+    for(i=1; i<NUM_ROWS(config.setpoint_start_mow); i++)
+    {
+        key_mow = config.setpoint_start_mow[i];
+        key_temp = config.setpoint_temperaturex10[i];  
+        key_heat_temp = config.setpoint_heating_temperaturex10[i]; 
+        key_cool_temp = config.setpoint_cooling_temperaturex10[i];                  
+        key_mode = config.setpoint_mode[i];
+
+        j = i - 1;
+
+        while ((j >= 0) && (config.setpoint_start_mow[j] > key_mow))
+        {
+            config.setpoint_start_mow[j+1] = config.setpoint_start_mow[j];
+            config.setpoint_temperaturex10[j+1] = config.setpoint_temperaturex10[j]; 
+            config.setpoint_heating_temperaturex10[j+1] = config.setpoint_heating_temperaturex10[j]; 
+            config.setpoint_cooling_temperaturex10[j+1] = config.setpoint_cooling_temperaturex10[j];                         
+            config.setpoint_mode[j+1] = config.setpoint_mode[j];            
+            j = j - 1;
+        }
+
+        config.setpoint_start_mow[j+1] = key_mow;
+        config.setpoint_temperaturex10[j+1] = key_temp; 
+        config.setpoint_heating_temperaturex10[j+1] = key_heat_temp; 
+        config.setpoint_cooling_temperaturex10[j+1] = key_cool_temp;                 
+        config.setpoint_mode[j+1] = key_mode;             
+    }
+
+    // update the schedule grid
+    make_schedule_grid();
+
+    // write config changes to flash
+    config_changed();
+
+    // Send the next page back to the user
+    return "/rs_schedule.shtml";
+    
+}
+
+/*!
+ * \brief cgi handler
+ *
+ * \param[in]  iIndex       index of cgi handler in cgi_handlers table
+ * \param[in]  iNumParams   number of parameters
+ * \param[in]  pcParam      parameter name
+ * \param[in]  pcValue      parameter value 
+ * 
+ * \return nothing
+ */
+const char * cgi_relay_period_edit_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
+{
+    int i = 0;
+    char *param = NULL;
+    char *value = NULL;
+    int new_relay_normally_open = 0; 
+    int new_irrigation_test_enable = 0;      
+    int new_gpio = 0;
+    int period_number = -1;  
+    int setpoint_index = -1;
+    int new_zone_max = 0;
+    int len = 0;
+       
+
+
+    printf("Got request to edit thermostat period. row = %d\n", web.thermostat_period_row);
+
+    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+ 
+    i = 0;
+    while (i < iNumParams)
+    {
+        param = pcParam[i];
+        value = pcValue[i];
+
+        if (param && value)
+        {
+            printf("Parameter: %s has Value: %s\n", param, value);  
+
+            len = strlen(param);
+            if ((len >= 1) && (param[0] == 'x'))
+            { 
+                sscanf(value, "%d", &(web.thermostat_period_row));
+                printf("Got request to edit thermostat period. row = %d\n", web.thermostat_period_row);
+                CLIP(web.thermostat_period_row, 0, NUM_ROWS(config.setpoint_start_mow));                
+            } 
+        }
+        i++;
+    }
+
+    // Send the next page back to the user
+    return "/rs_edit.shtml";
+    
+}
+
+/*!
+ * \brief cgi handler
+ *
+ * \param[in]  iIndex       index of cgi handler in cgi_handlers table
+ * \param[in]  iNumParams   number of parameters
+ * \param[in]  pcParam      parameter name
+ * \param[in]  pcValue      parameter value 
+ * 
+ * \return nothing
+ */
+const char * cgi_relay_period_delete_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
+{
+    int i = 0;
+    char *param = NULL;
+    char *value = NULL;
+    int new_relay_normally_open = 0; 
+    int new_irrigation_test_enable = 0;      
+    int new_gpio = 0;
+    int period_number = -1;  
+    int setpoint_index = -1;
+    int new_zone_max = 0;
+    int len = 0;
+       
+
+
+    printf("Got request to delete thermostat period. row = %d\n", web.thermostat_period_row);
+
+    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+ 
+    i = 0;
+    while (i < iNumParams)
+    {
+        param = pcParam[i];
+        value = pcValue[i];
+
+        if (param && value)
+        {
+            printf("Parameter: %s has Value: %s\n", param, value);  
+
+            len = strlen(param);
+            if ((len >= 1) && (param[0] == 'x'))
+            { 
+                sscanf(value, "%d", &(web.thermostat_period_row));
+                printf("Got request to delete thermostat period. row = %d\n", web.thermostat_period_row);
+                CLIP(web.thermostat_period_row, 0, NUM_ROWS(config.setpoint_start_mow));  
+                if ((web.thermostat_period_row >=0) && (web.thermostat_period_row < NUM_ROWS(config.setpoint_start_mow)))
+                {
+                    printf("Deleting row %d by setting mow to -1\n", web.thermostat_period_row);
+                    config.setpoint_start_mow[web.thermostat_period_row] = -1;
+
+                    // update the schedule grid
+                    make_schedule_grid();
+
+                    // write config changes to flash
+                    config_changed();
+                }                
+            } 
+        }
+        i++;
+    }
+
+    // Send the next page back to the user
+    return "/rs_schedule.shtml";
+    
+}
 
 // CGI requests and their respective handlers  --Add new entires at bottom--
 static const tCGI cgi_handlers[] = {
@@ -3515,7 +3911,10 @@ static const tCGI cgi_handlers[] = {
     {"/t_advanced.cgi",                 cgi_advanced_settings}, 
     {"/rs_default.cgi",                 cgi_remote_switch_relay_handler},     
     {"/rs_gpio.cgi",                    cgi_rs_gpio_handler},   
-    {"/rs_names.cgi",                   cgi_rs_names_handler},    
+    {"/rs_names.cgi",                   cgi_rs_names_handler}, 
+    {"/rs_change.cgi",                  cgi_relay_schedule_change_handler}, 
+    {"/rs_edit.cgi",                    cgi_relay_period_edit_handler}, 
+    {"/rs_delete.cgi",                  cgi_relay_period_delete_handler},           
     
 };
 

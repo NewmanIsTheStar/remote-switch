@@ -167,6 +167,8 @@ typedef struct
     int rmtsw_relay_default_active[8]; 
     char rmtsw_relay_name[8][16];  
     int rmtsw_relay_gpio[8];  
+    int rmtsw_relay_schedule_action_on[32];
+    int rmtsw_relay_schedule_action_off[32];    
     uint16_t crc;
 } NON_VOL_VARIABLES_T;
 
