@@ -51,7 +51,7 @@ body {
   <div class="sidenav">
     <a href="/network.shtml">Network</a>   
     <a href="/time.shtml">Time</a>
-    <a href="/t_gpio.shtml">GPIO</a>   
+    <a href="/rs_gpio.shtml">GPIO</a>   
     <a href="/syslog.shtml">Syslog</a>    
     <a href="/units.shtml">Foibles</a>     
     <a href="/status.shtml">Status</a>   
@@ -67,49 +67,49 @@ body {
               <td><label for="wind" <!--#rs1viz--> ><b>Relay 1</b> &emsp;</label></td>
               <!--#rsrly1-->
               <!--#rsoff1-->
-              <!--#rsnme1-->
+              <td><label for=\"rlynme\">&emsp;<!--#rs1nme--></label></td>              
           </tr>
           <tr>
               <td><label for="wind" <!--#rs2viz--> ><b>Relay 2</b> &emsp;</label></td>
               <!--#rsrly2-->
               <!--#rsoff2-->
-              <!--#rsnme2-->              
+              <td><label for=\"rlynme\">&emsp;<!--#rs2nme--></label></td>               
           </tr>
           <tr>
               <td><label for="wind" <!--#rs3viz--> ><b>Relay 3</b> &emsp;</label></td>
               <!--#rsrly3-->
               <!--#rsoff3-->
-              <!--#rsnme3-->  
+              <td><label for=\"rlynme\">&emsp;<!--#rs3nme--></label></td>  
           </tr>
           <tr>
               <td><label for="wind" <!--#rs4viz--> ><b>Relay 4</b> &emsp;</label></td>
               <!--#rsrly4-->
               <!--#rsoff4-->
-              <!--#rsnme4-->  
+              <td><label for=\"rlynme\">&emsp;<!--#rs4nme--></label></td>  
           </tr>
           <tr>
               <td><label for="wind" <!--#rs5viz--> ><b>Relay 5</b> &emsp;</label></td>
               <!--#rsrly5-->
               <!--#rsoff5-->
-              <!--#rsnme5-->  
+              <td><label for=\"rlynme\">&emsp;<!--#rs5nme--></label></td>   
           </tr>
           <tr>
               <td><label for="wind" <!--#rs6viz--> ><b>Relay 6</b> &emsp;</label></td>
               <!--#rsrly6-->
               <!--#rsoff6-->
-              <!--#rsnme6-->  
+              <td><label for=\"rlynme\">&emsp;<!--#rs6nme--></label></td>   
           </tr>
           <tr>
               <td><label for="wind" <!--#rs7viz--> ><b>Relay 7</b> &emsp;</label></td>
               <!--#rsrly7-->
               <!--#rsoff7-->
-              <!--#rsnme7-->  
+              <td><label for=\"rlynme\">&emsp;<!--#rs7nme--></label></td>   
           </tr>
           <tr>
               <td><label for="wind" <!--#rs8viz--> ><b>Relay 8</b> &emsp;</label></td>
               <!--#rsrly8-->
               <!--#rsoff8-->
-              <!--#rsnme8-->  
+              <td><label for=\"rlynme\">&emsp;<!--#rs8nme--></label></td>   
           </tr>                                        
           <tr>            
               <td>

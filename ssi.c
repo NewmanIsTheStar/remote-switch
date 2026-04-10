@@ -751,14 +751,14 @@ extern NON_VOL_VARIABLES_T config;
     x(rsrly6)    \
     x(rsrly7)    \
     x(rsrly8)    \
-    x(rsnme1)    \
-    x(rsnme2)    \
-    x(rsnme3)    \
-    x(rsnme4)    \
-    x(rsnme5)    \
-    x(rsnme6)    \
-    x(rsnme7)    \
-    x(rsnme8)    \
+    x(rs1nme)    \
+    x(rs2nme)    \
+    x(rs3nme)    \
+    x(rs4nme)    \
+    x(rs5nme)    \
+    x(rs6nme)    \
+    x(rs7nme)    \
+    x(rs8nme)    \
     x(rsoff1)    \
     x(rsoff2)    \
     x(rsoff3)    \
@@ -766,7 +766,16 @@ extern NON_VOL_VARIABLES_T config;
     x(rsoff5)    \
     x(rsoff6)    \
     x(rsoff7)    \
-    x(rsoff8)    
+    x(rsoff8)    \
+    x(rs1gpio)   \
+    x(rs2gpio)   \
+    x(rs3gpio)   \
+    x(rs4gpio)   \
+    x(rs5gpio)   \
+    x(rs6gpio)   \
+    x(rs7gpio)   \
+    x(rs8gpio)   \
+    x(rsmax)          
                 
 
 //enum used to index array of pointers to SSI string constants  e.g. index 0 is SSI_usurped
@@ -2853,14 +2862,14 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }                       
         }
         break;         
-        case SSI_rsnme1:
-        case SSI_rsnme2:
-        case SSI_rsnme3:
-        case SSI_rsnme4:
-        case SSI_rsnme5:
-        case SSI_rsnme6:
-        case SSI_rsnme7:
-        case SSI_rsnme8:
+        case SSI_rs1nme:
+        case SSI_rs2nme:
+        case SSI_rs3nme:
+        case SSI_rs4nme:
+        case SSI_rs5nme:
+        case SSI_rs6nme:
+        case SSI_rs7nme:
+        case SSI_rs8nme:
         {  
             if ((iIndex-SSI_rsrly1)%8 >= config.rmtsw_relay_max)
             {     
@@ -2868,10 +2877,28 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }
             else
             {                
-                printed = snprintf(pcInsert, iInsertLen, "<td><label for=\"rlynme\">&emsp;%s</label></td>", config.rmtsw_relay_name[(iIndex-SSI_rsrly1)%8]);
+                //printed = snprintf(pcInsert, iInsertLen, "<td><label for=\"rlynme\">&emsp;%s</label></td>", config.rmtsw_relay_name[(iIndex-SSI_rsrly1)%8]);
+                printed = snprintf(pcInsert, iInsertLen, "%s", config.rmtsw_relay_name[(iIndex-SSI_rsrly1)%8]);                
             }                       
         }
-        break;                  
+        break;  
+        case SSI_rs1gpio:
+        case SSI_rs2gpio:
+        case SSI_rs3gpio:
+        case SSI_rs4gpio:
+        case SSI_rs5gpio:
+        case SSI_rs6gpio:
+        case SSI_rs7gpio:
+        case SSI_rs8gpio:
+        {     
+            printed = snprintf(pcInsert, iInsertLen, "%d", config.rmtsw_relay_gpio[(iIndex-SSI_rs1gpio)%8]);             
+        }
+        break;  
+        case SSI_rsmax: //rsmax
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%d", config.rmtsw_relay_max);
+        }   
+        break;                              
 
         default:
         {

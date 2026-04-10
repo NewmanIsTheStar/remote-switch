@@ -3334,6 +3334,135 @@ const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *p
     
 }
 
+/*!
+ * \brief cgi handler
+ *
+ * \param[in]  iIndex       index of cgi handler in cgi_handlers table
+ * \param[in]  iNumParams   number of parameters
+ * \param[in]  pcParam      parameter name
+ * \param[in]  pcValue      parameter value 
+ * 
+ * \return nothing
+ */
+const char * cgi_rs_gpio_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
+{
+    int i = 0;
+    char *param = NULL;
+    char *value = NULL;
+    int new_relay_normally_open = 0; 
+    int new_irrigation_test_enable = 0;      
+    int new_gpio = 0;
+    int gpio_zone = -1;  
+    int new_zone_max = 0;
+       
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+ 
+    i = 0;
+    while (i < iNumParams)
+    {
+        param = pcParam[i];
+        value = pcValue[i];
+
+        if (param && value)
+        {
+            //printf("Parameter: %s has Value: %s\n", param, value);  
+            sscanf(param, "rs%dgpio", &gpio_zone);
+            if ((gpio_zone >= 1) && (gpio_zone <= 8))
+            {
+                // adjust to zero base
+                gpio_zone--;
+
+                sscanf(value, "%d", &config.rmtsw_relay_gpio[gpio_zone]);  
+            }   
+
+            if (strcasecmp("rsmax", param) == 0)
+            {
+                sscanf(value, "%d", &new_zone_max);
+                
+                if ((new_zone_max > 0) && (new_zone_max <= 8))
+                {
+                    config.rmtsw_relay_max = new_zone_max;
+                }                           
+            }
+
+            sscanf(param, "rs%dnme", &gpio_zone);
+            if ((gpio_zone >= 1) && (gpio_zone <= 8))
+            {
+                // adjust to zero base
+                gpio_zone--;
+
+                STRNCPY(config.rmtsw_relay_name[gpio_zone], value, sizeof(config.rmtsw_relay_name[gpio_zone]));
+            }             
+        }
+        i++;
+    }   
+
+    config_changed();
+
+    return "/rs_gpio.shtml";
+    
+}
+
+/*!
+ * \brief cgi handler
+ *
+ * \param[in]  iIndex       index of cgi handler in cgi_handlers table
+ * \param[in]  iNumParams   number of parameters
+ * \param[in]  pcParam      parameter name
+ * \param[in]  pcValue      parameter value 
+ * 
+ * \return nothing
+ */
+const char * cgi_rs_names_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
+{
+    int i = 0;
+    char *param = NULL;
+    char *value = NULL;
+    int new_relay_normally_open = 0; 
+    int new_irrigation_test_enable = 0;      
+    int new_gpio = 0;
+    int gpio_zone = -1;  
+    int new_zone_max = 0;
+    char decoded_string[32];
+       
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+ 
+    i = 0;
+    while (i < iNumParams)
+    {
+        param = pcParam[i];
+        value = pcValue[i];
+
+        if (param && value)
+        {
+            //printf("Parameter: %s has Value: %s\n", param, value);  
+            sscanf(param, "rs%dnme", &gpio_zone);
+            if ((gpio_zone >= 1) && (gpio_zone <= 8))
+            {
+                // adjust to zero base
+                gpio_zone--;
+                
+                // copy value to temporary buffer for decoding
+                STRNCPY(decoded_string, value, sizeof(decoded_string));
+
+                // in-place decode the url
+                urldecode(decoded_string, decoded_string);
+
+                // copy decoded value to configuration
+                STRNCPY(config.rmtsw_relay_name[gpio_zone], decoded_string, sizeof(config.rmtsw_relay_name[gpio_zone]));
+            }             
+        }
+        i++;
+    }   
+
+    config_changed();
+
+    return "/rs_names.shtml";
+    
+}
+
+
+
 
 // CGI requests and their respective handlers  --Add new entires at bottom--
 static const tCGI cgi_handlers[] = {
@@ -3384,7 +3513,10 @@ static const tCGI cgi_handlers[] = {
     {"/gpio_default.cgi",               cgi_gpio_default_handler},  
     {"/t_sensors.cgi",                  cgi_temperature_sensors},
     {"/t_advanced.cgi",                 cgi_advanced_settings}, 
-    {"/rs_default.cgi",                 cgi_remote_switch_relay_handler},          
+    {"/rs_default.cgi",                 cgi_remote_switch_relay_handler},     
+    {"/rs_gpio.cgi",                    cgi_rs_gpio_handler},   
+    {"/rs_names.cgi",                   cgi_rs_names_handler},    
+    
 };
 
 /*!
