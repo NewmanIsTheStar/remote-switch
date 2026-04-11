@@ -154,5 +154,5 @@ void setTimeSec(uint32_t sec);
 // Newman added this to supress warnings in altcp_tls about unused return values
 #define MBEDTLS_CHECK_RETURN 
 
-
+#define LWIP_HTTPD_MAX_TAG_NAME_LEN (10)  // Newman added for testing (default is 8)
 #endif

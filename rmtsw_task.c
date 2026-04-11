@@ -98,7 +98,15 @@ void rmtsw_task(void *params)
     strcpy(config.rmtsw_relay_name[5], "Cluster3");    
     strcpy(config.rmtsw_relay_name[6], "Cluster4");    
     strcpy(config.rmtsw_relay_name[7], "Cluster5");  
-    config.rmtsw_relay_max = 4;  
+    config.rmtsw_relay_max = 4;
+    
+    //TODO :- move to config upgrade code
+    for(i=0; i<NUM_ROWS(config.rmtsw_relay_schedule_start_mow); i++)
+    {
+        config.rmtsw_relay_schedule_start_mow[i] = -1;
+        config.rmtsw_relay_schedule_action_off[i] = 0;
+        config.rmtsw_relay_schedule_action_on[i] = 0;
+    }
 
     printf("Remote Switch (rmtsw) task started!\n");
 

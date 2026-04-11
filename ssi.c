@@ -1031,8 +1031,101 @@ extern NON_VOL_VARIABLES_T config;
     x(rs29actr8)    \
     x(rs30actr8)    \
     x(rs31actr8)    \
-    x(rs32actr8)
-
+    x(rs32actr8)    \
+    x(rsst)         \
+    x(rs1st)        \
+    x(rs2st)        \
+    x(rs3st)        \
+    x(rs4st)        \
+    x(rs5st)        \
+    x(rs6st)        \
+    x(rs7st)        \
+    x(rs8st)        \
+    x(rs9st)        \
+    x(rs10st)       \
+    x(rs11st)       \
+    x(rs12st)       \
+    x(rs13st)       \
+    x(rs14st)       \
+    x(rs15st)       \
+    x(rs16st)       \
+    x(rs17st)       \
+    x(rs18st)       \
+    x(rs19st)       \
+    x(rs20st)       \
+    x(rs21st)       \
+    x(rs22st)       \
+    x(rs23st)       \
+    x(rs24st)       \
+    x(rs25st)       \
+    x(rs26st)       \
+    x(rs27st)       \
+    x(rs28st)       \
+    x(rs29st)       \
+    x(rs30st)       \
+    x(rs31st)       \
+    x(rs32st)       \
+    x(rs1vz)            \
+    x(rs2vz)            \
+    x(rs3vz)            \
+    x(rs4vz)            \
+    x(rs5vz)            \
+    x(rs6vz)            \
+    x(rs7vz)            \
+    x(rs8vz)            \
+    x(rs9vz)            \
+    x(rs10vz)            \
+    x(rs11vz)            \
+    x(rs12vz)            \
+    x(rs13vz)            \
+    x(rs14vz)            \
+    x(rs15vz)            \
+    x(rs16vz)            \
+    x(rs17vz)            \
+    x(rs18vz)            \
+    x(rs19vz)            \
+    x(rs20vz)            \
+    x(rs21vz)            \
+    x(rs22vz)            \
+    x(rs23vz)            \
+    x(rs24vz)            \
+    x(rs25vz)            \
+    x(rs26vz)            \
+    x(rs27vz)            \
+    x(rs28vz)            \
+    x(rs29vz)            \
+    x(rs30vz)            \
+    x(rs31vz)            \
+    x(rs32vz)            \
+    x(rsaddvz)           \
+    x(rsact1)            \
+    x(rsact2)            \
+    x(rsact3)            \
+    x(rsact10)       \
+    x(rsact11)       \
+    x(rsact12)       \
+    x(rsact20)       \
+    x(rsact21)       \
+    x(rsact22)       \
+    x(rsact30)       \
+    x(rsact31)       \
+    x(rsact32)       \
+    x(rsact40)       \
+    x(rsact41)       \
+    x(rsact42)       \
+    x(rsact50)       \
+    x(rsact51)       \
+    x(rsact52)       \
+    x(rsact60)       \
+    x(rsact61)       \
+    x(rsact62)       \
+    x(rsact70)       \
+    x(rsact71)       \
+    x(rsact72)       \
+    x(rsact80)       \
+    x(rsact81)       \
+    x(rsact82)   
+    
 //enum used to index array of pointers to SSI string constants  e.g. index 0 is SSI_usurped
 enum ssi_index
 {
@@ -3413,14 +3506,14 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         case SSI_rs31actr8:
         case SSI_rs32actr8:                                                                        
         {
-            schedule_slot = (iIndex-SSI_rs1actr1)%8;
-            schedule_relay = (iIndex-SSI_rs1actr1)%32;
+            schedule_slot = (iIndex-SSI_rs1actr1)%32;
+            schedule_relay = (iIndex-SSI_rs1actr1)%8;
 
-            if (config.rmtsw_relay_schedule_action_on[schedule_slot] & (1>>schedule_relay))
+            if (config.rmtsw_relay_schedule_action_on[schedule_slot] & (1<<schedule_relay))
             {
                 printed = snprintf(pcInsert, iInsertLen, "ON");   
             }
-            else if (config.rmtsw_relay_schedule_action_off[schedule_slot] & (1>>schedule_relay))
+            else if (config.rmtsw_relay_schedule_action_off[schedule_slot] & (1<<schedule_relay))
             {
                 printed = snprintf(pcInsert, iInsertLen, "OFF"); 
             }
@@ -3430,6 +3523,160 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }
         }                     
         break;
+        case SSI_rsst:
+        {
+            CLIP(web.rmtsw_relay_period_row, 0, NUM_ROWS(config.rmtsw_relay_schedule_start_mow));
+            //printed = mow_to_string(pcInsert, iInsertLen, config.setpoint_start_mow[web.rmtsw_relay_period_row]);
+            printed = mow_to_time_string(pcInsert, iInsertLen, config.rmtsw_relay_schedule_start_mow[web.rmtsw_relay_period_row]);            
+        }
+        break;   
+        case SSI_rs1st:
+        case SSI_rs2st:
+        case SSI_rs3st:
+        case SSI_rs4st:
+        case SSI_rs5st:
+        case SSI_rs6st:
+        case SSI_rs7st:
+        case SSI_rs8st:
+        case SSI_rs9st:
+        case SSI_rs10st:
+        case SSI_rs11st:
+        case SSI_rs12st:
+        case SSI_rs13st:
+        case SSI_rs14st:
+        case SSI_rs15st:
+        case SSI_rs16st:
+        case SSI_rs17st:
+        case SSI_rs18st:
+        case SSI_rs19st:
+        case SSI_rs20st:
+        case SSI_rs21st:
+        case SSI_rs22st:
+        case SSI_rs23st:
+        case SSI_rs24st:
+        case SSI_rs25st:
+        case SSI_rs26st:
+        case SSI_rs27st:
+        case SSI_rs28st:
+        case SSI_rs29st:
+        case SSI_rs30st:
+        case SSI_rs31st:
+        case SSI_rs32st:                        
+        {
+            printed = mow_to_time_string(pcInsert, iInsertLen, config.rmtsw_relay_schedule_start_mow[iIndex-SSI_rs1st]);            
+        }
+        break;         
+        case SSI_rs1vz:
+        case SSI_rs2vz:
+        case SSI_rs3vz:
+        case SSI_rs4vz:
+        case SSI_rs5vz:
+        case SSI_rs6vz:
+        case SSI_rs7vz:
+        case SSI_rs8vz:
+        case SSI_rs9vz:
+        case SSI_rs10vz:
+        case SSI_rs11vz:
+        case SSI_rs12vz:
+        case SSI_rs13vz:
+        case SSI_rs14vz:
+        case SSI_rs15vz:
+        case SSI_rs16vz:
+        case SSI_rs17vz:
+        case SSI_rs18vz:
+        case SSI_rs19vz:
+        case SSI_rs20vz:
+        case SSI_rs21vz:
+        case SSI_rs22vz:
+        case SSI_rs23vz:
+        case SSI_rs24vz:
+        case SSI_rs25vz:
+        case SSI_rs26vz:
+        case SSI_rs27vz:
+        case SSI_rs28vz:
+        case SSI_rs29vz:
+        case SSI_rs30vz:
+        case SSI_rs31vz:
+        case SSI_rs32vz:                        
+        {
+            if ((get_day_from_mow(config.rmtsw_relay_schedule_start_mow[iIndex-SSI_rs1vz]) != web.rmtsw_relay_day) ||
+                (config.rmtsw_relay_schedule_start_mow[iIndex-SSI_rs1vz] <0))
+            {     
+                printed = snprintf(pcInsert, iInsertLen, "style=\"display:none;\"");
+            }
+            else
+            {
+                printed = 0;
+            }             
+        }
+        break; 
+        case SSI_rsaddvz:
+        {
+            for(i=0; i < NUM_ROWS(config.rmtsw_relay_schedule_start_mow); i++)
+            {
+                if (config.rmtsw_relay_schedule_start_mow[i] < 0)
+                {
+                    new_thermostat_period_found = true;
+                    break;
+                }
+            }
+            if (!new_thermostat_period_found)
+            {     
+                printed = snprintf(pcInsert, iInsertLen, "style=\"display:none;\"");
+            }
+            else
+            {
+                printed = 0;
+            }            
+        }
+        break;        
+        case SSI_rsact10:  // penultimate digit is relay number and ultimate is action number
+        case SSI_rsact11:
+        case SSI_rsact12:                
+        case SSI_rsact20:
+        case SSI_rsact21:
+        case SSI_rsact22:       
+        case SSI_rsact30:
+        case SSI_rsact31:
+        case SSI_rsact32:
+        case SSI_rsact40:
+        case SSI_rsact41:
+        case SSI_rsact42:
+        case SSI_rsact50:
+        case SSI_rsact51:
+        case SSI_rsact52:
+        case SSI_rsact60:
+        case SSI_rsact61:
+        case SSI_rsact62:
+        case SSI_rsact70:
+        case SSI_rsact71:
+        case SSI_rsact72:
+        case SSI_rsact80:
+        case SSI_rsact81:
+        case SSI_rsact82:                                                      
+        {
+            CLIP(web.rmtsw_relay_period_row, 0, NUM_ROWS(config.rmtsw_relay_schedule_start_mow));
+
+            schedule_relay = (iIndex-SSI_rsact10)%8;   // relay number
+            schedule_slot  = (iIndex-SSI_rsact10)%3;   // action number
+
+            if ((config.rmtsw_relay_schedule_action_on[web.rmtsw_relay_period_row] & (1<<schedule_relay)) && (schedule_slot == RMSW_ACTION_ON))
+            {
+                printed = snprintf(pcInsert, iInsertLen, "selected");   
+            }
+            else if ((config.rmtsw_relay_schedule_action_off[web.rmtsw_relay_period_row] & (1<<schedule_relay)) && (schedule_slot == RMSW_ACTION_OFF))
+            {
+                printed = snprintf(pcInsert, iInsertLen, "selected");  
+            }
+            else
+            {
+                printed = snprintf(pcInsert, iInsertLen, "");  
+            }
+            // TODO: may need to select do nothing option if first option not automatically used by browser
+        }
+        break;         
+
+
         default:
         {
             printed = snprintf(pcInsert, iInsertLen, "Unhandled SSI tag");    

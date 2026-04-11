@@ -67,13 +67,13 @@ body {
 </script>
 
 <div class="sidenav">
-  <a href="/t_schedule.cgi?day=0">Sunday</a>     
-  <a href="/t_schedule.cgi?day=1">Monday</a>
-  <a href="/t_schedule.cgi?day=2">Tuesday</a>
-  <a href="/t_schedule.cgi?day=3">Wednesday</a>
-  <a href="/t_schedule.cgi?day=4">Thursday</a>
-  <a href="/t_schedule.cgi?day=5">Friday</a>
-  <a href="/t_schedule.cgi?day=6">Saturday</a>
+  <a href="/rs_schedule.cgi?day=0">Sunday</a>     
+  <a href="/rs_schedule.cgi?day=1">Monday</a>
+  <a href="/rs_schedule.cgi?day=2">Tuesday</a>
+  <a href="/rs_schedule.cgi?day=3">Wednesday</a>
+  <a href="/rs_schedule.cgi?day=4">Thursday</a>
+  <a href="/rs_schedule.cgi?day=5">Friday</a>
+  <a href="/rs_schedule.cgi?day=6">Saturday</a>
   <a href="/network.shtml">&#9881 Settings</a>  
   <p><a href="/index.shtml">&#8629</a></p>       
 </div>
@@ -81,11 +81,10 @@ body {
 <div class="main">
   <h2>Edit Climate Period</h2>    
   <table id="climate_edit">
-    <form action="/ts_change.cgi" method="get" name="events">
+    <form action="/rs_change.cgi" method="get" name="events">
       <tr>
         <td><b>Day</b></td>
         <td><b>Time</b></td>
-        <td><b>NumRly</b></td>
         <td><b>R1</b></td>
         <td><b>R2</b></td>
         <td><b>R3</b></td>  
@@ -101,69 +100,66 @@ body {
           <!--#tday-->
         </td>
         <td>
-          <input name="tpst" id="tspst" <!--#tpst--> value="<!--#tpst-->"/>  
-        </td>  
+          <input name="rsst" id="rsst" <!--#rsst--> value="<!--#rsst-->"/>  
+        </td>           
         <td>
-          <input name="tpst" id="tspst" <!--#tpst--> value="<!--#tpst-->"/>  
-        </td>         
-        <td>
-          <select id="tpsm" name="tpsm" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
+          <select id="rsar1" name="rsar1" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
             <option value="0" <!--#tpsm1-->>X</option>
             <option value="1" <!--#tpsm2-->>OFF</option> 
             <option value="3" <!--#tpsm3-->>ON</option>                                
           </select>
         </td>   
         <td>
-          <select id="tpsm" name="tpsm" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
+          <select id="rsar2" name="rsar2" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
             <option value="0" <!--#tpsm1-->>X</option>
             <option value="1" <!--#tpsm2-->>OFF</option> 
             <option value="3" <!--#tpsm3-->>ON</option>                                
           </select>
         </td> 
         <td>
-          <select id="tpsm" name="tpsm" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
+          <select id="rsar3" name="rsar3" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
             <option value="0" <!--#tpsm1-->>X</option>
             <option value="1" <!--#tpsm2-->>OFF</option> 
             <option value="3" <!--#tpsm3-->>ON</option>                                
           </select>
         </td> 
         <td>
-          <select id="tpsm" name="tpsm" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
+          <select id="rsar4" name="rsar4" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
             <option value="0" <!--#tpsm1-->>X</option>
             <option value="1" <!--#tpsm2-->>OFF</option> 
             <option value="3" <!--#tpsm3-->>ON</option>                                
           </select>
         </td> 
         <td>
-          <select id="tpsm" name="tpsm" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
+          <select id="rsar5" name="rsar5" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
             <option value="0" <!--#tpsm1-->>X</option>
             <option value="1" <!--#tpsm2-->>OFF</option> 
             <option value="3" <!--#tpsm3-->>ON</option>                                
           </select>
         </td> 
         <td>
-          <select id="tpsm" name="tpsm" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
+          <select id="rsar6" name="rsar6" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
             <option value="0" <!--#tpsm1-->>X</option>
             <option value="1" <!--#tpsm2-->>OFF</option> 
             <option value="3" <!--#tpsm3-->>ON</option>                                
           </select>
         </td> 
         <td>
-          <select id="tpsm" name="tpsm" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
+          <select id="rsar7" name="rsar7" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
             <option value="0" <!--#tpsm1-->>X</option>
             <option value="1" <!--#tpsm2-->>OFF</option> 
             <option value="3" <!--#tpsm3-->>ON</option>                                
           </select>
         </td> 
         <td>
-          <select id="tpsm" name="tpsm" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
+          <select id="rsar8" name="rsar8" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
             <option value="0" <!--#tpsm1-->>X</option>
             <option value="1" <!--#tpsm2-->>OFF</option> 
             <option value="3" <!--#tpsm3-->>ON</option>                                
           </select>
         </td>                                                                
         <td>
-          <a href="/t_schedule.shtml">   <button type=button>Cancel</button></a> 
+          <a href="/rs_schedule.shtml">   <button type=button>Cancel</button></a> 
         </td>  
       <tr>
         <td>

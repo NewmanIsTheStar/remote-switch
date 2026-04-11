@@ -23,6 +23,15 @@
 #define DISPLAY_MAX_BRIGHTNESS           (7)
 #define TEMPERATURE_INVALID              (2000)
 
+
+typedef enum
+{
+    RMSW_ACTION_DO_NOTHING = 0,
+    RMSW_ACTION_OFF = 1,
+    RMSW_ACTION_ON = 2,
+    NUM_RMSW_ACTIONS = 3
+} RMSW_ACTION_T;
+
 typedef enum
 {
     HVAC_AUTO = 0,
