@@ -777,260 +777,260 @@ extern NON_VOL_VARIABLES_T config;
     x(rs8gpio)   \
     x(rsmax)     \
     x(rs1actr1)    \
-    x(rs2actr1)    \
-    x(rs3actr1)    \
-    x(rs4actr1)    \
-    x(rs5actr1)    \
-    x(rs6actr1)    \
-    x(rs7actr1)    \
-    x(rs8actr1)    \
-    x(rs9actr1)    \
-    x(rs10actr1)    \
-    x(rs11actr1)    \
-    x(rs12actr1)    \
-    x(rs13actr1)    \
-    x(rs14actr1)    \
-    x(rs15actr1)    \
-    x(rs16actr1)    \
-    x(rs17actr1)    \
-    x(rs18actr1)    \
-    x(rs19actr1)    \
-    x(rs20actr1)    \
-    x(rs21actr1)    \
-    x(rs22actr1)    \
-    x(rs23actr1)    \
-    x(rs24actr1)    \
-    x(rs25actr1)    \
-    x(rs26actr1)    \
-    x(rs27actr1)    \
-    x(rs28actr1)    \
-    x(rs29actr1)    \
-    x(rs30actr1)    \
-    x(rs31actr1)    \
-    x(rs32actr1)    \
     x(rs1actr2)    \
-    x(rs2actr2)    \
-    x(rs3actr2)    \
-    x(rs4actr2)    \
-    x(rs5actr2)    \
-    x(rs6actr2)    \
-    x(rs7actr2)    \
-    x(rs8actr2)    \
-    x(rs9actr2)    \
-    x(rs10actr2)    \
-    x(rs11actr2)    \
-    x(rs12actr2)    \
-    x(rs13actr2)    \
-    x(rs14actr2)    \
-    x(rs15actr2)    \
-    x(rs16actr2)    \
-    x(rs17actr2)    \
-    x(rs18actr2)    \
-    x(rs19actr2)    \
-    x(rs20actr2)    \
-    x(rs21actr2)    \
-    x(rs22actr2)    \
-    x(rs23actr2)    \
-    x(rs24actr2)    \
-    x(rs25actr2)    \
-    x(rs26actr2)    \
-    x(rs27actr2)    \
-    x(rs28actr2)    \
-    x(rs29actr2)    \
-    x(rs30actr2)    \
-    x(rs31actr2)    \
-    x(rs32actr2)    \
     x(rs1actr3)    \
-    x(rs2actr3)    \
-    x(rs3actr3)    \
-    x(rs4actr3)    \
-    x(rs5actr3)    \
-    x(rs6actr3)    \
-    x(rs7actr3)    \
-    x(rs8actr3)    \
-    x(rs9actr3)    \
-    x(rs10actr3)    \
-    x(rs11actr3)    \
-    x(rs12actr3)    \
-    x(rs13actr3)    \
-    x(rs14actr3)    \
-    x(rs15actr3)    \
-    x(rs16actr3)    \
-    x(rs17actr3)    \
-    x(rs18actr3)    \
-    x(rs19actr3)    \
-    x(rs20actr3)    \
-    x(rs21actr3)    \
-    x(rs22actr3)    \
-    x(rs23actr3)    \
-    x(rs24actr3)    \
-    x(rs25actr3)    \
-    x(rs26actr3)    \
-    x(rs27actr3)    \
-    x(rs28actr3)    \
-    x(rs29actr3)    \
-    x(rs30actr3)    \
-    x(rs31actr3)    \
-    x(rs32actr3)    \
     x(rs1actr4)    \
-    x(rs2actr4)    \
-    x(rs3actr4)    \
-    x(rs4actr4)    \
-    x(rs5actr4)    \
-    x(rs6actr4)    \
-    x(rs7actr4)    \
-    x(rs8actr4)    \
-    x(rs9actr4)    \
-    x(rs10actr4)    \
-    x(rs11actr4)    \
-    x(rs12actr4)    \
-    x(rs13actr4)    \
-    x(rs14actr4)    \
-    x(rs15actr4)    \
-    x(rs16actr4)    \
-    x(rs17actr4)    \
-    x(rs18actr4)    \
-    x(rs19actr4)    \
-    x(rs20actr4)    \
-    x(rs21actr4)    \
-    x(rs22actr4)    \
-    x(rs23actr4)    \
-    x(rs24actr4)    \
-    x(rs25actr4)    \
-    x(rs26actr4)    \
-    x(rs27actr4)    \
-    x(rs28actr4)    \
-    x(rs29actr4)    \
-    x(rs30actr4)    \
-    x(rs31actr4)    \
-    x(rs32actr4)    \
     x(rs1actr5)    \
-    x(rs2actr5)    \
-    x(rs3actr5)    \
-    x(rs4actr5)    \
-    x(rs5actr5)    \
-    x(rs6actr5)    \
-    x(rs7actr5)    \
-    x(rs8actr5)    \
-    x(rs9actr5)    \
-    x(rs10actr5)    \
-    x(rs11actr5)    \
-    x(rs12actr5)    \
-    x(rs13actr5)    \
-    x(rs14actr5)    \
-    x(rs15actr5)    \
-    x(rs16actr5)    \
-    x(rs17actr5)    \
-    x(rs18actr5)    \
-    x(rs19actr5)    \
-    x(rs20actr5)    \
-    x(rs21actr5)    \
-    x(rs22actr5)    \
-    x(rs23actr5)    \
-    x(rs24actr5)    \
-    x(rs25actr5)    \
-    x(rs26actr5)    \
-    x(rs27actr5)    \
-    x(rs28actr5)    \
-    x(rs29actr5)    \
-    x(rs30actr5)    \
-    x(rs31actr5)    \
-    x(rs32actr5)    \
     x(rs1actr6)    \
-    x(rs2actr6)    \
-    x(rs3actr6)    \
-    x(rs4actr6)    \
-    x(rs5actr6)    \
-    x(rs6actr6)    \
-    x(rs7actr6)    \
-    x(rs8actr6)    \
-    x(rs9actr6)    \
-    x(rs10actr6)    \
-    x(rs11actr6)    \
-    x(rs12actr6)    \
-    x(rs13actr6)    \
-    x(rs14actr6)    \
-    x(rs15actr6)    \
-    x(rs16actr6)    \
-    x(rs17actr6)    \
-    x(rs18actr6)    \
-    x(rs19actr6)    \
-    x(rs20actr6)    \
-    x(rs21actr6)    \
-    x(rs22actr6)    \
-    x(rs23actr6)    \
-    x(rs24actr6)    \
-    x(rs25actr6)    \
-    x(rs26actr6)    \
-    x(rs27actr6)    \
-    x(rs28actr6)    \
-    x(rs29actr6)    \
-    x(rs30actr6)    \
-    x(rs31actr6)    \
-    x(rs32actr6)    \
     x(rs1actr7)    \
-    x(rs2actr7)    \
-    x(rs3actr7)    \
-    x(rs4actr7)    \
-    x(rs5actr7)    \
-    x(rs6actr7)    \
-    x(rs7actr7)    \
-    x(rs8actr7)    \
-    x(rs9actr7)    \
-    x(rs10actr7)    \
-    x(rs11actr7)    \
-    x(rs12actr7)    \
-    x(rs13actr7)    \
-    x(rs14actr7)    \
-    x(rs15actr7)    \
-    x(rs16actr7)    \
-    x(rs17actr7)    \
-    x(rs18actr7)    \
-    x(rs19actr7)    \
-    x(rs20actr7)    \
-    x(rs21actr7)    \
-    x(rs22actr7)    \
-    x(rs23actr7)    \
-    x(rs24actr7)    \
-    x(rs25actr7)    \
-    x(rs26actr7)    \
-    x(rs27actr7)    \
-    x(rs28actr7)    \
-    x(rs29actr7)    \
-    x(rs30actr7)    \
-    x(rs31actr7)    \
-    x(rs32actr7)    \
     x(rs1actr8)    \
+    x(rs2actr1)    \
+    x(rs2actr2)    \
+    x(rs2actr3)    \
+    x(rs2actr4)    \
+    x(rs2actr5)    \
+    x(rs2actr6)    \
+    x(rs2actr7)    \
     x(rs2actr8)    \
+    x(rs3actr1)    \
+    x(rs3actr2)    \
+    x(rs3actr3)    \
+    x(rs3actr4)    \
+    x(rs3actr5)    \
+    x(rs3actr6)    \
+    x(rs3actr7)    \
     x(rs3actr8)    \
+    x(rs4actr1)    \
+    x(rs4actr2)    \
+    x(rs4actr3)    \
+    x(rs4actr4)    \
+    x(rs4actr5)    \
+    x(rs4actr6)    \
+    x(rs4actr7)    \
     x(rs4actr8)    \
+    x(rs5actr1)    \
+    x(rs5actr2)    \
+    x(rs5actr3)    \
+    x(rs5actr4)    \
+    x(rs5actr5)    \
+    x(rs5actr6)    \
+    x(rs5actr7)    \
     x(rs5actr8)    \
+    x(rs6actr1)    \
+    x(rs6actr2)    \
+    x(rs6actr3)    \
+    x(rs6actr4)    \
+    x(rs6actr5)    \
+    x(rs6actr6)    \
+    x(rs6actr7)    \
     x(rs6actr8)    \
+    x(rs7actr1)    \
+    x(rs7actr2)    \
+    x(rs7actr3)    \
+    x(rs7actr4)    \
+    x(rs7actr5)    \
+    x(rs7actr6)    \
+    x(rs7actr7)    \
     x(rs7actr8)    \
+    x(rs8actr1)    \
+    x(rs8actr2)    \
+    x(rs8actr3)    \
+    x(rs8actr4)    \
+    x(rs8actr5)    \
+    x(rs8actr6)    \
+    x(rs8actr7)    \
     x(rs8actr8)    \
+    x(rs9actr1)    \
+    x(rs9actr2)    \
+    x(rs9actr3)    \
+    x(rs9actr4)    \
+    x(rs9actr5)    \
+    x(rs9actr6)    \
+    x(rs9actr7)    \
     x(rs9actr8)    \
+    x(rs10actr1)    \
+    x(rs10actr2)    \
+    x(rs10actr3)    \
+    x(rs10actr4)    \
+    x(rs10actr5)    \
+    x(rs10actr6)    \
+    x(rs10actr7)    \
     x(rs10actr8)    \
+    x(rs11actr1)    \
+    x(rs11actr2)    \
+    x(rs11actr3)    \
+    x(rs11actr4)    \
+    x(rs11actr5)    \
+    x(rs11actr6)    \
+    x(rs11actr7)    \
     x(rs11actr8)    \
+    x(rs12actr1)    \
+    x(rs12actr2)    \
+    x(rs12actr3)    \
+    x(rs12actr4)    \
+    x(rs12actr5)    \
+    x(rs12actr6)    \
+    x(rs12actr7)    \
     x(rs12actr8)    \
+    x(rs13actr1)    \
+    x(rs13actr2)    \
+    x(rs13actr3)    \
+    x(rs13actr4)    \
+    x(rs13actr5)    \
+    x(rs13actr6)    \
+    x(rs13actr7)    \
     x(rs13actr8)    \
+    x(rs14actr1)    \
+    x(rs14actr2)    \
+    x(rs14actr3)    \
+    x(rs14actr4)    \
+    x(rs14actr5)    \
+    x(rs14actr6)    \
+    x(rs14actr7)    \
     x(rs14actr8)    \
+    x(rs15actr1)    \
+    x(rs15actr2)    \
+    x(rs15actr3)    \
+    x(rs15actr4)    \
+    x(rs15actr5)    \
+    x(rs15actr6)    \
+    x(rs15actr7)    \
     x(rs15actr8)    \
+    x(rs16actr1)    \
+    x(rs16actr2)    \
+    x(rs16actr3)    \
+    x(rs16actr4)    \
+    x(rs16actr5)    \
+    x(rs16actr6)    \
+    x(rs16actr7)    \
     x(rs16actr8)    \
+    x(rs17actr1)    \
+    x(rs17actr2)    \
+    x(rs17actr3)    \
+    x(rs17actr4)    \
+    x(rs17actr5)    \
+    x(rs17actr6)    \
+    x(rs17actr7)    \
     x(rs17actr8)    \
+    x(rs18actr1)    \
+    x(rs18actr2)    \
+    x(rs18actr3)    \
+    x(rs18actr4)    \
+    x(rs18actr5)    \
+    x(rs18actr6)    \
+    x(rs18actr7)    \
     x(rs18actr8)    \
+    x(rs19actr1)    \
+    x(rs19actr2)    \
+    x(rs19actr3)    \
+    x(rs19actr4)    \
+    x(rs19actr5)    \
+    x(rs19actr6)    \
+    x(rs19actr7)    \
     x(rs19actr8)    \
+    x(rs20actr1)    \
+    x(rs20actr2)    \
+    x(rs20actr3)    \
+    x(rs20actr4)    \
+    x(rs20actr5)    \
+    x(rs20actr6)    \
+    x(rs20actr7)    \
     x(rs20actr8)    \
+    x(rs21actr1)    \
+    x(rs21actr2)    \
+    x(rs21actr3)    \
+    x(rs21actr4)    \
+    x(rs21actr5)    \
+    x(rs21actr6)    \
+    x(rs21actr7)    \
     x(rs21actr8)    \
+    x(rs22actr1)    \
+    x(rs22actr2)    \
+    x(rs22actr3)    \
+    x(rs22actr4)    \
+    x(rs22actr5)    \
+    x(rs22actr6)    \
+    x(rs22actr7)    \
     x(rs22actr8)    \
+    x(rs23actr1)    \
+    x(rs23actr2)    \
+    x(rs23actr3)    \
+    x(rs23actr4)    \
+    x(rs23actr5)    \
+    x(rs23actr6)    \
+    x(rs23actr7)    \
     x(rs23actr8)    \
+    x(rs24actr1)    \
+    x(rs24actr2)    \
+    x(rs24actr3)    \
+    x(rs24actr4)    \
+    x(rs24actr5)    \
+    x(rs24actr6)    \
+    x(rs24actr7)    \
     x(rs24actr8)    \
+    x(rs25actr1)    \
+    x(rs25actr2)    \
+    x(rs25actr3)    \
+    x(rs25actr4)    \
+    x(rs25actr5)    \
+    x(rs25actr6)    \
+    x(rs25actr7)    \
     x(rs25actr8)    \
+    x(rs26actr1)    \
+    x(rs26actr2)    \
+    x(rs26actr3)    \
+    x(rs26actr4)    \
+    x(rs26actr5)    \
+    x(rs26actr6)    \
+    x(rs26actr7)    \
     x(rs26actr8)    \
+    x(rs27actr1)    \
+    x(rs27actr2)    \
+    x(rs27actr3)    \
+    x(rs27actr4)    \
+    x(rs27actr5)    \
+    x(rs27actr6)    \
+    x(rs27actr7)    \
     x(rs27actr8)    \
+    x(rs28actr1)    \
+    x(rs28actr2)    \
+    x(rs28actr3)    \
+    x(rs28actr4)    \
+    x(rs28actr5)    \
+    x(rs28actr6)    \
+    x(rs28actr7)    \
     x(rs28actr8)    \
+    x(rs29actr1)    \
+    x(rs29actr2)    \
+    x(rs29actr3)    \
+    x(rs29actr4)    \
+    x(rs29actr5)    \
+    x(rs29actr6)    \
+    x(rs29actr7)    \
     x(rs29actr8)    \
+    x(rs30actr1)    \
+    x(rs30actr2)    \
+    x(rs30actr3)    \
+    x(rs30actr4)    \
+    x(rs30actr5)    \
+    x(rs30actr6)    \
+    x(rs30actr7)    \
     x(rs30actr8)    \
+    x(rs31actr1)    \
+    x(rs31actr2)    \
+    x(rs31actr3)    \
+    x(rs31actr4)    \
+    x(rs31actr5)    \
+    x(rs31actr6)    \
+    x(rs31actr7)    \
     x(rs31actr8)    \
+    x(rs32actr1)    \
+    x(rs32actr2)    \
+    x(rs32actr3)    \
+    x(rs32actr4)    \
+    x(rs32actr5)    \
+    x(rs32actr6)    \
+    x(rs32actr7)    \
     x(rs32actr8)    \
     x(rsst)         \
     x(rs1st)        \
@@ -3506,21 +3506,43 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         case SSI_rs31actr8:
         case SSI_rs32actr8:                                                                        
         {
-            schedule_slot = (iIndex-SSI_rs1actr1)%32;
-            schedule_relay = (iIndex-SSI_rs1actr1)%8;
+            schedule_slot =  (iIndex-SSI_rs1actr1) / 8;
+            schedule_relay = (iIndex-SSI_rs1actr1) % 8;
+
+            //printf("row = %d bit = %d", schedule_slot, schedule_relay);
 
             if (config.rmtsw_relay_schedule_action_on[schedule_slot] & (1<<schedule_relay))
             {
-                printed = snprintf(pcInsert, iInsertLen, "ON");   
+                printed = snprintf(pcInsert, iInsertLen, "ON"); 
+                //printf("ON\n");  
             }
             else if (config.rmtsw_relay_schedule_action_off[schedule_slot] & (1<<schedule_relay))
             {
-                printed = snprintf(pcInsert, iInsertLen, "OFF"); 
+                printed = snprintf(pcInsert, iInsertLen, "OFF");
+                //printf("OFF\n"); 
             }
             else
             {
                 printed = snprintf(pcInsert, iInsertLen, "X");
+               // printf("X\n");
             }
+
+            // {
+            //     static int done =0;
+            //     int l;
+            //     int m;
+            //     if (!done)
+            //     {
+            //         for(l=1; l<=32; l++)
+            //         {
+            //             for(m=1; m<=8; m++)
+            //             {
+            //                 printf("x(rs%dactr%d)    \\\n", l, m);
+            //             }
+            //         }
+            //         done = 1;
+            //     }
+            // }
         }                     
         break;
         case SSI_rsst:
@@ -3657,20 +3679,25 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         {
             CLIP(web.rmtsw_relay_period_row, 0, NUM_ROWS(config.rmtsw_relay_schedule_start_mow));
 
-            schedule_relay = (iIndex-SSI_rsact10)%8;   // relay number
-            schedule_slot  = (iIndex-SSI_rsact10)%3;   // action number
+            schedule_relay = (iIndex-SSI_rsact10) / 3;   // relay number
+            schedule_slot  = (iIndex-SSI_rsact10) % 3;   // action number
+
+            printf("tag = %d row = %d relay = %d action = %d  OFF = %08b  ON = %08bn ", iIndex, web.rmtsw_relay_period_row, schedule_relay, schedule_slot, config.rmtsw_relay_schedule_action_off[web.rmtsw_relay_period_row], config.rmtsw_relay_schedule_action_on[web.rmtsw_relay_period_row]);
 
             if ((config.rmtsw_relay_schedule_action_on[web.rmtsw_relay_period_row] & (1<<schedule_relay)) && (schedule_slot == RMSW_ACTION_ON))
             {
-                printed = snprintf(pcInsert, iInsertLen, "selected");   
+                printed = snprintf(pcInsert, iInsertLen, "selected");
+                printf("relay %d ON\n", schedule_relay);   
             }
             else if ((config.rmtsw_relay_schedule_action_off[web.rmtsw_relay_period_row] & (1<<schedule_relay)) && (schedule_slot == RMSW_ACTION_OFF))
             {
-                printed = snprintf(pcInsert, iInsertLen, "selected");  
+                printed = snprintf(pcInsert, iInsertLen, "selected");
+                printf("relay %d OFF\n", schedule_relay);   
             }
             else
             {
                 printed = snprintf(pcInsert, iInsertLen, "");  
+                printf("relay %d blank assuming browser will pick first value X\n", schedule_relay);
             }
             // TODO: may need to select do nothing option if first option not automatically used by browser
         }

@@ -3310,7 +3310,7 @@ const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *p
 
                 sscanf(value, "%s", &value_string);  
 
-                printf("Got relay_default[%d] = %s\n", relay_num, value_string);
+                //printf("Got relay_default[%d] = %s\n", relay_num, value_string);
 
                 if (strcasecmp("Active", value_string) == 0)
                 {
@@ -3490,7 +3490,7 @@ const char * cgi_relay_schedule_change_handler(int iIndex, int iNumParams, char 
     int relay_number = 0;
     char action_number;  // 0 = do nothing, 1 = off, 2 = on
        
-    printf("Got request to change relay schedule\n");
+    printf("Got request to change relay schedule.  row initially = %d\n", web.rmtsw_relay_period_row);
 
     dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
@@ -3509,6 +3509,8 @@ const char * cgi_relay_schedule_change_handler(int iIndex, int iNumParams, char 
             { 
                 sscanf(value, "%d", &(web.rmtsw_relay_period_row));
                 CLIP(web.rmtsw_relay_period_row, 0, NUM_ROWS(config.rmtsw_relay_schedule_start_mow));  
+
+                printf("Parameter x used to set web.rmtsw_relay_period_row = %d\n", web.rmtsw_relay_period_row);
             } 
 
             // rsst -- relay start mow
@@ -3519,7 +3521,7 @@ const char * cgi_relay_schedule_change_handler(int iIndex, int iNumParams, char 
                 config.rmtsw_relay_schedule_start_mow[web.rmtsw_relay_period_row] = time_string_to_mow(value, 32, web.rmtsw_relay_day);
             } 
 
-            //rsar1 -- action for relay X 
+            //rsarx -- action for relay X 
             len = strlen(param);
             if ((len >= 5) && (param[0] == 'r') && (param[1] == 's') && (param[2] == 'a') && (param[3] == 'r') && (isdigit(param[4])))
             {
@@ -3546,10 +3548,12 @@ const char * cgi_relay_schedule_change_handler(int iIndex, int iNumParams, char 
                     break;
                 case RMSW_ACTION_OFF:
                     config.rmtsw_relay_schedule_action_off[web.rmtsw_relay_period_row] |= (1<<relay_number);
+                    config.rmtsw_relay_schedule_action_on[web.rmtsw_relay_period_row] &= ~(1<<relay_number);
                     printf("TURN OFF OFF=%08b\n", config.rmtsw_relay_schedule_action_off[web.rmtsw_relay_period_row]); 
                     break;
                 case RMSW_ACTION_ON:
                     config.rmtsw_relay_schedule_action_on[web.rmtsw_relay_period_row] |= (1<<relay_number);
+                    config.rmtsw_relay_schedule_action_off[web.rmtsw_relay_period_row] &= ~(1<<relay_number); 
                     printf("TURN ON ON=%08b\n", config.rmtsw_relay_schedule_action_on[web.rmtsw_relay_period_row]);
                     break;                                        
                 }
@@ -3640,7 +3644,7 @@ const char * cgi_relay_period_edit_handler(int iIndex, int iNumParams, char *pcP
        
 
 
-    printf("Got request to edit relay period. row = %d\n", web.rmtsw_relay_period_row);
+    printf("Got request to edit relay period. initially row = %d\n", web.rmtsw_relay_period_row);
 
     dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
@@ -3762,7 +3766,7 @@ const char * cgi_relay_period_add_handler(int iIndex, int iNumParams, char *pcPa
        
 
 
-    printf("Got request to add relay period. row = %d\n", web.rmtsw_relay_period_row);
+    printf("Got request to add relay period. initially row = %d\n", web.rmtsw_relay_period_row);
 
     dump_parameters(iIndex, iNumParams, pcParam, pcValue);
 
@@ -3772,6 +3776,8 @@ const char * cgi_relay_period_add_handler(int iIndex, int iNumParams, char *pcPa
         {
             web.rmtsw_relay_period_row = i;
             config.rmtsw_relay_schedule_start_mow[i] = web.rmtsw_relay_day*24*60;
+
+            printf("Found empty row for add.  row = %d\n", web.rmtsw_relay_period_row);
 
             next_page = "/rs_edit.shtml";
             break;

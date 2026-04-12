@@ -49,22 +49,7 @@ body {
 
 
 
-<body onload="toggleColumn()">
-<script>
-  function toggleColumn() {
-    const table = document.getElementById('climate_edit');
-    if (!table) return;
-    const rows = table.rows;
-    for (let columnIndex = 2; columnIndex < 10; columnIndex++) {
-      for (let i = 0; i < rows.length; i++) {
-          const cells = rows[i].cells;
-          if (cells.length > columnIndex) {
-              const cell = cells[columnIndex];
-          }
-      }
-    }
-  }
-</script>
+<body>
 
 <div class="sidenav">
   <a href="/rs_schedule.cgi?day=0">Sunday</a>     
@@ -100,62 +85,62 @@ body {
           <!--#tday-->
         </td>
         <td>
-          <input name="rsst" id="tspst" <!--#rsst--> value="<!--#rsst-->"/>  
+          <input name="rsst" id="rspst" <!--#rsst--> value="<!--#rsst-->"/>  
         </td>          
         <td>
-          <select id="rsar1" name="rsar1" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
-            <option value="0" <!--#rsact10-->>X</option>
-            <option value="1" <!--#rsact11-->>OFF</option> 
-            <option value="2" <!--#rsact12-->>ON</option>                                
+          <select id="rsar1" name="rsar1">
+            <option value="0" <!--#rsact10--> >X</option>
+            <option value="1" <!--#rsact11--> >OFF</option> 
+            <option value="2" <!--#rsact12--> >ON</option>                                
           </select>
         </td>   
         <td>
-          <select id="rsar2" name="rsar2" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
-            <option value="0" <!--#rsact20-->>X</option>
-            <option value="1" <!--#rsact21-->>OFF</option> 
-            <option value="2" <!--#rsact22-->>ON</option>                                
+          <select id="rsar2" name="rsar2">
+            <option value="0" <!--#rsact20--> >X</option>
+            <option value="1" <!--#rsact21--> >OFF</option> 
+            <option value="2" <!--#rsact22--> >ON</option>                                
           </select>
         </td> 
         <td>
-          <select id="rsar3" name="rsar3" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
-            <option value="0" <!--#rsact30-->>X</option>
-            <option value="1" <!--#rsact31-->>OFF</option> 
-            <option value="2" <!--#rsact32-->>ON</option>                                
+          <select id="rsar3" name="rsar3">
+            <option value="0" <!--#rsact30--> >X</option>
+            <option value="1" <!--#rsact31--> >OFF</option> 
+            <option value="2" <!--#rsact32--> >ON</option>                                
           </select>
         </td> 
         <td>
-          <select id="rsar4" name="rsar4" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
-            <option value="0" <!--#rsact40-->>X</option>
-            <option value="1" <!--#rsact41-->>OFF</option> 
-            <option value="2" <!--#rsact42-->>ON</option>                                
+          <select id="rsar4" name="rsar4">
+            <option value="0" <!--#rsact40--> >X</option>
+            <option value="1" <!--#rsact41--> >OFF</option> 
+            <option value="2" <!--#rsact42--> >ON</option>
           </select>
         </td> 
         <td>
-          <select id="rsar5" name="rsar5" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
-            <option value="0" <!--#rsact50-->>X</option>
-            <option value="1" <!--#rsact51-->>OFF</option> 
-            <option value="2" <!--#rsact52-->>ON</option>                                
+          <select id="rsar5" name="rsar5">
+            <option value="0" <!--#rsact50--> >X</option>
+            <option value="1" <!--#rsact51--> >OFF</option> 
+            <option value="2" <!--#rsact52--> >ON</option>
           </select>
         </td> 
         <td>
-          <select id="rsar6" name="rsar6" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
-            <option value="0" <!--#rsact60-->>X</option>
-            <option value="1" <!--#rsact61-->>OFF</option> 
-            <option value="2" <!--#rsact62-->>ON</option>                                
+          <select id="rsar6" name="rsar6">
+            <option value="0" <!--#rsact60--> >X</option>
+            <option value="1" <!--#rsact61--> >OFF</option> 
+            <option value="2" <!--#rsact62--> >ON</option>
           </select>
         </td> 
         <td>
-          <select id="rsar7" name="rsar7" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
-            <option value="0" <!--#rsact70-->>X</option>
-            <option value="1" <!--#rsact71-->>OFF</option> 
-            <option value="2" <!--#rsact72-->>ON</option>                                
+          <select id="rsar7" name="rsar7">
+            <option value="0" <!--#rsact70--> >X</option>
+            <option value="1" <!--#rsact71--> >OFF</option> 
+            <option value="2" <!--#rsact72--> >ON</option>
           </select>
         </td> 
         <td>
-          <select id="rsar8" name="rsar8" onchange="toggleColumn();" onfocus="this.selectedIndex = -1;">
-            <option value="0" <!--#rsact80-->>X</option>
-            <option value="1" <!--#rsact81-->>OFF</option> 
-            <option value="2" <!--#rsact82-->>ON</option>                                
+          <select id="rsar8" name="rsar8">
+            <option value="0" <!--#rsact80--> >X</option>
+            <option value="1" <!--#rsact81--> >OFF</option> 
+            <option value="2" <!--#rsact82--> >ON</option>
           </select>
         </td>                                                                
         <td>

@@ -58,8 +58,9 @@ body {
   <div class="sidenav">
     <a href="/network.shtml">Network</a>   
     <a href="/time.shtml">Time</a>
-    <a href="/rs_gpio.shtml">GPIO</a>   
-    <a href="/rs_names.shtml">Names</a>  
+    <a href="/rs_gpio.shtml">GPIO</a>
+    <a href="/rs_names.shtml">Names</a>      
+    <a href="/rs_schedule.shtml">Schedule</a>  
     <a href="/syslog.shtml">Syslog</a>    
     <a href="/units.shtml">Foibles</a>     
     <a href="/status.shtml">Status</a>   
