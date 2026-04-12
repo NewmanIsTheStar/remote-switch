@@ -65,7 +65,7 @@ body {
 
 
 <div class="main">
-  <h2><!--#tday--> Schedule</h2> 
+  <h2><!--#rsday--> Schedule</h2> 
   
   <table>
     <tr>

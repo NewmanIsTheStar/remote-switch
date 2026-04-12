@@ -82,7 +82,7 @@ body {
       </tr>
       <tr> 
         <td>
-          <!--#tday-->
+          <!--#rsday-->
         </td>
         <td>
           <input name="rsst" id="rspst" <!--#rsst--> value="<!--#rsst-->"/>  

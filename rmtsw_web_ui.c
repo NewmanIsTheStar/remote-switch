@@ -51,13 +51,63 @@ extern WEB_VARIABLES_T web;
 static int hvac_state_change_log_index = 0;
 static HVAC_STATE_CHANGE_LOG_T hvac_state_change_log[32];
 
-
 /*!
- * \brief Create thermostat schedule grid
+ * \brief Sort schedule
  * 
  * \return nothing
  */
-int make_schedule_grid(void)
+int rmtsw_sort_schedule(void)
+{
+    int i, j, x, y;
+    int key_mow = 0;
+    int key_action_on = 0;
+    int key_action_off = 0;
+
+    // check for duplicates and remove
+    CLIP(web.rmtsw_relay_period_row, 0, NUM_ROWS(config.rmtsw_relay_schedule_start_mow));
+    for(i=0; i<NUM_ROWS(config.rmtsw_relay_schedule_start_mow); i++)
+    {
+        if ((i != web.rmtsw_relay_period_row) &&
+            (config.rmtsw_relay_schedule_start_mow[i] >= 0) &&
+            (config.rmtsw_relay_schedule_start_mow[i] == config.rmtsw_relay_schedule_start_mow[web.rmtsw_relay_period_row]))
+        {
+            printf("Duplicate relay period deleted\n");
+            config.rmtsw_relay_schedule_start_mow[i] = -1;
+        }
+    }    
+
+    // sort the schedule into ascending order by mow
+    for(i=1; i<NUM_ROWS(config.setpoint_start_mow); i++)
+    {
+        key_mow = config.rmtsw_relay_schedule_start_mow[i];
+        key_action_on = config.rmtsw_relay_schedule_action_on[i];  
+        key_action_off = config.rmtsw_relay_schedule_action_off[i]; 
+
+        j = i - 1;
+
+        while ((j >= 0) && (config.rmtsw_relay_schedule_start_mow[j] > key_mow))
+        {
+            config.rmtsw_relay_schedule_start_mow[j+1] = config.rmtsw_relay_schedule_start_mow[j];
+            config.rmtsw_relay_schedule_action_on[j+1] = config.rmtsw_relay_schedule_action_on[j]; 
+            config.rmtsw_relay_schedule_action_off[j+1] = config.rmtsw_relay_schedule_action_off[j];           
+            j = j - 1;
+        }
+
+        config.rmtsw_relay_schedule_start_mow[j+1] = key_mow;
+        config.rmtsw_relay_schedule_action_on[j+1] = key_action_on; 
+        config.rmtsw_relay_schedule_action_off[j+1] = key_action_off; 
+            
+    }
+
+    return(0);
+}
+
+/*!
+ * \brief Create relay schedule grid
+ * 
+ * \return nothing
+ */
+int rmtsw_make_schedule_grid(void)
 {
     int i, j, x, y;
     int key_mow = 0;
@@ -183,6 +233,78 @@ int make_schedule_grid(void)
  * 
  * \return nothing
  */
+int rmtsw_copy_schedule(int source_day, int destination_day)
+{
+    int i, j, k, x, y;
+    int key_mow = 0;
+    int key_temp = 0;
+    //int mow;
+    int mod;
+    int setpointtemperaturex10 = 0;
+    bool found = false;
+    int populated_rows = 0;
+    int mow[NUM_ROWS(config.setpoint_start_mow)];
+    int temp[NUM_ROWS(config.setpoint_start_mow)];
+    int day = 0;
+
+    CLIP(source_day, 0, 6);
+
+    // erase existing entries on destination days
+    for(i=0; i<NUM_ROWS(config.rmtsw_relay_schedule_start_mow); i++)
+    {
+        if ((config.rmtsw_relay_schedule_start_mow[i] >= 0) && (config.rmtsw_relay_schedule_start_mow[i] < 60*24*7))
+        {
+            day = config.rmtsw_relay_schedule_start_mow[i]/(60*24);
+            CLIP(day, 0, 6);
+        }
+
+        // 0-6 = sunday to saturday, 7 = everyday, 8 = weekdays, 9 = weekend days
+        if ((day != source_day) && (!day_compare(day, destination_day)))                                                                      
+        {
+            // mark unused    
+            config.rmtsw_relay_schedule_start_mow[i] = -1;
+            config.rmtsw_relay_schedule_action_off[i] = 0;
+            config.rmtsw_relay_schedule_action_on[i] = 0;
+        }
+    }
+
+
+    for (day = 0; day < 7; day++)   // day to copy into -- loop needed for destinations like "every weekday"
+    {
+        for (i=0; i < NUM_ROWS(config.setpoint_start_mow); i++)  // scan existing schedule
+        {
+            if (rmtsw_schedule_row_valid(i))
+            {
+                j = config.rmtsw_relay_schedule_start_mow[i]/(60*24);
+                mod = config.rmtsw_relay_schedule_start_mow[i]%(60*24);
+                CLIP(j, 0, 6);
+                CLIP(mod, 0, 60*24);
+
+                // 0-6 = sunday to saturday, 7 = everyday, 8 = weekdays, 9 = weekend days
+                if ((day != source_day) && (j == source_day) && (!day_compare(day, destination_day)))
+                {
+                    k = rmtsw_get_free_schedule_row();
+
+                    if ((k >= 0) && (k < NUM_ROWS(config.rmtsw_relay_schedule_start_mow)))
+                    {
+                        // copy schedule
+                        config.rmtsw_relay_schedule_start_mow[k] = day*(60*24) + mod;
+                        config.rmtsw_relay_schedule_action_off[k] = config.rmtsw_relay_schedule_action_off[i];
+                        config.rmtsw_relay_schedule_action_on[k] = config.rmtsw_relay_schedule_action_on[i];
+                    }
+                }
+             }
+        }
+    }
+
+    return(0);
+}
+
+/*!
+ * \brief Copy daily schedule to other day(s)
+ * 
+ * \return nothing
+ */
 int copy_schedule(int source_day, int destination_day)
 {
     int i, j, k, x, y;
@@ -261,6 +383,7 @@ int copy_schedule(int source_day, int destination_day)
     return(0);
 }
 
+
 /*!
  * \brief check if day matchs
  * 
@@ -315,6 +438,28 @@ bool day_compare(int day1, int day2)
  * 
  * \return true if temperature schedule entry is valid
  */
+bool rmtsw_schedule_row_valid(int row)
+{
+    bool valid = true;
+
+
+    if ((row < 0) || (row > NUM_ROWS(config.rmtsw_relay_schedule_start_mow)))
+    {
+        valid = false;
+    }
+    else if ((config.rmtsw_relay_schedule_start_mow[row] < 0) ||  (config.rmtsw_relay_schedule_start_mow[row] > (60*24*7))) 
+    {
+        valid = false;
+    }
+  
+    return(valid);
+}
+
+/*!
+ * \brief check if temperature schedule row is valid
+ * 
+ * \return true if temperature schedule entry is valid
+ */
 bool schedule_row_valid(int row)
 {
     bool valid = true;
@@ -347,6 +492,31 @@ bool schedule_row_valid(int row)
     //printf("ROW %d mow = %d temp = %d %s\n", row, config.setpoint_start_mow[row], config.setpoint_temperaturex10[row], valid?"TRUE":"FALSE");
 
     return(valid);
+}
+
+
+/*!
+ * \brief Copy daily schedule to other day(s)
+ * 
+ * \return nothing
+ */
+int rmtsw_get_free_schedule_row(void)
+{
+    int i = 0;
+    bool found = false;
+
+    for(i=0; i<NUM_ROWS(config.rmtsw_relay_schedule_start_mow); i++)
+    {
+        if (!rmtsw_schedule_row_valid(i))
+        {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) i = -1;
+
+    return(i);
 }
 
 /*!

@@ -78,14 +78,17 @@ typedef struct
 
 // thermostat_task.c
 void rmtsw_task(__unused void *params);
-int make_schedule_grid(void);
+int rmtsw_make_schedule_grid(void);
 //int update_current_setpoints(void);
 int copy_schedule(int source_day, int destination_day);
+int rmtsw_copy_schedule(int source_day, int destination_day);
 
 
 // thermostat_web_ui.c
 int get_free_schedule_row(void);
+int rmtsw_get_free_schedule_row(void);
 bool schedule_row_valid(int row);
+bool rmtsw_schedule_row_valid(int row);
 bool day_compare(int day1, int day2);
 void hvac_log_state_change(THERMOSTAT_STATE_T new_state);
 bool schedule_setpoint_valid(long int temperaturex10, long int heating_temperaturex10, long int cooling_temperaturex10, int mow, THERMOSTAT_MODE_T mode);
@@ -96,6 +99,7 @@ bool schedule_mode_valid(int mode);
 int rmtsw_relay_initialize(void);
 uint32_t rmtsw_relay_control(void);
 int rmtsw_relay_gpio_enable(bool enable);
+int rmtsw_sort_schedule(void);
 
 
 

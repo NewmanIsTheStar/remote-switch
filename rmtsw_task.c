@@ -125,7 +125,7 @@ void rmtsw_task(void *params)
     rmtsw_sanitize_user_config();
 
     // create the schedule grid used in web inteface
-    make_schedule_grid();
+    rmtsw_make_schedule_grid();
      
     while (true)
     {
@@ -143,7 +143,7 @@ void rmtsw_task(void *params)
             SLEEP_MS(REMOTE_SWITCH_TASK_LOOP_DELAY); 
             
             // update web schedule
-            make_schedule_grid();
+            rmtsw_make_schedule_grid();
         }
         else
         {

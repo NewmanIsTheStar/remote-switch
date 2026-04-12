@@ -1124,7 +1124,9 @@ extern NON_VOL_VARIABLES_T config;
     x(rsact72)       \
     x(rsact80)       \
     x(rsact81)       \
-    x(rsact82)   
+    x(rsact82)       \
+    x(rsday)         \
+    x(rscpy)
     
 //enum used to index array of pointers to SSI string constants  e.g. index 0 is SSI_usurped
 enum ssi_index
@@ -3702,7 +3704,11 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             // TODO: may need to select do nothing option if first option not automatically used by browser
         }
         break;         
-
+        case SSI_rsday:
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", day_name(web.rmtsw_relay_day));            
+        }
+        break; 
 
         default:
         {
