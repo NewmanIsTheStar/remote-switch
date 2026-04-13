@@ -43,6 +43,9 @@
 #include "pluto.h"
 #include "tm1637.h"
 
+
+#define MINUTES_IN_WEEK (10080)
+
 typedef struct
 {
     TimerHandle_t timer_handle;
@@ -71,11 +74,13 @@ int hvac_timer_stop(CLIMATE_TIMER_INDEX_T timer_index);
 bool hvac_timer_expired(CLIMATE_TIMER_INDEX_T timer_index);
 void vTimerCallback(TimerHandle_t xTimer);
 int update_current_setpoints(THERMOSTAT_STATE_T last_active, long int temperaturex10, int temporary_set_point_offsetx10);
+int update_relay_scheduled_actions(void);
 long int sanitize_setpoint(long int setpoint);
 bool temporary_setpoint_offset_changed(void);
 int thermostat_relay_lockout_stop(void);
 
 // external variables
+extern uint32_t unix_time;
 extern NON_VOL_VARIABLES_T config;
 extern WEB_VARIABLES_T web;
 //extern long int temperaturex10;
@@ -86,27 +91,59 @@ static CLIMATE_TIMERS_T climate_timers[NUM_HVAC_TIMERS];     // set of timers us
 static bool relay_gpio_ok = false;                           // ok to use configured gpio
 
 /*!
- * \brief Open or close relay based on user request TODO: or schedule
+ * \brief Open or close relay based on user request or schedule
  * 
  * \return relay state where each bit represents one relay
  */
 uint32_t rmtsw_relay_control(void)
 {
-    static uint32_t relay_state = 0;
-    uint32_t new_state = 0;
+    static bool relay_state[8] = {0,0,0,0,0,0,0,0};
+    static uint32_t relay_timestamp[8] = {0,0,0,0,0,0,0,0};
+    static uint32_t relay_delay[8] = {1,1,1,1,1,1,1,1};    
     int i;
 
-    for(i=0; i< NUM_ROWS(config.rmtsw_relay_gpio); i++)
-    {
-        new_state |= (web.rmtsw_relay_active[i]?1:0)<<i;
-    }
+    // update desired states based on schedule
+    update_relay_scheduled_actions();
 
-    if (new_state != relay_state)
+    CLIP(config.rmtsw_relay_max, 0, 8);
+
+    // apply desired states
+    for(i=0; i< config.rmtsw_relay_max; i++)
     {
-        relay_state = new_state;
+        printf("desired[%d] = %d\n", i, web.rmtsw_relay_desired_state[i]);
+
+        if (web.rmtsw_relay_enabled[i])
+        {
+            // check if state change requested
+            if (relay_state[i] != web.rmtsw_relay_desired_state[i])
+            {
+                // check if sufficient time has passed since last state change
+                if ((unix_time - relay_timestamp[i]) >  relay_delay[i])
+                {
+                    gpio_put(config.rmtsw_relay_gpio[i], web.rmtsw_relay_desired_state[i]);
+                    relay_state[i] = web.rmtsw_relay_desired_state[i]; 
+                    relay_timestamp[i] = unix_time; 
+                    if (relay_delay[i] < 5*60)
+                    {
+                        relay_delay[i] *= 2; // double delay up to max of approx 5 minutes
+                    }  
+                }
+            }
+            else
+            {
+                // check if sufficient time has passed to reduce the delay
+                if ((unix_time - relay_timestamp[i]) >  (2*relay_delay[i]))
+                {
+                    if (relay_delay[i] > 1)
+                    {
+                        relay_delay[i] /= 2; // halve delay down to min of 1 second
+                    }                     
+                }
+            }          
+        }
     }
                                    
-    return(relay_state);
+    return(0);
 }
 
 /*!
@@ -320,4 +357,68 @@ int thermostat_relay_lockout_stop(void)
     hvac_timer_stop(HVAC_OVERSHOOT_TIMER);
       
     return(0);
+}
+
+/*!
+ * \brief  Update the relay state based on schedule
+ * 
+ * \return nothing
+ */
+int update_relay_scheduled_actions(void)
+{
+    int err = 0;
+    int i;
+    int mow = -1;
+    int candidate_start_mow = -1;
+    int candidate_off_bitmap = 0;
+    int candidate_on_bitmap = 0;
+    int candidate_delta = 0;
+    static int current_start_mow = 0;
+    int delta = 10079;  // number of minutes in a week
+
+    // get relay state according to schedule
+    if (!get_mow_local_tz(&mow))
+    {
+        for(i=0; i < NUM_ROWS(config.rmtsw_relay_schedule_start_mow); i++)
+        {
+            
+            if (rmtsw_schedule_row_valid(i))
+            {
+
+                candidate_delta = mow_future_delta(config.rmtsw_relay_schedule_start_mow[i], mow);
+
+                if (candidate_delta < delta)
+                {
+                    delta = candidate_delta;
+
+                    candidate_start_mow  = config.rmtsw_relay_schedule_start_mow[i];
+                    candidate_off_bitmap = config.rmtsw_relay_schedule_action_off[i];
+                    candidate_on_bitmap  = config.rmtsw_relay_schedule_action_on[i]; 
+                }
+            }
+        }
+    }
+
+    // check if we've entered a new schedule period
+    if ((candidate_start_mow >= 0) && (candidate_start_mow < MINUTES_IN_WEEK) && (current_start_mow != candidate_start_mow))
+    {
+        current_start_mow = candidate_start_mow;
+
+        // update relay states based on schedule
+        for(i=0; i<8; i++)
+        {
+            if (candidate_off_bitmap & (1<<i))
+            {
+                web.rmtsw_relay_desired_state[i] = false;
+            }
+            else if (candidate_on_bitmap & (1<<i))
+            {
+                web.rmtsw_relay_desired_state[i] = true;
+            }
+        }
+
+        printf("New scheduled relay state.  start mow = %d off = %08b on = %08b\n", candidate_start_mow, candidate_off_bitmap, candidate_on_bitmap);
+    }  
+
+    return(err);
 }

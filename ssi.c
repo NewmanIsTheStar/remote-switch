@@ -3188,9 +3188,13 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }
             else
             {
-                
-                printed =  snprintf(pcInsert, iInsertLen, "<td><input type=\"radio\" id=\"rs%d\" name=\"rsrly%d\" value=\"ON\" %s></td>", (iIndex-SSI_rsrly1)%8+1, (iIndex-SSI_rsrly1)%8+1, config.rmtsw_relay_default_active[(iIndex-SSI_rsrly1)%8]?"checked":"");
-                printed += snprintf(pcInsert+printed, iInsertLen-printed, "<td><label for=\"inact\">ON</label></td>");
+                // original shows config values                
+                // printed =  snprintf(pcInsert, iInsertLen, "<td><input type=\"radio\" id=\"rs%d\" name=\"rsrly%d\" value=\"ON\" %s></td>", (iIndex-SSI_rsrly1)%8+1, (iIndex-SSI_rsrly1)%8+1, config.rmtsw_relay_default_state[(iIndex-SSI_rsrly1)%8]?"checked":"");
+                // printed += snprintf(pcInsert+printed, iInsertLen-printed, "<td><label for=\"inact\">ON</label></td>");
+
+                // show live values -- conflating live state with configuration
+                printed =  snprintf(pcInsert, iInsertLen, "<td><input type=\"radio\" id=\"rs%d\" name=\"rsrly%d\" value=\"ON\" %s></td>", (iIndex-SSI_rsrly1)%8+1, (iIndex-SSI_rsrly1)%8+1, web.rmtsw_relay_desired_state[(iIndex-SSI_rsrly1)%8]?"checked":"");
+                printed += snprintf(pcInsert+printed, iInsertLen-printed, "<td><label for=\"inact\">ON</label></td>");                
             }                       
         }
         break; 
@@ -3203,14 +3207,18 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         case SSI_rsoff7:
         case SSI_rsoff8:
         {  
-            if ((iIndex-SSI_rsrly1)%8 >= config.rmtsw_relay_max)
+            if ((iIndex-SSI_rsoff1)%8 >= config.rmtsw_relay_max)
             {     
                 printed = snprintf(pcInsert, iInsertLen, "");
             }
             else
             {                
-                printed += snprintf(pcInsert, iInsertLen, "<td><input type=\"radio\" id=\"rs%d\" name=\"rsrly%d\" value=\"OFF\" %s></td>", (iIndex-SSI_rsrly1)%8+1, (iIndex-SSI_rsrly1)%8+1, config.rmtsw_relay_default_active[(iIndex-SSI_rsrly1)%8]?"":"checked");                
-                printed += snprintf(pcInsert+printed, iInsertLen-printed, "<td><label for=\"inact\">OFF</label></td>");
+                // printed += snprintf(pcInsert, iInsertLen, "<td><input type=\"radio\" id=\"rs%d\" name=\"rsrly%d\" value=\"OFF\" %s></td>", (iIndex-SSI_rsoff1)%8+1, (iIndex-SSI_rsoff1)%8+1, config.rmtsw_relay_default_state[(iIndex-SSI_rsoff1)%8]?"":"checked");                
+                // printed += snprintf(pcInsert+printed, iInsertLen-printed, "<td><label for=\"inact\">OFF</label></td>");
+
+                // show live values -- conflating live state with configuration
+                printed += snprintf(pcInsert, iInsertLen, "<td><input type=\"radio\" id=\"rs%d\" name=\"rsrly%d\" value=\"OFF\" %s></td>", (iIndex-SSI_rsoff1)%8+1, (iIndex-SSI_rsoff1)%8+1, web.rmtsw_relay_desired_state[(iIndex-SSI_rsoff1)%8]?"":"checked");                
+                printed += snprintf(pcInsert+printed, iInsertLen-printed, "<td><label for=\"inact\">OFF</label></td>");                
             }                       
         }
         break;         

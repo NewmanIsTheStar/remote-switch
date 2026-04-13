@@ -452,7 +452,7 @@ void config_v11_to_v12(void)
     for(i=0; i<NUM_ROWS(config.rmtsw_relay_normally_closed); i++)
     {
         config.rmtsw_relay_normally_closed[i] = 0;
-        config.rmtsw_relay_default_active[i]  = 0;
+        config.rmtsw_relay_default_state[i]  = false;
         config.rmtsw_relay_name[i][0] = 0;  
         config.rmtsw_relay_gpio[i] = -1;  
        

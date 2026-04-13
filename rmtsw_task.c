@@ -119,7 +119,7 @@ void rmtsw_task(void *params)
     printf("Remote Switch (rmtsw) task started!\n");
 
     // set initial status
-    memset(web.rmtsw_relay_active, 0, sizeof(web.rmtsw_relay_active));
+    memset(web.rmtsw_relay_desired_state, 0, sizeof(web.rmtsw_relay_desired_state));
 
     // check and correct critical user configuration settings
     rmtsw_sanitize_user_config();

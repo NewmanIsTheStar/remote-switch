@@ -164,7 +164,7 @@ typedef struct
     int rmtsw_enable;
     int rmtsw_relay_max;
     int rmtsw_relay_normally_closed[8];
-    int rmtsw_relay_default_active[8]; 
+    bool rmtsw_relay_default_state[8]; 
     char rmtsw_relay_name[8][16];  
     int rmtsw_relay_gpio[8];  
     int rmtsw_relay_schedule_action_on[32];

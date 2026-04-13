@@ -3312,13 +3312,15 @@ const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *p
 
                 //printf("Got relay_default[%d] = %s\n", relay_num, value_string);
 
-                if (strcasecmp("Active", value_string) == 0)
+                if (strcasecmp("ON", value_string) == 0)
                 {
-                    config.rmtsw_relay_default_active[relay_num] = 1;
+                    config.rmtsw_relay_default_state[relay_num] = true;
+                    web.rmtsw_relay_desired_state[relay_num] = true;
                 }
                 else
                 {
-                    config.rmtsw_relay_default_active[relay_num] = 0;
+                    config.rmtsw_relay_default_state[relay_num] = false;
+                    web.rmtsw_relay_desired_state[relay_num] = false;
                 }
             }   
         }

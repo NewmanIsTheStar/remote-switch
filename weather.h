@@ -225,7 +225,7 @@ typedef struct WEB_VARIABLES
   int thermostat_temperature_prediction;
   THERMOSTAT_MODE_T thermostat_effective_mode;
   int rmtsw_relay_enabled[8];
-  int rmtsw_relay_active[8];
+  bool rmtsw_relay_desired_state[8];
   int rmtsw_relay_day;              // used for rendering relay event web page -- making that page single user / session only
   int rmtsw_relay_period_row;
   int rmtsw_relay_day_events[7];
