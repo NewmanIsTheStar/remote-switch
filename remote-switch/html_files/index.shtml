@@ -2,21 +2,11 @@
 <html> 
 
 <head>
-    <title>Orientation Detection</title>
-    <link rel="icon" type="image/x-icon" href="/sprinkler.ico">    
+    <title>Remote Switch</title>
+    <link rel="icon" type="image/x-icon" href="/sprinkler.ico"> 
+    <meta http-equiv="refresh" content="0; url=<!--#home-->">   
 </head>
 
-<body onload="load_page();"></body>
-
-<script>
-    function load_page() {
-        if(screen.availHeight > screen.availWidth){
-            window.location = "/rs_relay_default.shtml"; 
-        }
-        else {
-            window.location = "/rs_relay_default.shtml";
-        }
-    }
-</script>
+<body></body>
 
 </html>

@@ -68,75 +68,75 @@ body {
   <table id="climate_edit">
     <form action="/rs_change.cgi" method="get" name="events">
       <tr>
-        <td><b>Day</b></td>
-        <td><b>Time</b></td>
-        <td><b>R1</b></td>
-        <td><b>R2</b></td>
-        <td><b>R3</b></td>  
-        <td><b>R4</b></td> 
-        <td><b>R5</b></td> 
-        <td><b>R6</b></td> 
-        <td><b>R7</b></td> 
-        <td><b>R8</b></td>                       
-        <td>&nbsp;</td>
+        <td <!--#rscvz1--> ><b>Day</b></td>
+        <td <!--#rscvz2--> ><b>Time</b></td>
+        <td <!--#rscvz3--> ><b>R1</b></td>
+        <td <!--#rscvz4--> ><b>R2</b></td>
+        <td <!--#rscvz5--> ><b>R3</b></td>  
+        <td <!--#rscvz6--> ><b>R4</b></td> 
+        <td <!--#rscvz7--> ><b>R5</b></td> 
+        <td <!--#rscvz8--> ><b>R6</b></td> 
+        <td <!--#rscvz9--> ><b>R7</b></td> 
+        <td <!--#rscvz10--> ><b>R8</b></td>                       
+        <td <!--#rscvz11--> >&nbsp;</td>
       </tr>
       <tr> 
-        <td>
+        <td <!--#rscvz1--> >
           <!--#rsday-->
         </td>
-        <td>
+        <td <!--#rscvz2--> >
           <input name="rsst" id="rspst" <!--#rsst--> value="<!--#rsst-->"/>  
         </td>          
-        <td>
+        <td <!--#rscvz3--> >
           <select id="rsar1" name="rsar1">
             <option value="0" <!--#rsact10--> >X</option>
             <option value="1" <!--#rsact11--> >OFF</option> 
             <option value="2" <!--#rsact12--> >ON</option>                                
           </select>
         </td>   
-        <td>
+        <td <!--#rscvz4--> >
           <select id="rsar2" name="rsar2">
             <option value="0" <!--#rsact20--> >X</option>
             <option value="1" <!--#rsact21--> >OFF</option> 
             <option value="2" <!--#rsact22--> >ON</option>                                
           </select>
         </td> 
-        <td>
+        <td <!--#rscvz5--> >
           <select id="rsar3" name="rsar3">
             <option value="0" <!--#rsact30--> >X</option>
             <option value="1" <!--#rsact31--> >OFF</option> 
             <option value="2" <!--#rsact32--> >ON</option>                                
           </select>
         </td> 
-        <td>
+        <td <!--#rscvz6--> >
           <select id="rsar4" name="rsar4">
             <option value="0" <!--#rsact40--> >X</option>
             <option value="1" <!--#rsact41--> >OFF</option> 
             <option value="2" <!--#rsact42--> >ON</option>
           </select>
         </td> 
-        <td>
+        <td <!--#rscvz7--> >
           <select id="rsar5" name="rsar5">
             <option value="0" <!--#rsact50--> >X</option>
             <option value="1" <!--#rsact51--> >OFF</option> 
             <option value="2" <!--#rsact52--> >ON</option>
           </select>
         </td> 
-        <td>
+        <td <!--#rscvz8--> >
           <select id="rsar6" name="rsar6">
             <option value="0" <!--#rsact60--> >X</option>
             <option value="1" <!--#rsact61--> >OFF</option> 
             <option value="2" <!--#rsact62--> >ON</option>
           </select>
         </td> 
-        <td>
+        <td <!--#rscvz9--> >
           <select id="rsar7" name="rsar7">
             <option value="0" <!--#rsact70--> >X</option>
             <option value="1" <!--#rsact71--> >OFF</option> 
             <option value="2" <!--#rsact72--> >ON</option>
           </select>
         </td> 
-        <td>
+        <td <!--#rscvz10--> >
           <select id="rsar8" name="rsar8">
             <option value="0" <!--#rsact80--> >X</option>
             <option value="1" <!--#rsact81--> >OFF</option> 

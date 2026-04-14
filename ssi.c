@@ -1126,7 +1126,19 @@ extern NON_VOL_VARIABLES_T config;
     x(rsact81)       \
     x(rsact82)       \
     x(rsday)         \
-    x(rscpy)
+    x(rscpy)         \
+    x(rscvz1)        \
+    x(rscvz2)        \
+    x(rscvz3)        \
+    x(rscvz4)        \
+    x(rscvz5)        \
+    x(rscvz6)        \
+    x(rscvz7)        \
+    x(rscvz8)        \
+    x(rscvz9)        \
+    x(rscvz10)       \
+    x(rscvz11)       \
+    x(home)    
     
 //enum used to index array of pointers to SSI string constants  e.g. index 0 is SSI_usurped
 enum ssi_index
@@ -3717,6 +3729,40 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             printed = snprintf(pcInsert, iInsertLen, "%s", day_name(web.rmtsw_relay_day));            
         }
         break; 
+        case SSI_rscvz1:
+        case SSI_rscvz2:        
+        case SSI_rscvz3:        
+        case SSI_rscvz4:        
+        case SSI_rscvz5:        
+        case SSI_rscvz6:        
+        case SSI_rscvz7:        
+        case SSI_rscvz8:        
+        case SSI_rscvz9:        
+        case SSI_rscvz10: 
+        case SSI_rscvz11:                       
+        {
+            if ((iIndex-SSI_rscvz1) < (config.rmtsw_relay_max + 2))
+            {
+                printed = snprintf(pcInsert, iInsertLen, "");
+            }
+            else
+            {
+                printed = snprintf(pcInsert, iInsertLen, "style=\"visibility:collapse;\""); 
+            }                       
+        }
+        break;
+        case SSI_home:
+        {
+            if (web.access_point_mode)
+            {
+                printed = snprintf(pcInsert, iInsertLen, "/network.shtml");
+            }
+            else
+            {
+                printed = snprintf(pcInsert, iInsertLen, "/rs_relay_default.shtml");
+            }                       
+        }
+        break;                  
 
         default:
         {

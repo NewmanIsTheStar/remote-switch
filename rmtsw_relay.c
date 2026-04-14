@@ -110,7 +110,7 @@ uint32_t rmtsw_relay_control(void)
     // apply desired states
     for(i=0; i< config.rmtsw_relay_max; i++)
     {
-        printf("desired[%d] = %d\n", i, web.rmtsw_relay_desired_state[i]);
+        //printf("desired[%d] = %d\n", i, web.rmtsw_relay_desired_state[i]);
 
         if (web.rmtsw_relay_enabled[i])
         {

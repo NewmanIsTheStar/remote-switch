@@ -59,7 +59,6 @@ body {
   <a href="/rs_schedule.cgi?day=4">Thursday</a>
   <a href="/rs_schedule.cgi?day=5">Friday</a>
   <a href="/rs_schedule.cgi?day=6">Saturday</a>
-  <a href="/network.shtml">&#9881 Settings</a>  
   <p><a href="/index.shtml">&#8629</a></p>       
 </div>
 
@@ -69,431 +68,431 @@ body {
   
   <table>
     <tr>
-      <td><b>Time</b></td>
-      <td><b>R1</b></td>
-      <td><b>R2</b></td>
-      <td><b>R3</b></td>
-      <td><b>R4</b></td>
-      <td><b>R5</b></td>
-      <td><b>R6</b></td>
-      <td><b>R7</b></td>
-      <td><b>R8</b></td>                  
+      <td <!--#rscvz2--> ><b>Time</b></td>
+      <td <!--#rscvz3--> ><b>R1</b></td>
+      <td <!--#rscvz4--> ><b>R2</b></td>
+      <td <!--#rscvz5--> ><b>R3</b></td>
+      <td <!--#rscvz6--> ><b>R4</b></td>
+      <td <!--#rscvz7--> ><b>R5</b></td>
+      <td <!--#rscvz8--> ><b>R6</b></td>
+      <td <!--#rscvz9--> ><b>R7</b></td>
+      <td <!--#rscvz10--> ><b>R8</b></td>                  
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
     <tr <!--#rs1vz-->>
-      <td><!--#rs1st--></td>      
-      <td><!--#rs1actr1--></td>
-      <td><!--#rs1actr2--></td>
-      <td><!--#rs1actr3--></td>
-      <td><!--#rs1actr4--></td>
-      <td><!--#rs1actr5--></td>
-      <td><!--#rs1actr6--></td>
-      <td><!--#rs1actr7--></td>
-      <td><!--#rs1actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs1st--></td>      
+      <td <!--#rscvz3--> ><!--#rs1actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs1actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs1actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs1actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs1actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs1actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs1actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs1actr8--></td>
       <td><a href="/rs_edit.cgi?x=0">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=0"> <button>Delete</button></a></td>
     </tr>
     <tr <!--#rs2vz-->>
-      <td><!--#rs2st--></td>      
-      <td><!--#rs2actr1--></td>
-      <td><!--#rs2actr2--></td>
-      <td><!--#rs2actr3--></td>
-      <td><!--#rs2actr4--></td>
-      <td><!--#rs2actr5--></td>
-      <td><!--#rs2actr6--></td>
-      <td><!--#rs2actr7--></td>
-      <td><!--#rs2actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs2st--></td>      
+      <td <!--#rscvz3--> ><!--#rs2actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs2actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs2actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs2actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs2actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs2actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs2actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs2actr8--></td>
       <td><a href="/rs_edit.cgi?x=1">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=1"> <button>Delete</button></a></td>
     </tr>    
     <tr <!--#rs3vz-->>
-      <td><!--#rs3st--></td>      
-      <td><!--#rs3actr1--></td>
-      <td><!--#rs3actr2--></td>
-      <td><!--#rs3actr3--></td>
-      <td><!--#rs3actr4--></td>
-      <td><!--#rs3actr5--></td>
-      <td><!--#rs3actr6--></td>
-      <td><!--#rs3actr7--></td>
-      <td><!--#rs3actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs3st--></td>      
+      <td <!--#rscvz3--> ><!--#rs3actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs3actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs3actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs3actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs3actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs3actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs3actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs3actr8--></td>
       <td><a href="/rs_edit.cgi?x=2">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=2"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs4vz-->>
-      <td><!--#rs4st--></td>      
-      <td><!--#rs4actr1--></td>
-      <td><!--#rs4actr2--></td>
-      <td><!--#rs4actr3--></td>
-      <td><!--#rs4actr4--></td>
-      <td><!--#rs4actr5--></td>
-      <td><!--#rs4actr6--></td>
-      <td><!--#rs4actr7--></td>
-      <td><!--#rs4actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs4st--></td>      
+      <td <!--#rscvz3--> ><!--#rs4actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs4actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs4actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs4actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs4actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs4actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs4actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs4actr8--></td>
       <td><a href="/rs_edit.cgi?x=3">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=3"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs5vz-->>
-      <td><!--#rs5st--></td>      
-      <td><!--#rs5actr1--></td>
-      <td><!--#rs5actr2--></td>
-      <td><!--#rs5actr3--></td>
-      <td><!--#rs5actr4--></td>
-      <td><!--#rs5actr5--></td>
-      <td><!--#rs5actr6--></td>
-      <td><!--#rs5actr7--></td>
-      <td><!--#rs5actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs5st--></td>      
+      <td <!--#rscvz3--> ><!--#rs5actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs5actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs5actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs5actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs5actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs5actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs5actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs5actr8--></td>
       <td><a href="/rs_edit.cgi?x=4">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=4"> <button>Delete</button></a></td>
     </tr>   
     <tr <!--#rs6vz-->>
-      <td><!--#rs6st--></td>      
-      <td><!--#rs6actr1--></td>
-      <td><!--#rs6actr2--></td>
-      <td><!--#rs6actr3--></td>
-      <td><!--#rs6actr4--></td>
-      <td><!--#rs6actr5--></td>
-      <td><!--#rs6actr6--></td>
-      <td><!--#rs6actr7--></td>
-      <td><!--#rs6actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs6st--></td>      
+      <td <!--#rscvz3--> ><!--#rs6actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs6actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs6actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs6actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs6actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs6actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs6actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs6actr8--></td>
       <td><a href="/rs_edit.cgi?x=5">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=5"> <button>Delete</button></a></td>
     </tr>
     <tr <!--#rs7vz-->>
-      <td><!--#rs7st--></td>      
-      <td><!--#rs7actr1--></td>
-      <td><!--#rs7actr2--></td>
-      <td><!--#rs7actr3--></td>
-      <td><!--#rs7actr4--></td>
-      <td><!--#rs7actr5--></td>
-      <td><!--#rs7actr6--></td>
-      <td><!--#rs7actr7--></td>
-      <td><!--#rs7actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs7st--></td>      
+      <td <!--#rscvz3--> ><!--#rs7actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs7actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs7actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs7actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs7actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs7actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs7actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs7actr8--></td>
       <td><a href="/rs_edit.cgi?x=6">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=6"> <button>Delete</button></a></td>
     </tr>    
     <tr <!--#rs8vz-->>
-      <td><!--#rs8st--></td>      
-      <td><!--#rs8actr1--></td>
-      <td><!--#rs8actr2--></td>
-      <td><!--#rs8actr3--></td>
-      <td><!--#rs8actr4--></td>
-      <td><!--#rs1actr5--></td>
-      <td><!--#rs8actr6--></td>
-      <td><!--#rs8actr7--></td>
-      <td><!--#rs8actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs8st--></td>      
+      <td <!--#rscvz3--> ><!--#rs8actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs8actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs8actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs8actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs1actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs8actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs8actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs8actr8--></td>
       <td><a href="/rs_edit.cgi?x=7">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=7"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs9vz-->>
-      <td><!--#rs9st--></td>      
-      <td><!--#rs9actr1--></td>
-      <td><!--#rs9actr2--></td>
-      <td><!--#rs9actr3--></td>
-      <td><!--#rs9actr4--></td>
-      <td><!--#rs9actr5--></td>
-      <td><!--#rs9actr6--></td>
-      <td><!--#rs9actr7--></td>
-      <td><!--#rs9actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs9st--></td>      
+      <td <!--#rscvz3--> ><!--#rs9actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs9actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs9actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs9actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs9actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs9actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs9actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs9actr8--></td>
       <td><a href="/rs_edit.cgi?x=8">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=8"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs10vz-->>
-      <td><!--#rs10st--></td>      
-      <td><!--#rs10actr1--></td>
-      <td><!--#rs10actr2--></td>
-      <td><!--#rs10actr3--></td>
-      <td><!--#rs10actr4--></td>
-      <td><!--#rs10actr5--></td>
-      <td><!--#rs10actr6--></td>
-      <td><!--#rs10actr7--></td>
-      <td><!--#rs10actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs10st--></td>      
+      <td <!--#rscvz3--> ><!--#rs10actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs10actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs10actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs10actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs10actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs10actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs10actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs10actr8--></td>
       <td><a href="/rs_edit.cgi?x=9">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=9"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs11vz-->>
-      <td><!--#rs11st--></td>      
-      <td><!--#rs11actr1--></td>
-      <td><!--#rs11actr2--></td>
-      <td><!--#rs11actr3--></td>
-      <td><!--#rs11actr4--></td>
-      <td><!--#rs11actr5--></td>
-      <td><!--#rs11actr6--></td>
-      <td><!--#rs11actr7--></td>
-      <td><!--#rs11actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs11st--></td>      
+      <td <!--#rscvz3--> ><!--#rs11actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs11actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs11actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs11actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs11actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs11actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs11actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs11actr8--></td>
       <td><a href="/rs_edit.cgi?x=10">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=10"> <button>Delete</button></a></td>
     </tr>
     <tr <!--#rs12vz-->>
-      <td><!--#rs12st--></td>      
-      <td><!--#rs12actr1--></td>
-      <td><!--#rs12actr2--></td>
-      <td><!--#rs12actr3--></td>
-      <td><!--#rs12actr4--></td>
-      <td><!--#rs12actr5--></td>
-      <td><!--#rs12actr6--></td>
-      <td><!--#rs12actr7--></td>
-      <td><!--#rs12actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs12st--></td>      
+      <td <!--#rscvz3--> ><!--#rs12actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs12actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs12actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs12actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs12actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs12actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs12actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs12actr8--></td>
       <td><a href="/rs_edit.cgi?x=11">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=11"> <button>Delete</button></a></td>
     </tr>    
     <tr <!--#rs13vz-->>
-      <td><!--#rs12st--></td>      
-      <td><!--#rs12actr1--></td>
-      <td><!--#rs12actr2--></td>
-      <td><!--#rs12actr3--></td>
-      <td><!--#rs12actr4--></td>
-      <td><!--#rs12actr5--></td>
-      <td><!--#rs12actr6--></td>
-      <td><!--#rs12actr7--></td>
-      <td><!--#rs12actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs12st--></td>      
+      <td <!--#rscvz3--> ><!--#rs12actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs12actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs12actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs12actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs12actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs12actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs12actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs12actr8--></td>
       <td><a href="/rs_edit.cgi?x=12">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=12"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs14vz-->>
-      <td><!--#rs13st--></td>      
-      <td><!--#rs13actr1--></td>
-      <td><!--#rs13actr2--></td>
-      <td><!--#rs13actr3--></td>
-      <td><!--#rs13actr4--></td>
-      <td><!--#rs13actr5--></td>
-      <td><!--#rs13actr6--></td>
-      <td><!--#rs13actr7--></td>
-      <td><!--#rs13actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs13st--></td>      
+      <td <!--#rscvz3--> ><!--#rs13actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs13actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs13actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs13actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs13actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs13actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs13actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs13actr8--></td>
       <td><a href="/rs_edit.cgi?x=13">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=13"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs15vz-->>
-      <td><!--#rs15st--></td>      
-      <td><!--#rs15actr1--></td>
-      <td><!--#rs15actr2--></td>
-      <td><!--#rs15actr3--></td>
-      <td><!--#rs15actr4--></td>
-      <td><!--#rs15actr5--></td>
-      <td><!--#rs15actr6--></td>
-      <td><!--#rs15actr7--></td>
-      <td><!--#rs15actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs15st--></td>      
+      <td <!--#rscvz3--> ><!--#rs15actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs15actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs15actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs15actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs15actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs15actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs15actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs15actr8--></td>
       <td><a href="/rs_edit.cgi?x=14">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=14"> <button>Delete</button></a></td>
     </tr>   
     <tr <!--#rs16vz-->>
-      <td><!--#rs16st--></td>      
-      <td><!--#rs16actr1--></td>
-      <td><!--#rs16actr2--></td>
-      <td><!--#rs16actr3--></td>
-      <td><!--#rs16actr4--></td>
-      <td><!--#rs16actr5--></td>
-      <td><!--#rs16actr6--></td>
-      <td><!--#rs16actr7--></td>
-      <td><!--#rs16actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs16st--></td>      
+      <td <!--#rscvz3--> ><!--#rs16actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs16actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs16actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs16actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs16actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs16actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs16actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs16actr8--></td>
       <td><a href="/rs_edit.cgi?x=15">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=15"> <button>Delete</button></a></td>
     </tr>
     <tr <!--#rs17vz-->>
-      <td><!--#rs17st--></td>      
-      <td><!--#rs17actr1--></td>
-      <td><!--#rs17actr2--></td>
-      <td><!--#rs17actr3--></td>
-      <td><!--#rs17actr4--></td>
-      <td><!--#rs17actr5--></td>
-      <td><!--#rs17actr6--></td>
-      <td><!--#rs17actr7--></td>
-      <td><!--#rs17actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs17st--></td>      
+      <td <!--#rscvz3--> ><!--#rs17actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs17actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs17actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs17actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs17actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs17actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs17actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs17actr8--></td>
       <td><a href="/rs_edit.cgi?x=16">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=16"> <button>Delete</button></a></td>
     </tr>    
     <tr <!--#rs18vz-->>
-      <td><!--#rs18st--></td>      
-      <td><!--#rs18actr1--></td>
-      <td><!--#rs18actr2--></td>
-      <td><!--#rs18actr3--></td>
-      <td><!--#rs18actr4--></td>
-      <td><!--#rs18actr5--></td>
-      <td><!--#rs18actr6--></td>
-      <td><!--#rs18actr7--></td>
-      <td><!--#rs18actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs18st--></td>      
+      <td <!--#rscvz3--> ><!--#rs18actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs18actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs18actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs18actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs18actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs18actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs18actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs18actr8--></td>
       <td><a href="/rs_edit.cgi?x=17">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=17"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs19vz-->>
-      <td><!--#rs19st--></td>      
-      <td><!--#rs19actr1--></td>
-      <td><!--#rs19actr2--></td>
-      <td><!--#rs19actr3--></td>
-      <td><!--#rs19actr4--></td>
-      <td><!--#rs19actr5--></td>
-      <td><!--#rs19actr6--></td>
-      <td><!--#rs19actr7--></td>
-      <td><!--#rs19actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs19st--></td>      
+      <td <!--#rscvz3--> ><!--#rs19actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs19actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs19actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs19actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs19actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs19actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs19actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs19actr8--></td>
       <td><a href="/rs_edit.cgi?x=18">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=18"> <button>Delete</button></a></td>
     </tr>   
     <tr <!--#rs20vz-->>
-      <td><!--#rs20st--></td>      
-      <td><!--#rs20actr1--></td>
-      <td><!--#rs20actr2--></td>
-      <td><!--#rs20actr3--></td>
-      <td><!--#rs20actr4--></td>
-      <td><!--#rs20actr5--></td>
-      <td><!--#rs20actr6--></td>
-      <td><!--#rs20actr7--></td>
-      <td><!--#rs20actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs20st--></td>      
+      <td <!--#rscvz3--> ><!--#rs20actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs20actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs20actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs20actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs20actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs20actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs20actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs20actr8--></td>
       <td><a href="/rs_edit.cgi?x=19">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=19"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs21vz-->>
-      <td><!--#rs21st--></td>      
-      <td><!--#rs21actr1--></td>
-      <td><!--#rs21actr2--></td>
-      <td><!--#rs21actr3--></td>
-      <td><!--#rs21actr4--></td>
-      <td><!--#rs21actr5--></td>
-      <td><!--#rs21actr6--></td>
-      <td><!--#rs21actr7--></td>
-      <td><!--#rs21actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs21st--></td>      
+      <td <!--#rscvz3--> ><!--#rs21actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs21actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs21actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs21actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs21actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs21actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs21actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs21actr8--></td>
       <td><a href="/rs_edit.cgi?x=20">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=20"> <button>Delete</button></a></td>
     </tr>
     <tr <!--#rs22vz-->>
-      <td><!--#rs22st--></td>      
-      <td><!--#rs22actr1--></td>
-      <td><!--#rs22actr2--></td>
-      <td><!--#rs22actr3--></td>
-      <td><!--#rs22actr4--></td>
-      <td><!--#rs22actr5--></td>
-      <td><!--#rs22actr6--></td>
-      <td><!--#rs22actr7--></td>
-      <td><!--#rs22actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs22st--></td>      
+      <td <!--#rscvz3--> ><!--#rs22actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs22actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs22actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs22actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs22actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs22actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs22actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs22actr8--></td>
       <td><a href="/rs_edit.cgi?x=21">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=21"> <button>Delete</button></a></td>
     </tr>    
     <tr <!--#rs23vz-->>
-      <td><!--#rs23st--></td>      
-      <td><!--#rs23actr1--></td>
-      <td><!--#rs23actr2--></td>
-      <td><!--#rs23actr3--></td>
-      <td><!--#rs23actr4--></td>
-      <td><!--#rs23actr5--></td>
-      <td><!--#rs23actr6--></td>
-      <td><!--#rs23actr7--></td>
-      <td><!--#rs23actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs23st--></td>      
+      <td <!--#rscvz3--> ><!--#rs23actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs23actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs23actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs23actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs23actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs23actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs23actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs23actr8--></td>
       <td><a href="/rs_edit.cgi?x=22">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=22"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs24vz-->>
-      <td><!--#rs24st--></td>      
-      <td><!--#rs24actr1--></td>
-      <td><!--#rs24actr2--></td>
-      <td><!--#rs24actr3--></td>
-      <td><!--#rs24actr4--></td>
-      <td><!--#rs24actr5--></td>
-      <td><!--#rs24actr6--></td>
-      <td><!--#rs24actr7--></td>
-      <td><!--#rs24actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs24st--></td>      
+      <td <!--#rscvz3--> ><!--#rs24actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs24actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs24actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs24actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs24actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs24actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs24actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs24actr8--></td>
       <td><a href="/rs_edit.cgi?x=23">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=23"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs25vz-->>
-      <td><!--#rs25st--></td>      
-      <td><!--#rs25actr1--></td>
-      <td><!--#rs25actr2--></td>
-      <td><!--#rs25actr3--></td>
-      <td><!--#rs25actr4--></td>
-      <td><!--#rs25actr5--></td>
-      <td><!--#rs25actr6--></td>
-      <td><!--#rs25actr7--></td>
-      <td><!--#rs25actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs25st--></td>      
+      <td <!--#rscvz3--> ><!--#rs25actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs25actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs25actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs25actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs25actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs25actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs25actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs25actr8--></td>
       <td><a href="/rs_edit.cgi?x=24">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=24"> <button>Delete</button></a></td>
     </tr>   
     <tr <!--#rs26vz-->>
-      <td><!--#rs26st--></td>      
-      <td><!--#rs26actr1--></td>
-      <td><!--#rs26actr2--></td>
-      <td><!--#rs26actr3--></td>
-      <td><!--#rs26actr4--></td>
-      <td><!--#rs26actr5--></td>
-      <td><!--#rs26actr6--></td>
-      <td><!--#rs26actr7--></td>
-      <td><!--#rs26actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs26st--></td>      
+      <td <!--#rscvz3--> ><!--#rs26actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs26actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs26actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs26actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs26actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs26actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs26actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs26actr8--></td>
       <td><a href="/rs_edit.cgi?x=25">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=25"> <button>Delete</button></a></td>
     </tr>
     <tr <!--#rs27vz-->>
-      <td><!--#rs27st--></td>      
-      <td><!--#rs27actr1--></td>
-      <td><!--#rs27actr2--></td>
-      <td><!--#rs27actr3--></td>
-      <td><!--#rs27actr4--></td>
-      <td><!--#rs27actr5--></td>
-      <td><!--#rs27actr6--></td>
-      <td><!--#rs27actr7--></td>
-      <td><!--#rs27actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs27st--></td>      
+      <td <!--#rscvz3--> ><!--#rs27actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs27actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs27actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs27actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs27actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs27actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs27actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs27actr8--></td>
       <td><a href="/rs_edit.cgi?x=26">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=26"> <button>Delete</button></a></td>
     </tr>    
     <tr <!--#rs28vz-->>
-      <td><!--#rs28st--></td>      
-      <td><!--#rs28actr1--></td>
-      <td><!--#rs28actr2--></td>
-      <td><!--#rs28actr3--></td>
-      <td><!--#rs28actr4--></td>
-      <td><!--#rs28actr5--></td>
-      <td><!--#rs28actr6--></td>
-      <td><!--#rs28actr7--></td>
-      <td><!--#rs28actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs28st--></td>      
+      <td <!--#rscvz3--> ><!--#rs28actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs28actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs28actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs28actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs28actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs28actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs28actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs28actr8--></td>
       <td><a href="/rs_edit.cgi?x=27">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=27"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs29vz-->>
-      <td><!--#rs29st--></td>      
-      <td><!--#rs29actr1--></td>
-      <td><!--#rs29actr2--></td>
-      <td><!--#rs29actr3--></td>
-      <td><!--#rs29actr4--></td>
-      <td><!--#rs29actr5--></td>
-      <td><!--#rs29actr6--></td>
-      <td><!--#rs29actr7--></td>
-      <td><!--#rs29actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs29st--></td>      
+      <td <!--#rscvz3--> ><!--#rs29actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs29actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs29actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs29actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs29actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs29actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs29actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs29actr8--></td>
       <td><a href="/rs_edit.cgi?x=28">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=28"> <button>Delete</button></a></td>
     </tr>                  
    <tr <!--#rs30vz-->>
-      <td><!--#rs30st--></td>      
-      <td><!--#rs30actr1--></td>
-      <td><!--#rs30actr2--></td>
-      <td><!--#rs30actr3--></td>
-      <td><!--#rs30actr4--></td>
-      <td><!--#rs30actr5--></td>
-      <td><!--#rs30actr6--></td>
-      <td><!--#rs30actr7--></td>
-      <td><!--#rs30actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs30st--></td>      
+      <td <!--#rscvz3--> ><!--#rs30actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs30actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs30actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs30actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs30actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs30actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs30actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs30actr8--></td>
       <td><a href="/rs_edit.cgi?x=29">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=29"> <button>Delete</button></a></td>
     </tr>  
     <tr <!--#rs31vz-->>
-      <td><!--#rs31st--></td>      
-      <td><!--#rs31actr1--></td>
-      <td><!--#rs31actr2--></td>
-      <td><!--#rs31actr3--></td>
-      <td><!--#rs31actr4--></td>
-      <td><!--#rs31actr5--></td>
-      <td><!--#rs31actr6--></td>
-      <td><!--#rs31actr7--></td>
-      <td><!--#rs31actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs31st--></td>      
+      <td <!--#rscvz3--> ><!--#rs31actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs31actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs31actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs31actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs31actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs31actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs31actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs31actr8--></td>
       <td><a href="/rs_edit.cgi?x=30">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=30"> <button>Delete</button></a></td>
     </tr>
     <tr <!--#rs32vz-->>
-      <td><!--#rs32st--></td>      
-      <td><!--#rs32actr1--></td>
-      <td><!--#rs32actr2--></td>
-      <td><!--#rs32actr3--></td>
-      <td><!--#rs32actr4--></td>
-      <td><!--#rs32actr5--></td>
-      <td><!--#rs32actr6--></td>
-      <td><!--#rs32actr7--></td>
-      <td><!--#rs32actr8--></td>
+      <td <!--#rscvz2--> ><!--#rs32st--></td>      
+      <td <!--#rscvz3--> ><!--#rs32actr1--></td>
+      <td <!--#rscvz4--> ><!--#rs32actr2--></td>
+      <td <!--#rscvz5--> ><!--#rs32actr3--></td>
+      <td <!--#rscvz6--> ><!--#rs32actr4--></td>
+      <td <!--#rscvz7--> ><!--#rs32actr5--></td>
+      <td <!--#rscvz8--> ><!--#rs32actr6--></td>
+      <td <!--#rscvz9--> ><!--#rs32actr7--></td>
+      <td <!--#rscvz10--> ><!--#rs32actr8--></td>
       <td><a href="/rs_edit.cgi?x=31">   <button>Edit</button></a></td>
       <td><a href="/rs_delete.cgi?x=31"> <button>Delete</button></a></td>
     </tr> 

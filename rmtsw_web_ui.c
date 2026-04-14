@@ -77,7 +77,7 @@ int rmtsw_sort_schedule(void)
     }    
 
     // sort the schedule into ascending order by mow
-    for(i=1; i<NUM_ROWS(config.setpoint_start_mow); i++)
+    for(i=1; i<NUM_ROWS(config.rmtsw_relay_schedule_start_mow); i++)
     {
         key_mow = config.rmtsw_relay_schedule_start_mow[i];
         key_action_on = config.rmtsw_relay_schedule_action_on[i];  
