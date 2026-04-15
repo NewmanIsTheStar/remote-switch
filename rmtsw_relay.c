@@ -30,7 +30,7 @@
 #include "stdarg.h"
 
 #include "watchdog.h"
-#include "weather.h"
+//#include "weather.h"
 #include "rmtsw.h"
 #include "flash.h"
 #include "calendar.h"
@@ -202,67 +202,6 @@ bool hvac_timer_expired(CLIMATE_TIMER_INDEX_T timer_index)
     return(expired);
 }
 
-/*!
- * \brief Set HVAC Control GPIOs
- * 
- * \return 
- */
-int set_hvac_gpio(THERMOSTAT_STATE_T thermostat_state)
-{
-    int err = 0;
-
-    // set the gpio output connected to the relay    
-    //if (config.thermostat_enable && gpio_valid(config.heating_gpio) && gpio_valid(config.cooling_gpio) && gpio_valid(config.fan_gpio))
-    if (config.thermostat_enable && relay_gpio_ok)
-    {
-        switch (thermostat_state)
-        {
-        case EXCESSIVE_OVERSHOOT:        
-        case HEATING_AND_COOLING_OFF:
-            printf("Heating, Cooling and Fan off\n");
-            gpio_put(config.heating_gpio, 0);
-            gpio_put(config.cooling_gpio, 0);
-            gpio_put(config.fan_gpio, 0);   
-            break;
-        case HEATING_IN_PROGRESS:
-            printf("Heating on, Cooling and Fan off\n");
-            gpio_put(config.heating_gpio, 1);
-            gpio_put(config.cooling_gpio, 0);
-            gpio_put(config.fan_gpio, 0);      // when heating the thermostat is *not* responsible for turning on the fan (to avoid blowing cold air)
-            break;
-        case COOLING_IN_PROGRESS:
-            printf("Cooling on, Fan on and Heating off\n");
-            gpio_put(config.heating_gpio, 0);
-            gpio_put(config.cooling_gpio, 1);
-            gpio_put(config.fan_gpio, 1);      // it is conventional for the thermostat to turn on the fan when cooling
-            break;                 
-        case FAN_ONLY_IN_PROGRESS:
-            printf("Fan on, Cooling and Heating off\n");
-            gpio_put(config.heating_gpio, 0);
-            gpio_put(config.cooling_gpio, 0);
-            gpio_put(config.fan_gpio, 1);      // air circulation only
-            break;                    
-        case DUCT_PURGE:
-            printf("Heating and Cooling off and Fan on\n");
-            gpio_put(config.heating_gpio, 0);
-            gpio_put(config.cooling_gpio, 0);
-            gpio_put(config.fan_gpio, 1);   
-            break; 
-        default:
-        case THERMOSTAT_LOCKOUT:
-            err = 1;
-            break;         
-        }
-
-        hvac_log_state_change(thermostat_state);
-    }
-    else
-    {
-        err = 1;
-    } 
-
-    return(err);
-}
 
 /*!
  * \brief Timer callback
@@ -293,14 +232,6 @@ int rmtsw_relay_initialize(void)
 
     if (relay_gpio_ok)
     {
-        // // create hvac timers
-        // for (i=0; i < NUM_HVAC_TIMERS; i++)
-        // {
-        //     climate_timers[i].timer_handle = xTimerCreate("Timer", 1000, pdFALSE, (void *)i, vTimerCallback);  
-
-        //     //printf("Created timer with handle = %p\n", climate_timers[i].timer_handle);
-        // }
-
         CLIP(config.rmtsw_relay_max, 0, 8);
 
         for(i=0; i<config.rmtsw_relay_max; i++)

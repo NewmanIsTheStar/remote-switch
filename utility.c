@@ -26,7 +26,7 @@
 
 #include "stdarg.h"
 
-#include "weather.h"
+//#include "weather.h"
 #include "flash.h"
 #include "calendar.h"
 #include "utility.h"
@@ -278,6 +278,7 @@ int check_watchdog_reboot(void)
     return(0);
 }
 
+#ifdef USURPER
 /*!
  * \brief Send a govee command
  *
@@ -392,6 +393,7 @@ int send_govee_command(int on, int red, int green, int blue)
     return(sent_bytes);
 }
 
+
 /*!
  * \brief Send a govee command
  *
@@ -427,6 +429,7 @@ int check_govee_state(void)
 
     return(sent_bytes);
 }
+#endif
 
 /*!
  * \brief Create a TCP or UDP socket to receive multicast packets. NB Receive only!

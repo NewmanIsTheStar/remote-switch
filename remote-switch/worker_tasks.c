@@ -15,26 +15,21 @@
 #include "worker_tasks.h"
 
 // include header for each worker task here
-#include "weather.h"
-#include "led_strip.h"
-#include "message.h"
+//#include "weather.h"
+// #include "led_strip.h"
+// #include "message.h"
 #include "rmtsw.h"
-#include "hc_task.h"
-#include "discovery_task.h"
+// #include "hc_task.h"
+// #include "discovery_task.h"
 
 // worker tasks to launch and monitor
 WORKER_TASK_T worker_tasks[] =
 {
-    //  function        name                    stack   priority        
-#ifdef INCORPORATE_THERMOSTAT    
-    {   thermostat_task,"Thermostat Task",      8096,   5},       
-#endif
+    //  function        name                       stack   priority        
+    {   rmtsw_task,     "Remote Switch Task",      8096,   5},       
 
-#ifdef INCORPORATE_REMOTE_SWITCH    
-    {   rmtsw_task,"Remote Switch Task",      8096,   5},       
-#endif
 
-    // end of table
+    //  end of table
     {   NULL,           NULL,               0,      0,         }
 };
 

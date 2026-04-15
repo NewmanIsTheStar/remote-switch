@@ -42,7 +42,7 @@
 
 #include "stdarg.h"
 
-#include "weather.h"
+//#include "weather.h"
 #include "cgi.h"
 #include "ssi.h"
 #include "flash.h"

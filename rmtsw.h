@@ -78,7 +78,6 @@ typedef struct
 
 // thermostat_task.c
 void rmtsw_task(__unused void *params);
-int rmtsw_make_schedule_grid(void);
 //int update_current_setpoints(void);
 int copy_schedule(int source_day, int destination_day);
 int rmtsw_copy_schedule(int source_day, int destination_day);

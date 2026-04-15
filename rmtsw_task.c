@@ -30,7 +30,7 @@
 #include "stdarg.h"
 
 #include "watchdog.h"
-#include "weather.h"
+//#include "weather.h"
 #include "rmtsw.h"
 #include "flash.h"
 #include "calendar.h"
@@ -123,9 +123,6 @@ void rmtsw_task(void *params)
 
     // check and correct critical user configuration settings
     rmtsw_sanitize_user_config();
-
-    // create the schedule grid used in web inteface
-    rmtsw_make_schedule_grid();
      
     while (true)
     {
@@ -141,9 +138,6 @@ void rmtsw_task(void *params)
             rmtsw_relay_control();
 
             SLEEP_MS(REMOTE_SWITCH_TASK_LOOP_DELAY); 
-            
-            // update web schedule
-            rmtsw_make_schedule_grid();
         }
         else
         {
@@ -168,44 +162,46 @@ int rmtsw_validate_gpio_set(void)
     int j;
     bool relay_gpio_valid = false;
 
-    // check for gpio conflicts
-    if (!gpio_conflict(config.rmtsw_relay_gpio, NUM_ROWS(config.rmtsw_relay_gpio)))
+    if (config.rmtsw_relay_max >= 1)
     {
-        // no conflicts
-        i = NUM_ROWS(config.rmtsw_relay_gpio);
-    }
-    else
-    {
-        // conflicts found
-        relay_gpio_valid = false;
-
-        // search for first conflict
-        for(i=0; i<NUM_ROWS(config.rmtsw_relay_gpio); i++)
+        // check for gpio conflicts
+        if (!gpio_conflict(config.rmtsw_relay_gpio, config.rmtsw_relay_max))
         {
-            if (gpio_conflict(config.rmtsw_relay_gpio, i))
-            {
-                break;
-            }
-        }
-    }
-
-    // enable all gpios prior to first conflict
-    for (j=0; j<NUM_ROWS(config.rmtsw_relay_gpio); j++)
-    {
-        if ((j < i) && gpio_valid(config.rmtsw_relay_gpio[j]))
-        {
-            web.rmtsw_relay_enabled[j] = 1;
-            relay_gpio_valid = true;            
+            // no conflicts
+            i = NUM_ROWS(config.rmtsw_relay_gpio);
         }
         else
         {
-            web.rmtsw_relay_enabled[j] = 0;
+            // conflicts found
+            relay_gpio_valid = false;
+
+            // search for first conflict
+            for(i=0; i<config.rmtsw_relay_max; i++)
+            {
+                if (gpio_conflict(config.rmtsw_relay_gpio, i))
+                {
+                    break;
+                }
+            }
         }
-    } 
 
-    // tell subsystems they can use gpio
-    rmtsw_relay_gpio_enable(relay_gpio_valid);
+        // enable all gpios prior to first conflict
+        for (j=0; j<config.rmtsw_relay_max; j++)
+        {
+            if ((j < i) && gpio_valid(config.rmtsw_relay_gpio[j]))
+            {
+                web.rmtsw_relay_enabled[j] = 1;
+                relay_gpio_valid = true;            
+            }
+            else
+            {
+                web.rmtsw_relay_enabled[j] = 0;
+            }
+        } 
 
+        // tell subsystems they can use gpio
+        rmtsw_relay_gpio_enable(relay_gpio_valid);
+    }
     return(0);
 }
 

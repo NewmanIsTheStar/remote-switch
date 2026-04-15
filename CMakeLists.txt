@@ -87,7 +87,8 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/generated/tm1637.py
 
 set(common_source_files
         pluto.c
-        weather.c
+        web.c
+        # weather.c
         flash.c
         ssi.c
         cgi.c
@@ -96,10 +97,10 @@ set(common_source_files
         config.c
         dhcpserver.c
         dnsserver.c
-        led_strip.c
+        # led_strip.c
         sdk_callback.c
         watchdog.c
-        message.c
+        # message.c
         udp.c
         wifi.c
         usurper_ping.c
