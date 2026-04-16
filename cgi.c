@@ -3336,16 +3336,7 @@ const char * cgi_rs_gpio_handler(int iIndex, int iNumParams, char *pcParam[], ch
                 {
                     config.rmtsw_relay_max = new_zone_max;
                 }                           
-            }
-
-            sscanf(param, "rs%dnme", &gpio_zone);
-            if ((gpio_zone >= 1) && (gpio_zone <= 8))
-            {
-                // adjust to zero base
-                gpio_zone--;
-
-                STRNCPY(config.rmtsw_relay_name[gpio_zone], value, sizeof(config.rmtsw_relay_name[gpio_zone]));
-            }             
+            }           
         }
         i++;
     }   
