@@ -101,15 +101,15 @@ body {
           </tr>    
           <tr>
               <td><label for="wind" <!--#rs6viz--> >Relay 6 GPIO:</label></td>
-              <td><input type="text" is="rs5gpio" name="rs5gpio" value="<!--#rs5gpio-->" <!--#rs6viz--> ></td>
+              <td><input type="text" is="rs6gpio" name="rs6gpio" value="<!--#rs6gpio-->" <!--#rs6viz--> ></td>
           </tr>  
           <tr>
               <td><label for="wind" <!--#rs7viz--> >Relay 7 GPIO:</label></td>
-              <td><input type="text" is="rs5gpio" name="rs5gpio" value="<!--#rs5gpio-->" <!--#rs7viz--> ></td>
+              <td><input type="text" is="rs7gpio" name="rs7gpio" value="<!--#rs7gpio-->" <!--#rs7viz--> ></td>
           </tr>  
           <tr>
               <td><label for="wind" <!--#rs8viz--> >Relay 8 GPIO:</label></td>
-              <td><input type="text" is="rs5gpio" name="rs5gpio" value="<!--#rs5gpio-->" <!--#rs8viz--> ></td>
+              <td><input type="text" is="rs8gpio" name="rs8gpio" value="<!--#rs8gpio-->" <!--#rs8viz--> ></td>
           </tr>                                                                       
           <tr>            
               <td>
