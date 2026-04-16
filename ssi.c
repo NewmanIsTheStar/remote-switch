@@ -3243,14 +3243,14 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         case SSI_rs7nme:
         case SSI_rs8nme:
         {  
-            if ((iIndex-SSI_rsrly1)%8 >= config.rmtsw_relay_max)
+            if ((iIndex-SSI_rs1nme)%8 >= config.rmtsw_relay_max)
             {     
                 printed = snprintf(pcInsert, iInsertLen, "");
             }
             else
             {                
                 //printed = snprintf(pcInsert, iInsertLen, "<td><label for=\"rlynme\">&emsp;%s</label></td>", config.rmtsw_relay_name[(iIndex-SSI_rsrly1)%8]);
-                printed = snprintf(pcInsert, iInsertLen, "%s", config.rmtsw_relay_name[(iIndex-SSI_rsrly1)%8]);                
+                printed = snprintf(pcInsert, iInsertLen, "%s", config.rmtsw_relay_name[(iIndex-SSI_rs1nme)%8]);                
             }                       
         }
         break;  

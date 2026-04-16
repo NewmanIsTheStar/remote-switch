@@ -89,33 +89,6 @@ void rmtsw_task(void *params)
         config.rmtsw_enable = 1;
     }
 
-    // TEST TEST TEST
-    strcpy(config.rmtsw_relay_name[0], "Home Assistant");
-    strcpy(config.rmtsw_relay_name[1], "PiVPN");
-    strcpy(config.rmtsw_relay_name[2], "Cluster0");    
-    strcpy(config.rmtsw_relay_name[3], "Cluster1");    
-    strcpy(config.rmtsw_relay_name[4], "Cluster2");    
-    strcpy(config.rmtsw_relay_name[5], "Cluster3");    
-    strcpy(config.rmtsw_relay_name[6], "Cluster4");    
-    strcpy(config.rmtsw_relay_name[7], "Cluster5");  
-    config.rmtsw_relay_max = 8;
-    
-    //TODO :- move to config upgrade code
-    for(i=0; i<NUM_ROWS(config.rmtsw_relay_schedule_start_mow); i++)
-    {
-        config.rmtsw_relay_schedule_start_mow[i] = -1;
-        config.rmtsw_relay_schedule_action_off[i] = 0;
-        config.rmtsw_relay_schedule_action_on[i] = 0;
-    }
-
-    // TEST TES TEST
-    for(i=0; i<NUM_ROWS(config.rmtsw_relay_schedule_start_mow); i++)
-    {
-        config.rmtsw_relay_schedule_start_mow[i] = i;
-        config.rmtsw_relay_schedule_action_off[i] = 129;
-        config.rmtsw_relay_schedule_action_on[i] = 32;
-    }    
-
     printf("Remote Switch (rmtsw) task started!\n");
 
     // set initial status

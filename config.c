@@ -27,6 +27,7 @@
 //#define DISABLE_CONFIG_WRITE [1]
 
 int config_validate(void);
+void config_system_variable_initialize(void);
 void config_blank_to_v1(void);
 
 
@@ -54,50 +55,24 @@ void config_blank_to_v1(void)
 
     // personality
     config.personality = REMOTE_SWITCH;
-
-    // network
-    STRNCPY(config.wifi_country, "World Wide", sizeof(config.wifi_country));      
-    config.wifi_ssid[0] = 0;
-    config.wifi_password[0] = 0;
-    config.dhcp_enable = 1;
-    config.ip_address[0] = 0;
-    config.network_mask[0] = 0;
-    
-    // time
-    config.timezone_offset = -6*60;
-    config.daylightsaving_enable = 1;  
-    STRNCPY(config.daylightsaving_start, "Second Sunday in March", sizeof(config.daylightsaving_start));
-    STRNCPY(config.daylightsaving_end, "First Sunday in November", sizeof(config.daylightsaving_end));
-    STRNCPY(config.time_server[0], "pool.ntp.org", sizeof(config.time_server[0]));
-    STRNCPY(config.time_server[1], "time.google.com", sizeof(config.time_server[1]));
-    STRNCPY(config.time_server[2], "time.facebook.com", sizeof(config.time_server[2]));
-    STRNCPY(config.time_server[3], "time.windows.com", sizeof(config.time_server[3]));        
-
-    // syslog
-    STRNCPY(config.syslog_server_ip, "spud.badnet", sizeof(config.syslog_server_ip));         
-    config.syslog_enable = 0;
-    
-    // foibles
-    config.use_archaic_units = 1;
-    config.use_simplified_english = 1;
-    config.use_monday_as_week_start = 0;
-
-    // gpio
-    for(i=0; i<NUM_ROWS(config.gpio_default); i++)
-    {
-        config.gpio_default[i] = GP_UNINITIALIZED;
-    }  
     
     // remote switch
+    config.rmtsw_enable = 1;
     config.rmtsw_relay_max = NUM_ROWS(config.rmtsw_relay_normally_closed);
     for(i=0; i<NUM_ROWS(config.rmtsw_relay_normally_closed); i++)
     {
-        config.rmtsw_relay_normally_closed[i] = 0;
+        config.rmtsw_relay_normally_closed[i] = false;
         config.rmtsw_relay_default_state[i]  = false;
         config.rmtsw_relay_name[i][0] = 0;  
         config.rmtsw_relay_gpio[i] = -1;  
        
-    }    
+    }  
+    for(i=0; i<NUM_ROWS(config.rmtsw_relay_schedule_start_mow); i++)
+    {
+        config.rmtsw_relay_schedule_start_mow[i] = -1;
+        config.rmtsw_relay_schedule_action_off[i] = 0;
+        config.rmtsw_relay_schedule_action_on[i] = 0;
+    }      
 }
 
 
@@ -187,8 +162,8 @@ int config_write(void)
         if (memcmp((char *)(XIP_BASE +  FLASH_TARGET_OFFSET), ((char *)&config), sizeof(config)))
         {
             printf("Writing configuration to flash\n");
-            flash_write_non_volatile_variables();
-        }
+            flash_write_non_volatile_variables(); 
+        }           
         else
         {
             printf("Refusing to write configuration to flash as RAM and flash copies are identical\n");
@@ -199,9 +174,6 @@ int config_write(void)
         {
             // config was updated by another task after we computed the crc and possibly before we wrote to flash
             printf("Config update occured while writing to flash, will retry\n");
-
-            // printf("config.crc = %d\n", config.crc);
-            // printf("calculated crc = %d\n", crc_buffer((uint8_t *)&config, offsetof(NON_VOL_VARIABLES_T, crc)));
             
             config_changed();
 
@@ -272,6 +244,24 @@ int config_validate(void)
         }
     }
 
+    // check if we did not find valid config version
+    if (latest_valid_config_version == 0)
+    {
+        // no valid config --- try to fallback to system config only
+        crc_from_flash = *((uint16_t *)((uint8_t *)&config + offsetof(NON_VOL_VARIABLES_T, system_crc)));
+        calculated_crc = crc_buffer((uint8_t *)&config, offsetof(NON_VOL_VARIABLES_T, system_crc));
+
+        if(crc_from_flash == calculated_crc)
+        {
+            printf("Found valid system configuration variables (e.g. network config).  These will be preserved.\n");
+        }
+        else
+        {
+            printf("Initializing system configuration variables\n");
+            config_system_variable_initialize();
+        }
+    }
+
 #ifndef DISABLE_CONFIG_UPGRADE    
     // upgrade configuration sequentially to latest version 
     for(i=0; i < NUM_ROWS(config_info); i++)
@@ -314,4 +304,52 @@ int config_timeserver_failsafe(void)
     }
 
     return(0);
+}
+
+/*!
+ * \brief Set default values for system variables
+ * 
+ * \return 0 on success, -1 on error
+ */
+void config_system_variable_initialize(void)
+{
+    int i;
+
+    printf("Initializing configuration system variables\n");
+
+    // personality
+    config.personality = NO_PERSONALITY;
+
+    // network
+    STRNCPY(config.wifi_country, "World Wide", sizeof(config.wifi_country));      
+    config.wifi_ssid[0] = 0;
+    config.wifi_password[0] = 0;
+    config.dhcp_enable = 1;
+    config.ip_address[0] = 0;
+    config.network_mask[0] = 0;
+    
+    // time
+    config.timezone_offset = -6*60;
+    config.daylightsaving_enable = 1;  
+    STRNCPY(config.daylightsaving_start, "Second Sunday in March", sizeof(config.daylightsaving_start));
+    STRNCPY(config.daylightsaving_end, "First Sunday in November", sizeof(config.daylightsaving_end));
+    STRNCPY(config.time_server[0], "pool.ntp.org", sizeof(config.time_server[0]));
+    STRNCPY(config.time_server[1], "time.google.com", sizeof(config.time_server[1]));
+    STRNCPY(config.time_server[2], "time.facebook.com", sizeof(config.time_server[2]));
+    STRNCPY(config.time_server[3], "time.windows.com", sizeof(config.time_server[3]));        
+
+    // syslog
+    STRNCPY(config.syslog_server_ip, "spud.badnet", sizeof(config.syslog_server_ip));         
+    config.syslog_enable = 0;
+    
+    // foibles
+    config.use_archaic_units = 1;
+    config.use_simplified_english = 1;
+    config.use_monday_as_week_start = 0;
+
+    // gpio
+    for(i=0; i<NUM_ROWS(config.gpio_default); i++)
+    {
+        config.gpio_default[i] = GP_UNINITIALIZED;
+    }       
 }

@@ -239,8 +239,11 @@ int rmtsw_relay_initialize(void)
             if (web.rmtsw_relay_enabled[i])
             {
                 gpio_init(config.rmtsw_relay_gpio[i]);
-                gpio_put(config.rmtsw_relay_gpio[i], 0);
-                gpio_set_dir(config.rmtsw_relay_gpio[i], true);                
+                gpio_put(config.rmtsw_relay_gpio[i], config.rmtsw_relay_default_state[i]);
+                gpio_set_dir(config.rmtsw_relay_gpio[i], true);
+                
+                // set web ui desired state to match initial relay state
+                web.rmtsw_relay_desired_state[i] = config.rmtsw_relay_default_state[i];
             }
         }        
         err = 0;
