@@ -64,7 +64,7 @@ body {
 
 <div class="main">
 
-  <h2>Network Settings</h2>  
+  <h2>Network Settings</h2>
   <label for="dsstart">WiFi Country is <!--#wific--></label><br>
   <a href="/wifi_country.shtml" style="text-decoration:none"><small>Change WiFi Country &#8594</small></a><br><br>
   <table>
@@ -105,7 +105,8 @@ body {
   <label>WiFi changes will be applied after reboot</label>
   <form action="/reboot.cgi" method="get">
       <input type="submit" value="Reboot" name="reboot" id="reboot" style="font-size: 25px;">
-  </form>   
+  </form> 
+    <br><p style="font-size: x-small;">MAC <!--#macadr--></p><br>  
 </div>
    
 </body>

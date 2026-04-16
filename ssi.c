@@ -1138,7 +1138,8 @@ extern NON_VOL_VARIABLES_T config;
     x(rscvz9)        \
     x(rscvz10)       \
     x(rscvz11)       \
-    x(home)    
+    x(home)          \
+    x(macadr)
     
 //enum used to index array of pointers to SSI string constants  e.g. index 0 is SSI_usurped
 enum ssi_index
@@ -3763,6 +3764,11 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }                       
         }
         break;                  
+        case SSI_macadr:                        
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%02x:%02x:%02x:%02x:%02x:%02x\n", web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);              
+        }
+        break; 
 
         default:
         {

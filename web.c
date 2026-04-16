@@ -51,6 +51,9 @@ int init_web_variables(void)
     // zero web structure
     memset(&web, 0, sizeof(web));
 
+    cyw43_hal_get_mac(CYW43_ITF_STA, web.mac);
+    printf("MAC Address: %02x:%02x:%02x:%02x:%02x:%02x\n", web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);
+
     web.access_point_mode = 0;
     
     web.outside_temperature = 0;
