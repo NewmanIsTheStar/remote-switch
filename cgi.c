@@ -3278,7 +3278,8 @@ const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *p
         i++;
     }
 
-
+    // tell rmtsw_task that a relay state change might have occured
+    rmtsw_queue_send((uint8_t)relay_num);
 
     config_changed();
 

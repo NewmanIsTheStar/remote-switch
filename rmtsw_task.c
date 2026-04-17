@@ -65,6 +65,7 @@ extern WEB_VARIABLES_T web;
 // global variables
 THERMOSTAT_INITIALIZATION_T initialization_table[] =
 {
+    {rmtsw_initialize_queue,                 false},  
     {rmtsw_initialize_relays,                false},           
 };
 bool relays_initialized = false;
@@ -110,7 +111,9 @@ void rmtsw_task(void *params)
             // set relays
             rmtsw_relay_control();
 
-            SLEEP_MS(REMOTE_SWITCH_TASK_LOOP_DELAY); 
+            // wait for timeout period or user change
+            rmtsw_wait(REMOTE_SWITCH_TASK_LOOP_DELAY);
+            //SLEEP_MS(REMOTE_SWITCH_TASK_LOOP_DELAY); 
         }
         else
         {

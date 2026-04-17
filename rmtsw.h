@@ -76,14 +76,14 @@ typedef struct
     long int humidityx10;
 } CLIMATE_DATAPOINT_T;
 
-// thermostat_task.c
+// rmtsw_task.c
 void rmtsw_task(__unused void *params);
 //int update_current_setpoints(void);
 int copy_schedule(int source_day, int destination_day);
 int rmtsw_copy_schedule(int source_day, int destination_day);
 
 
-// thermostat_web_ui.c
+// rmtsw_web_ui.c
 int get_free_schedule_row(void);
 int rmtsw_get_free_schedule_row(void);
 bool schedule_row_valid(int row);
@@ -99,7 +99,9 @@ int rmtsw_relay_initialize(void);
 uint32_t rmtsw_relay_control(void);
 int rmtsw_relay_gpio_enable(bool enable);
 int rmtsw_sort_schedule(void);
-
+int rmtsw_wait(TickType_t timeout);
+void rmtsw_queue_send(uint8_t message);
+int rmtsw_initialize_queue(void);
 
 
 #endif

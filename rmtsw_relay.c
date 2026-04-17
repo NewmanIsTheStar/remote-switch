@@ -89,6 +89,9 @@ extern WEB_VARIABLES_T web;
 static THERMOSTAT_MODE_T scheduled_mode = HVAC_AUTO;         // scheduled mode
 static CLIMATE_TIMERS_T climate_timers[NUM_HVAC_TIMERS];     // set of timers used to control state
 static bool relay_gpio_ok = false;                           // ok to use configured gpio
+static QueueHandle_t relay_queue = NULL;                     // indicates user has change relay state
+static uint8_t relay_message = 0;                            // relay that has changed state
+static bool rmtsw_queue_initialized = false;                 // queue initialization status
 
 /*!
  * \brief Open or close relay based on user request or schedule
@@ -353,6 +356,52 @@ int update_relay_scheduled_actions(void)
 
         printf("New scheduled relay state.  start mow = %d off = %08b on = %08b\n", candidate_start_mow, candidate_off_bitmap, candidate_on_bitmap);
     }  
+
+    return(err);
+}
+
+
+
+/*!
+ * \brief wait for timeout or queue
+ * 
+ * \return true if timeout preempted
+ */
+int rmtsw_wait(TickType_t timeout)
+{
+    int err = 0;
+
+    if (xQueueReceive(relay_queue, &relay_message, timeout) == pdPASS)
+    {
+        // user changed relay state so abort wait
+        err = 1;
+    }
+
+    return(err);
+}
+
+
+void rmtsw_queue_send(uint8_t message)
+{
+    static uint8_t message_store = 0;
+
+    if (rmtsw_queue_initialized)
+    {
+        message_store = message;
+
+        // send the message to the queue
+        xQueueSend(relay_queue, &message_store, 0);
+    }
+}
+
+int rmtsw_initialize_queue(void)
+{
+    int err = 0;
+
+    // create queue for to pass interrupt messages to task
+    relay_queue = xQueueCreate(1, sizeof(uint8_t));
+
+    rmtsw_queue_initialized = true;
 
     return(err);
 }
