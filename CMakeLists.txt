@@ -115,6 +115,7 @@ set(pluto_link_libraries
         pico_lwip_api        
         pico_lwip_sntp
         pico_lwip_http
+        pico_lwip_mqtt
         pico_stdlib
         pico_rand
         FreeRTOS-Kernel-Heap4
