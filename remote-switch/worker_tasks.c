@@ -15,19 +15,16 @@
 #include "worker_tasks.h"
 
 // include header for each worker task here
-//#include "weather.h"
-// #include "led_strip.h"
-// #include "message.h"
 #include "rmtsw.h"
-// #include "hc_task.h"
-// #include "discovery_task.h"
+#include "mqtt.h"
+
 
 // worker tasks to launch and monitor
 WORKER_TASK_T worker_tasks[] =
 {
     //  function        name                       stack   priority        
     {   rmtsw_task,     "Remote Switch Task",      8096,   5},       
-
+    {   mqtt_task,      "MQTT Task",               8096,   10},     
 
     //  end of table
     {   NULL,           NULL,               0,      0,         }

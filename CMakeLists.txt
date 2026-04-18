@@ -145,6 +145,7 @@ set(remote-switch_source_files ${common_source_files}
         rmtsw_task.c
         rmtsw_web_ui.c
         rmtsw_relay.c
+        mqtt_task.c
 )        
 
 add_executable(remote-switch ${remote-switch_source_files})  
