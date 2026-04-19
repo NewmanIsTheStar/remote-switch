@@ -76,10 +76,84 @@ MQTT_INITIALIZATION_T mqtt_initialization_table[] =
 };
 bool something_initialized = false;
 ip_addr_t broker_ip;
-
+int relay_to_switch = -1;
+int relay_desired_state = -1;
 
 // static variables
 static mqtt_client_t *mqtt_client;
+
+
+const char ha_device_discovery_payload[] =
+"{"
+"  \"dev\": {"
+"    \"ids\": \"rmtsw-00-11-22-33-44-55\","
+"    \"name\": \"cluster-power\""
+"  },"
+"  \"o\": {"
+"    \"name\":\"cluster-power\","
+"    \"sw\": \"2.1\","
+"    \"url\": \"https://bla2mqtt.example.com/support\""
+"  },"
+"  \"cmps\": {"
+"    \"rmtsw-relay1-00-11-22-33-44-55\": {"
+"      \"p\": \"switch\","
+"      \"command_topic\":\"relay1/command\","
+"      \"state_topic\":\"relay1/state\","   
+"      \"unique_id\":\"monkey1\","
+"      \"name\":\"RELAY-1\""
+"    },"
+"    \"rmtsw-relay2-00-11-22-33-44-55\": {"
+"      \"p\": \"switch\","
+"      \"command_topic\":\"relay2/command\","
+"      \"state_topic\":\"relay2/state\","      
+"      \"unique_id\":\"monkey2\","
+"      \"name\":\"RELAY-2\""
+"    }"
+"    \"rmtsw-relay3-00-11-22-33-44-55\": {"
+"      \"p\": \"switch\","
+"      \"command_topic\":\"relay3/command\","
+"      \"state_topic\":\"relay3/state\","      
+"      \"unique_id\":\"monkey3\","
+"      \"name\":\"RELAY-3\""
+"    }"
+"    \"rmtsw-relay4-00-11-22-33-44-55\": {"
+"      \"p\": \"switch\","
+"      \"command_topic\":\"relay4/command\","
+"      \"state_topic\":\"relay4/state\","      
+"      \"unique_id\":\"monkey4\","
+"      \"name\":\"RELAY-4\""
+"    }"
+"    \"rmtsw-relay5-00-11-22-33-44-55\": {"
+"      \"p\": \"switch\","
+"      \"command_topic\":\"relay5/command\","
+"      \"state_topic\":\"relay5/state\","      
+"      \"unique_id\":\"monkey5\","
+"      \"name\":\"RELAY-5\""
+"    }"
+"    \"rmtsw-relay6-00-11-22-33-44-55\": {"
+"      \"p\": \"switch\","
+"      \"command_topic\":\"relay6/command\","
+"      \"state_topic\":\"relay6/state\","      
+"      \"unique_id\":\"monkey6\","
+"      \"name\":\"RELAY-6\""
+"    }"
+"    \"rmtsw-relay7-00-11-22-33-44-55\": {"
+"      \"p\": \"switch\","
+"      \"command_topic\":\"relay7/command\","
+"      \"state_topic\":\"relay7/state\","      
+"      \"unique_id\":\"monkey7\","
+"      \"name\":\"RELAY-7\""
+"    }"
+"    \"rmtsw-relay8-00-11-22-33-44-55\": {"
+"      \"p\": \"switch\","
+"      \"command_topic\":\"relay8/command\","
+"      \"state_topic\":\"relay8/state\","      
+"      \"unique_id\":\"monkey8\","
+"      \"name\":\"RELAY-8\""
+"    }"
+"  },"
+"  \"qos\": 0"
+"}";
 
 
 /*!
@@ -102,9 +176,20 @@ void mqtt_task(void *params)
         // initialize all subsystems that are not already up
         mqtt_initialize();
 
-        printf("MQTT\n");
-        rmtsw_mqtt_publish(mqtt_client, NULL);
+        //printf("MQTT\n");
+        //rmtsw_mqtt_publish(mqtt_client, NULL);
         
+
+        if ((relay_to_switch >= 0) && (relay_to_switch < 8))
+        {
+            if (relay_desired_state == 1)
+            {
+                printf("MQTT Turning relay%d ON\n", relay_to_switch);
+            } else if (relay_desired_state == 0)
+            {
+               printf("MQTT Turning relay%d OFF\n", relay_to_switch); 
+            }
+        }
         // wait for timeout period or user change
         SLEEP_MS(MQTT_TASK_LOOP_DELAY); 
 
@@ -243,16 +328,38 @@ void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status
 // 1. Publish Callback: Receives the topic
 void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len) 
 {
-  printf("Topic: %s, Total Length: %u\n", topic, (unsigned int)tot_len);
+    printf("Topic: %s, Total Length: %u\n", topic, (unsigned int)tot_len);
+
+    if (strncasecmp(topic, "relay1/command", 12) == 0)
+    {
+       relay_to_switch = 0; 
+    }
+    else
+    {
+        relay_to_switch = -1;
+    }
 }
 
 // 2. Data Callback: Receives payload chunks
 void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags) 
 {
   if(flags & MQTT_DATA_FLAG_LAST)
-  {
-    printf("Final message received: %.*s\n", len, (const char*)data);
-  }
+    {
+        printf("Final message received: %.*s\n", len, (const char*)data);
+
+        if (strncasecmp(data, "ON", 2) == 0)
+        {
+            relay_desired_state = 1; 
+        }
+        else if (strncasecmp(data, "OFF", 3) == 0)
+        {
+            relay_desired_state = 0;
+        }
+        else
+        {
+            relay_desired_state = -1;
+        }        
+    }
 }
 
 // 3. Sub Request Callback: Confirms subscription status
@@ -269,6 +376,10 @@ void start_mqtt_sub(mqtt_client_t *client)
 
   // Subscribe
   mqtt_subscribe(client, "homeassistant/#", 1, mqtt_sub_request_cb, NULL);
+  mqtt_subscribe(client, "relay1/command", 1, mqtt_sub_request_cb, NULL);
+  mqtt_subscribe(client, "relay1/state", 1, mqtt_sub_request_cb, NULL);
+  
+  
 }
 
 /*PUBLISH**********************************************************************************************/
@@ -278,6 +389,7 @@ void mqtt_pub_request_cb(void *arg, err_t result)
     if(result != ERR_OK) 
     {
         printf("Publish failed: %d\n", result);
+        if (arg) printf("%s\n", arg);
     } else 
     {
         printf("Publish success\n");
@@ -292,10 +404,15 @@ void rmtsw_mqtt_publish(mqtt_client_t *client, void *arg)
     u8_t qos = 1; // 0, 1, or 2
     u8_t retain = 0;
 
-    err = mqtt_publish(client, "test/test", pub_payload, strlen(pub_payload), qos, retain, mqtt_pub_request_cb, arg);
+    printf("size of payload = %d\n", sizeof(ha_device_discovery_payload));
+
+    //err = mqtt_publish(client, "test/test", pub_payload, strlen(pub_payload), qos, retain, mqtt_pub_request_cb, arg);
+    err = mqtt_publish(client, "homeassistant/device/rmtsw-00-11-22-33-44-55/config", ha_device_discovery_payload, strlen(ha_device_discovery_payload), qos, retain, mqtt_pub_request_cb, arg);
 
     if(err != ERR_OK) 
     {
         printf("Publish error: %d\n", err);
     }
 }
+
+

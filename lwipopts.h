@@ -159,5 +159,7 @@ void setTimeSec(uint32_t sec);
 //MQTT stuff added by Newman
 #define LWIP_MQTT
 #define MEMP_NUM_SYS_TIMEOUT            (LWIP_NUM_SYS_TIMEOUT_INTERNAL+10) 
+#define MQTT_VAR_HEADER_BUFFER_LEN (2048)
+#define MQTT_OUTPUT_RINGBUF_SIZE   (2048)
 
 #endif
