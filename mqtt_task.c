@@ -55,14 +55,16 @@ typedef struct
 int mqtt_sanitize_user_config(void);
 int mqtt_initialize(void);
 int mqtt_deinitialize(int (*subsytem_init_func)(void));
-int mqtt_initialize_something(void);
+int mqtt_initialize_connection(void);
 void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status);
 void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len); 
 void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags);
 void mqtt_sub_request_cb(void *arg, err_t result);
 void start_mqtt_sub(mqtt_client_t *client);
 void mqtt_pub_request_cb(void *arg, err_t result);
-void rmtsw_mqtt_publish(mqtt_client_t *client, void *arg);
+void rmtsw_mqtt_publish_discovery(mqtt_client_t *client, void *arg);
+int mqtt_initialize_ha_discovery(void);
+void rmtsw_mqtt_publish_state(int relay, mqtt_client_t *client, void *arg);
 
 // external variables
 extern uint32_t unix_time;
@@ -72,9 +74,11 @@ extern WEB_VARIABLES_T web;
 // global variables
 MQTT_INITIALIZATION_T mqtt_initialization_table[] =
 {
-    {mqtt_initialize_something,                false},           
+    {mqtt_initialize_connection,                false},    
+    {mqtt_initialize_ha_discovery,              false},             
 };
-bool something_initialized = false;
+bool connection_initialized = false;
+bool discovery_initialized = false;
 ip_addr_t broker_ip;
 int relay_to_switch = -1;
 int relay_desired_state = -1;
@@ -108,42 +112,42 @@ const char ha_device_discovery_payload[] =
 "      \"state_topic\":\"relay2/state\","      
 "      \"unique_id\":\"monkey2\","
 "      \"name\":\"RELAY-2\""
-"    }"
+"    },"
 "    \"rmtsw-relay3-00-11-22-33-44-55\": {"
 "      \"p\": \"switch\","
 "      \"command_topic\":\"relay3/command\","
 "      \"state_topic\":\"relay3/state\","      
 "      \"unique_id\":\"monkey3\","
 "      \"name\":\"RELAY-3\""
-"    }"
+"    },"
 "    \"rmtsw-relay4-00-11-22-33-44-55\": {"
 "      \"p\": \"switch\","
 "      \"command_topic\":\"relay4/command\","
 "      \"state_topic\":\"relay4/state\","      
 "      \"unique_id\":\"monkey4\","
 "      \"name\":\"RELAY-4\""
-"    }"
+"    },"
 "    \"rmtsw-relay5-00-11-22-33-44-55\": {"
 "      \"p\": \"switch\","
 "      \"command_topic\":\"relay5/command\","
 "      \"state_topic\":\"relay5/state\","      
 "      \"unique_id\":\"monkey5\","
 "      \"name\":\"RELAY-5\""
-"    }"
+"    },"
 "    \"rmtsw-relay6-00-11-22-33-44-55\": {"
 "      \"p\": \"switch\","
 "      \"command_topic\":\"relay6/command\","
 "      \"state_topic\":\"relay6/state\","      
 "      \"unique_id\":\"monkey6\","
 "      \"name\":\"RELAY-6\""
-"    }"
+"    },"
 "    \"rmtsw-relay7-00-11-22-33-44-55\": {"
 "      \"p\": \"switch\","
 "      \"command_topic\":\"relay7/command\","
 "      \"state_topic\":\"relay7/state\","      
 "      \"unique_id\":\"monkey7\","
 "      \"name\":\"RELAY-7\""
-"    }"
+"    },"
 "    \"rmtsw-relay8-00-11-22-33-44-55\": {"
 "      \"p\": \"switch\","
 "      \"command_topic\":\"relay8/command\","
@@ -185,10 +189,15 @@ void mqtt_task(void *params)
             if (relay_desired_state == 1)
             {
                 printf("MQTT Turning relay%d ON\n", relay_to_switch);
+                web.rmtsw_relay_desired_state[relay_to_switch] = true;
+                
             } else if (relay_desired_state == 0)
             {
                printf("MQTT Turning relay%d OFF\n", relay_to_switch); 
+               web.rmtsw_relay_desired_state[relay_to_switch] = false;
             }
+
+            rmtsw_mqtt_publish_state(relay_to_switch ,mqtt_client, NULL);
         }
         // wait for timeout period or user change
         SLEEP_MS(MQTT_TASK_LOOP_DELAY); 
@@ -280,7 +289,7 @@ int mqtt_sanitize_user_config(void)
  * 
  * \return 0 on success
  */
-int mqtt_initialize_something(void)
+int mqtt_initialize_connection(void)
 {
     int err = -1;
     
@@ -301,7 +310,27 @@ int mqtt_initialize_something(void)
         err = mqtt_client_connect(mqtt_client, &broker_ip, MQTT_PORT, mqtt_connection_cb, NULL, &ci);
     }
 
-    something_initialized = true;
+    connection_initialized = true;
+
+    return(err);
+}
+
+ /*!
+ * \brief send home assistant mqtt device discovery
+ *
+ * \param params none
+ * 
+ * \return 0 on success
+ */
+int mqtt_initialize_ha_discovery(void)
+{
+    int err = -1;
+
+    rmtsw_mqtt_publish_discovery(mqtt_client, NULL);
+    
+    err = 0;
+
+    discovery_initialized = true;
 
     return(err);
 }
@@ -397,7 +426,7 @@ void mqtt_pub_request_cb(void *arg, err_t result)
 }
 
 // 2. Example publish function
-void rmtsw_mqtt_publish(mqtt_client_t *client, void *arg)
+void rmtsw_mqtt_publish_discovery(mqtt_client_t *client, void *arg)
 {
     const char *pub_payload = "Pico2W Hello!";
     err_t err;
@@ -407,11 +436,54 @@ void rmtsw_mqtt_publish(mqtt_client_t *client, void *arg)
     printf("size of payload = %d\n", sizeof(ha_device_discovery_payload));
 
     //err = mqtt_publish(client, "test/test", pub_payload, strlen(pub_payload), qos, retain, mqtt_pub_request_cb, arg);
+   
+    // remove existing device from ha
+    // retain = 1;
+    // err = mqtt_publish(client, "homeassistant/device/rmtsw-00-11-22-33-44-55/config", "", 0, qos, retain, mqtt_pub_request_cb, arg);
+
+    // add device to ha
+    retain = 0;
     err = mqtt_publish(client, "homeassistant/device/rmtsw-00-11-22-33-44-55/config", ha_device_discovery_payload, strlen(ha_device_discovery_payload), qos, retain, mqtt_pub_request_cb, arg);
 
     if(err != ERR_OK) 
     {
-        printf("Publish error: %d\n", err);
+        printf("Publish discovery error: %d\n", err);
+    }
+}
+
+
+void rmtsw_mqtt_publish_state(int relay, mqtt_client_t *client, void *arg)
+{
+    const char *pub_payload = "Pico2W Hello!";
+    err_t err;
+    u8_t qos = 1; // 0, 1, or 2
+    u8_t retain = 0;
+    char state[64];
+    char state_payload[8];
+
+    printf("size of payload = %d\n", sizeof(ha_device_discovery_payload));
+
+    CLIP(relay, 0, 7);
+
+    sprintf(state, "relay%d/state", relay+1);
+
+    // if (config.rmtsw_relay_default_state[relay])   TODO: this is the proper way!
+    if (web.rmtsw_relay_desired_state[relay])
+    {
+        sprintf(state_payload, "ON");
+    }
+    else
+    {
+        sprintf(state_payload, "OFF");
+    }
+
+    // send state
+    retain = 0;
+    err = mqtt_publish(client, state, state_payload, strlen(state_payload), qos, retain, mqtt_pub_request_cb, arg);
+
+    if(err != ERR_OK) 
+    {
+        printf("Publish state error: %d\n", err);
     }
 }
 
