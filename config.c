@@ -63,7 +63,7 @@ void config_blank_to_v1(void)
     {
         config.rmtsw_relay_normally_closed[i] = false;
         config.rmtsw_relay_default_state[i]  = false;
-        config.rmtsw_relay_name[i][0] = 0;  
+        sprintf(config.rmtsw_relay_name[i], "RELAY-%d", i);  
         config.rmtsw_relay_gpio[i] = -1;  
        
     }  

@@ -3298,15 +3298,11 @@ const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *p
  * 
  * \return nothing
  */
-const char * cgi_rs_gpio_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
+const char * cgi_rs_gpio_max_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
 {
     int i = 0;
     char *param = NULL;
     char *value = NULL;
-    int new_relay_normally_open = 0; 
-    int new_irrigation_test_enable = 0;      
-    int new_gpio = 0;
-    int gpio_zone = -1;  
     int new_zone_max = 0;
        
     //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
@@ -3320,14 +3316,6 @@ const char * cgi_rs_gpio_handler(int iIndex, int iNumParams, char *pcParam[], ch
         if (param && value)
         {
             //printf("Parameter: %s has Value: %s\n", param, value);  
-            sscanf(param, "rs%dgpio", &gpio_zone);
-            if ((gpio_zone >= 1) && (gpio_zone <= 8))
-            {
-                // adjust to zero base
-                gpio_zone--;
-
-                sscanf(value, "%d", &config.rmtsw_relay_gpio[gpio_zone]);  
-            }   
 
             if (strcasecmp("rsmax", param) == 0)
             {
@@ -3337,10 +3325,86 @@ const char * cgi_rs_gpio_handler(int iIndex, int iNumParams, char *pcParam[], ch
                 {
                     config.rmtsw_relay_max = new_zone_max;
                 }                           
-            }           
+            }              
         }
         i++;
     }   
+
+    config_changed();
+
+    return "/rs_gpio.shtml";
+    
+}
+
+
+/*!
+ * \brief cgi handler
+ *
+ * \param[in]  iIndex       index of cgi handler in cgi_handlers table
+ * \param[in]  iNumParams   number of parameters
+ * \param[in]  pcParam      parameter name
+ * \param[in]  pcValue      parameter value 
+ * 
+ * \return nothing
+ */
+const char * cgi_rs_gpio_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
+{
+    int i = 0;
+    char *param = NULL;
+    char *value = NULL;
+    int new_relay_normally_open = 0; 
+    int new_irrigation_test_enable = 0;      
+    int new_gpio = 0;
+    int gpio_zone = -1;  
+    int new_zone_max = 0;
+    bool new_normally_closed[8] = {false, false, false, false, false, false, false, false};
+       
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+ 
+    i = 0;
+    while (i < iNumParams)
+    {
+        param = pcParam[i];
+        value = pcValue[i];
+
+        if (param && value)
+        {
+            //printf("Parameter: %s has Value: %s\n", param, value); 
+            
+            gpio_zone = -1; 
+            sscanf(param, "rs%dgpio", &gpio_zone);
+            if ((gpio_zone >= 1) && (gpio_zone <= 8))
+            {
+                // adjust to zero base
+                gpio_zone--;
+
+                if (!strcasestr(value, "none"))
+                { 
+                    sscanf(value, "%d", &config.rmtsw_relay_gpio[gpio_zone]);
+                }
+            }   
+
+            gpio_zone = -1;
+            sscanf(param, "rsnc%d", &gpio_zone);
+            if ((gpio_zone >= 1) && (gpio_zone <= 8))
+            {
+                // adjust to zero base
+                gpio_zone--;
+
+                new_normally_closed[gpio_zone] = true;  
+
+                printf("hit %d with param %s\n", gpio_zone, param);
+            }              
+        }
+        i++;
+    }   
+
+    // copy new normally closed states to config
+    for (i=0; i<config.rmtsw_relay_max; i++)
+    {
+        config.rmtsw_relay_normally_closed[i] = new_normally_closed[i];
+        printf("set relay[%d] normally closed to %d\n", i, config.rmtsw_relay_normally_closed[i]);
+    }
 
     config_changed();
 
@@ -3914,14 +3978,16 @@ static const tCGI cgi_handlers[] = {
     // {"/t_sensors.cgi",                  cgi_temperature_sensors},
     // {"/t_advanced.cgi",                 cgi_advanced_settings}, 
     {"/rs_default.cgi",                 cgi_remote_switch_relay_handler},     
-    {"/rs_gpio.cgi",                    cgi_rs_gpio_handler},   
+    {"/rs_gpio_max.cgi",                cgi_rs_gpio_max_handler},   
+    {"/rs_gpio.cgi",                    cgi_rs_gpio_handler},      
     {"/rs_names.cgi",                   cgi_rs_names_handler}, 
     {"/rs_change.cgi",                  cgi_relay_schedule_change_handler}, 
     {"/rs_edit.cgi",                    cgi_relay_period_edit_handler}, 
     {"/rs_delete.cgi",                  cgi_relay_period_delete_handler}, 
     {"/rs_add.cgi",                     cgi_relay_period_add_handler},   
     {"/rs_schedule.cgi",                cgi_relay_schedule_handler}, 
-    {"/rs_copy.cgi",                    cgi_relay_copy_handler},                         
+    {"/rs_copy.cgi",                    cgi_relay_copy_handler},  
+                           
 };
 
 /*!

@@ -1,48 +1,55 @@
 {
 	"folders": [
 		{
-			"name": "thermostat",
 			"path": "."
 		}
 	],
 	"settings": {
+		"cmake.options.statusBarVisibility": "hidden",
+		"cmake.options.advanced": {
+			"build": {
+				"statusBarVisibility": "hidden"
+			},
+			"launch": {
+				"statusBarVisibility": "hidden"
+			},
+			"debug": {
+				"statusBarVisibility": "hidden"
+			}
+		},
+		"terminal.integrated.env.windows": {
+			"PICO_SDK_PATH": "${env:USERPROFILE}/.pico-sdk/sdk/2.1.1",
+			"PICO_TOOLCHAIN_PATH": "${env:USERPROFILE}/.pico-sdk/toolchain/14_2_Rel1",
+			"Path": "${env:USERPROFILE}/.pico-sdk/toolchain/14_2_Rel1/bin;${env:USERPROFILE}/.pico-sdk/picotool/2.1.0/picotool;${env:USERPROFILE}/.pico-sdk/cmake/v3.31.5/bin;${env:USERPROFILE}/.pico-sdk/ninja/v1.12.1;${env:PATH}"
+		},
+		"terminal.integrated.env.osx": {
+			"PICO_SDK_PATH": "${env:HOME}/.pico-sdk/sdk/2.1.1",
+			"PICO_TOOLCHAIN_PATH": "${env:HOME}/.pico-sdk/toolchain/14_2_Rel1",
+			"PATH": "${env:HOME}/.pico-sdk/toolchain/14_2_Rel1/bin:${env:HOME}/.pico-sdk/picotool/2.1.0/picotool:${env:HOME}/.pico-sdk/cmake/v3.31.5/bin:${env:HOME}/.pico-sdk/ninja/v1.12.1:${env:PATH}"
+		},
+		"terminal.integrated.env.linux": {
+			"PICO_SDK_PATH": "${env:HOME}/.pico-sdk/sdk/2.1.1",
+			"PICO_TOOLCHAIN_PATH": "${env:HOME}/.pico-sdk/toolchain/14_2_Rel1",
+			"PATH": "${env:HOME}/.pico-sdk/toolchain/14_2_Rel1/bin:${env:HOME}/.pico-sdk/picotool/2.1.0/picotool:${env:HOME}/.pico-sdk/cmake/v3.31.5/bin:${env:HOME}/.pico-sdk/ninja/v1.12.1:${env:PATH}"
+		},
+		"raspberry-pi-pico.cmakeAutoConfigure": true,
+		"raspberry-pi-pico.useCmakeTools": false,
+		"raspberry-pi-pico.cmakePath": "${HOME}/.pico-sdk/cmake/v3.31.5/bin/cmake",
+		"raspberry-pi-pico.ninjaPath": "${HOME}/.pico-sdk/ninja/v1.12.1/ninja",
 		"files.associations": {
-			"sockets.h": "c",
-			"freertos.h": "c",
-			"systick.h": "c",
-			"flash.h": "c",
-			"githash.h": "c",
-			"watchdog.h": "c",
-			"optional": "c",
-			"istream": "c",
-			"ostream": "c",
-			"system_error": "c",
+			"debug.h": "c",
+			"ssl.h": "c",
+			"net_sockets.h": "c",
+			"config.h": "c",
 			"array": "c",
+			"charconv": "c",
+			"compare": "c",
 			"functional": "c",
 			"tuple": "c",
 			"type_traits": "c",
 			"utility": "c",
-			"ws2812.pio.h": "c",
-			"cyw43_arch.h": "c",
-			"stdlib.h": "c",
-			"datetime.h": "c",
-			"pluto.h": "c",
-			"weather.h": "c",
-			"string": "c",
-			"ip4_addr.h": "c",
-			"utility.h": "c",
-			"rtc.h": "c",
-			"charconv": "c",
-			"format": "c",
-			"text_encoding": "c",
-			"typeinfo": "c",
-			"vector": "c",
-			"exception": "c",
-			"fstream": "c",
-			"limits": "c",
-			"sstream": "c",
-			"string_view": "c",
-			"algorithm": "c"
+			"variant": "c",
+			"powerwall.h": "c"
 		}
 	}
 }

@@ -64,10 +64,10 @@ body {
 
   <h2>Relay GPIO Settings</h2>  
   <table>
-      <form action="/rs_gpio.cgi">
+      <form action="/rs_gpio_max.cgi">
           <tr>
               <td><label for="ecoip">Number of Relays</label></td>
-              <td><input type="text" id="rsmax" name="rsmax" value="<!--#rsmax-->"></td>
+              <td><input type="text" size="4" id="rsmax" name="rsmax" value="<!--#rsmax-->"></td>
           </tr>
           <tr>            
               <td>
@@ -80,36 +80,52 @@ body {
   <table>
       <form action="/rs_gpio.cgi">
           <tr>
-              <td><label for="wind" <!--#rs1viz--> >Relay 1 GPIO:</label></td>
-              <td><input type="text" is="rs1gpio" name="rs1gpio" value="<!--#rs1gpio-->" <!--#rs1viz--> ></td>
+              <td><label for="wind" <!--#rs1viz--> >Relay 1 GPIO</label></td>
+              <td><input type="text" size="4" is="rs1gpio" name="rs1gpio" value="<!--#rs1gpio-->" <!--#rs1viz--> ></td>
+              <td><label <!--#rs1viz--> >&ensp; Normally Closed</label></td>
+              <td <!--#rs1viz--> ><input type="checkbox" id="rsnc1" name="rsnc1" value="on" style="height:20px; width:20px; vertical-align: middle;" <!--#rs1nc-->  ></td>
           </tr>         
           <tr>
-              <td><label for="wind" <!--#rs2viz--> >Relay 2 GPIO:</label></td>
-              <td><input type="text" is="rs2gpio" name="rs2gpio" value="<!--#rs2gpio-->" <!--#rs2viz--> ></td>
+              <td><label for="wind" <!--#rs2viz--> >Relay 2 GPIO</label></td>
+              <td><input type="text" size="4" is="rs2gpio" name="rs2gpio" value="<!--#rs2gpio-->" <!--#rs2viz--> ></td>
+              <td><label <!--#rs2viz--> >&ensp; Normally Closed</label></td>
+              <td <!--#rs2viz--> ><input type="checkbox" id="rsnc2" name="rsnc2" value="on" style="height:20px; width:20px; vertical-align: middle;" <!--#rs2nc-->  ></td>
+            </tr>      
+          <tr>
+              <td><label for="wind" <!--#rs3viz--> >Relay 3 GPIO</label></td>
+              <td><input type="text" size="4" is="rs3gpio" name="rs3gpio" value="<!--#rs3gpio-->" <!--#rs3viz--> ></td>
+              <td><label <!--#rs3viz--> >&ensp; Normally Closed</label></td>
+              <td <!--#rs3viz--> ><input type="checkbox" id="rsnc3" name="rsnc3" value="on" style="height:20px; width:20px; vertical-align: middle;" <!--#rs3nc-->  ></td>
+         </tr>                        
+          <tr>
+              <td><label for="wind" <!--#rs4viz--> >Relay 4 GPIO</label></td>
+              <td><input type="text" size="4" is="rs4gpio" name="rs4gpio" value="<!--#rs4gpio-->" <!--#rs4viz--> ></td>
+              <td><label <!--#rs4viz--> >&ensp; Normally Closed</label></td>
+              <td <!--#rs4viz--> ><input type="checkbox" id="rsnc4" name="rsnc4" value="on" style="height:20px; width:20px; vertical-align: middle;" <!--#rs4nc-->  ></td>
           </tr>      
           <tr>
-              <td><label for="wind" <!--#rs3viz--> >Relay 3 GPIO:</label></td>
-              <td><input type="text" is="rs3gpio" name="rs3gpio" value="<!--#rs3gpio-->" <!--#rs3viz--> ></td>
-          </tr>                        
-          <tr>
-              <td><label for="wind" <!--#rs4viz--> >Relay 4 GPIO:</label></td>
-              <td><input type="text" is="rs4gpio" name="rs4gpio" value="<!--#rs4gpio-->" <!--#rs4viz--> ></td>
-          </tr>      
-          <tr>
-              <td><label for="wind" <!--#rs5viz--> >Relay 5 GPIO:</label></td>
-              <td><input type="text" is="rs5gpio" name="rs5gpio" value="<!--#rs5gpio-->" <!--#rs5viz--> ></td>
+              <td><label for="wind" <!--#rs5viz--> >Relay 5 GPIO</label></td>
+              <td><input type="text" size="4" is="rs5gpio" name="rs5gpio" value="<!--#rs5gpio-->" <!--#rs5viz--> ></td>
+              <td><label <!--#rs5viz--> >&ensp; Normally Closed</label></td>
+              <td <!--#rs5viz--> ><input type="checkbox" id="rsnc5" name="rsnc5" value="on" style="height:20px; width:20px; vertical-align: middle;" <!--#rs5nc-->  ></td>
           </tr>    
           <tr>
-              <td><label for="wind" <!--#rs6viz--> >Relay 6 GPIO:</label></td>
-              <td><input type="text" is="rs6gpio" name="rs6gpio" value="<!--#rs6gpio-->" <!--#rs6viz--> ></td>
+              <td><label for="wind" <!--#rs6viz--> >Relay 6 GPIO</label></td>
+              <td><input type="text" size="4" is="rs6gpio" name="rs6gpio" value="<!--#rs6gpio-->" <!--#rs6viz--> ></td>
+              <td><label <!--#rs6viz--> >&ensp; Normally Closed</label></td>
+              <td <!--#rs6viz--> ><input type="checkbox" id="rsnc6" name="rsnc6" value="on" style="height:20px; width:20px; vertical-align: middle;" <!--#rs6nc-->  ></td>
           </tr>  
           <tr>
-              <td><label for="wind" <!--#rs7viz--> >Relay 7 GPIO:</label></td>
-              <td><input type="text" is="rs7gpio" name="rs7gpio" value="<!--#rs7gpio-->" <!--#rs7viz--> ></td>
+              <td><label for="wind" <!--#rs7viz--> >Relay 7 GPIO</label></td>
+              <td><input type="text" size="4" is="rs7gpio" name="rs7gpio" value="<!--#rs7gpio-->" <!--#rs7viz--> ></td>
+              <td><label <!--#rs7viz--> >&ensp; Normally Closed</label></td>
+              <td <!--#rs7viz--> ><input type="checkbox" id="rsnc7" name="rsnc7" value="on" style="height:20px; width:20px; vertical-align: middle;" <!--#rs7nc-->  ></td>
           </tr>  
           <tr>
-              <td><label for="wind" <!--#rs8viz--> >Relay 8 GPIO:</label></td>
-              <td><input type="text" is="rs8gpio" name="rs8gpio" value="<!--#rs8gpio-->" <!--#rs8viz--> ></td>
+              <td><label for="wind" <!--#rs8viz--> >Relay 8 GPIO</label></td>
+              <td><input type="text" size="4" is="rs8gpio" name="rs8gpio" value="<!--#rs8gpio-->" <!--#rs8viz--> ></td>
+              <td><label <!--#rs8viz--> >&ensp; Normally Closed</label></td>
+              <td <!--#rs8viz--> ><input type="checkbox" id="rsnc8" name="rsnc8" value="on" style="height:20px; width:20px; vertical-align: middle;" <!--#rs8nc-->  ></td>
           </tr>                                                                       
           <tr>            
               <td>
