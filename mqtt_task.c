@@ -184,21 +184,12 @@ void mqtt_task(void *params)
         //rmtsw_mqtt_publish(mqtt_client, NULL);
         
 
-        if ((relay_to_switch >= 0) && (relay_to_switch < 8))
-        {
-            if (relay_desired_state == 1)
-            {
-                printf("MQTT Turning relay%d ON\n", relay_to_switch);
-                web.rmtsw_relay_desired_state[relay_to_switch] = true;
-                
-            } else if (relay_desired_state == 0)
-            {
-               printf("MQTT Turning relay%d OFF\n", relay_to_switch); 
-               web.rmtsw_relay_desired_state[relay_to_switch] = false;
-            }
+        // if ((relay_to_switch >= 0) && (relay_to_switch < 8))
+        // {
 
-            rmtsw_mqtt_publish_state(relay_to_switch ,mqtt_client, NULL);
-        }
+
+        //     rmtsw_mqtt_publish_state(relay_to_switch ,mqtt_client, NULL);
+        // }
         // wait for timeout period or user change
         SLEEP_MS(MQTT_TASK_LOOP_DELAY); 
 
@@ -359,13 +350,14 @@ void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
 {
     printf("Topic: %s, Total Length: %u\n", topic, (unsigned int)tot_len);
 
-    if (strncasecmp(topic, "relay1/command", 12) == 0)
+    if (strlen(topic) == strlen("relayX/command"))
     {
-       relay_to_switch = 0; 
-    }
-    else
-    {
-        relay_to_switch = -1;
+        if ((strncasecmp(topic, "relay", strlen("relay")) == 0) &&
+            (strncasecmp(topic + strlen("relayX/"), "command", strlen("command")) == 0) &&
+            isdigit(topic[strlen("relay")]))
+        {
+            relay_to_switch = topic[strlen("relay")] - '0' - 1;  // switch to zero base
+        }
     }
 }
 
@@ -376,18 +368,24 @@ void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
     {
         printf("Final message received: %.*s\n", len, (const char*)data);
 
-        if (strncasecmp(data, "ON", 2) == 0)
+        if ((relay_to_switch >=0) && (relay_to_switch < config.rmtsw_relay_max))
         {
-            relay_desired_state = 1; 
+            if (strncasecmp(data, "ON", 2) == 0)
+            {
+                web.rmtsw_relay_desired_state[relay_to_switch] = true;
+                rmtsw_queue_send((uint8_t)relay_to_switch);
+                rmtsw_mqtt_publish_state(relay_to_switch, mqtt_client, NULL);                    
+            }
+            else if (strncasecmp(data, "OFF", 3) == 0)
+            {
+                web.rmtsw_relay_desired_state[relay_to_switch] = false;
+                rmtsw_queue_send((uint8_t)relay_to_switch);
+                rmtsw_mqtt_publish_state(relay_to_switch, mqtt_client, NULL);  
+            }
+            
+            relay_to_switch = -1;
         }
-        else if (strncasecmp(data, "OFF", 3) == 0)
-        {
-            relay_desired_state = 0;
-        }
-        else
-        {
-            relay_desired_state = -1;
-        }        
+       
     }
 }
 
@@ -400,15 +398,36 @@ void mqtt_sub_request_cb(void *arg, err_t result)
 // 4. Setup
 void start_mqtt_sub(mqtt_client_t *client)
 {
-  // Set callbacks
-  mqtt_set_inpub_callback(client, mqtt_incoming_publish_cb, mqtt_incoming_data_cb, NULL);
+    int err;
 
-  // Subscribe
-  mqtt_subscribe(client, "homeassistant/#", 1, mqtt_sub_request_cb, NULL);
-  mqtt_subscribe(client, "relay1/command", 1, mqtt_sub_request_cb, NULL);
-  mqtt_subscribe(client, "relay1/state", 1, mqtt_sub_request_cb, NULL);
-  
-  
+    // Set callbacks
+    mqtt_set_inpub_callback(client, mqtt_incoming_publish_cb, mqtt_incoming_data_cb, NULL);
+
+    // Subscribe
+    err = mqtt_subscribe(client, "relay1/command", 1, mqtt_sub_request_cb, NULL);
+    printf("subscribe result = %d\n", err);
+    SLEEP_MS(2000);
+    err = mqtt_subscribe(client, "relay2/command", 1, mqtt_sub_request_cb, NULL);
+    printf("subscribe result = %d\n", err);
+    SLEEP_MS(2000);
+    err = mqtt_subscribe(client, "relay3/command", 1, mqtt_sub_request_cb, NULL);
+    printf("subscribe result = %d\n", err);
+    SLEEP_MS(2000);    
+    err = mqtt_subscribe(client, "relay4/command", 1, mqtt_sub_request_cb, NULL);
+    printf("subscribe result = %d\n", err);
+    SLEEP_MS(2000);
+    err = mqtt_subscribe(client, "relay5/command", 1, mqtt_sub_request_cb, NULL);
+    printf("subscribe result = %d\n", err);
+    SLEEP_MS(2000);
+    err = mqtt_subscribe(client, "relay6/command", 1, mqtt_sub_request_cb, NULL);
+    printf("subscribe result = %d\n", err);
+    SLEEP_MS(2000);
+    err = mqtt_subscribe(client, "relay7/command", 1, mqtt_sub_request_cb, NULL);
+    printf("subscribe result = %d\n", err);
+    SLEEP_MS(2000);
+    err = mqtt_subscribe(client, "relay8/command", 1, mqtt_sub_request_cb, NULL);
+    printf("subscribe result = %d\n", err);
+    SLEEP_MS(2000);
 }
 
 /*PUBLISH**********************************************************************************************/
@@ -461,8 +480,6 @@ void rmtsw_mqtt_publish_state(int relay, mqtt_client_t *client, void *arg)
     char state[64];
     char state_payload[8];
 
-    printf("size of payload = %d\n", sizeof(ha_device_discovery_payload));
-
     CLIP(relay, 0, 7);
 
     sprintf(state, "relay%d/state", relay+1);
@@ -485,6 +502,8 @@ void rmtsw_mqtt_publish_state(int relay, mqtt_client_t *client, void *arg)
     {
         printf("Publish state error: %d\n", err);
     }
+
+    printf("published new state. %s = %s\n", state, state_payload);
 }
 
 

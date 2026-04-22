@@ -162,4 +162,11 @@ void setTimeSec(uint32_t sec);
 #define MQTT_VAR_HEADER_BUFFER_LEN (2048)
 #define MQTT_OUTPUT_RINGBUF_SIZE   (2048)
 
+/*
+Currently get memory error on 4th subscription
+Increase MQTT_REQ_MAX_IN_FLIGHT: This defines how many MQTT messages (subscriptions/publishes) can be in progress simultaneously. Raise this from the default (often 4) to at least 10 or higher.
+Increase MQTT_VAR_HEADER_BUFFER_LEN: This buffer must hold the topic string and payload. If subscribing to multiple topics, this needs to be larger to avoid incoming publication fragmentation.
+Increase MQTT_OUTPUT_RINGBUF_SIZE: If sending multiple subscription requests in rapid succession, increase this to prevent overflowing the output buffer. 
+*/
+
 #endif

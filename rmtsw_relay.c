@@ -78,6 +78,7 @@ int update_relay_scheduled_actions(void);
 long int sanitize_setpoint(long int setpoint);
 bool temporary_setpoint_offset_changed(void);
 int thermostat_relay_lockout_stop(void);
+ static inline void rmtsw_gpio_put(uint relay, bool value);
 
 // external variables
 extern uint32_t unix_time;
@@ -123,7 +124,8 @@ uint32_t rmtsw_relay_control(void)
                 // check if sufficient time has passed since last state change
                 if ((unix_time - relay_timestamp[i]) >  relay_delay[i])
                 {
-                    gpio_put(config.rmtsw_relay_gpio[i], web.rmtsw_relay_desired_state[i]);
+                    rmtsw_gpio_put(i, web.rmtsw_relay_desired_state[i]);
+                    //pio_put(config.rmtsw_relay_gpio[i], web.rmtsw_relay_desired_state[i]);
                     relay_state[i] = web.rmtsw_relay_desired_state[i]; 
                     relay_timestamp[i] = unix_time; 
                     if (relay_delay[i] < 5*60)
@@ -242,7 +244,8 @@ int rmtsw_relay_initialize(void)
             if (web.rmtsw_relay_enabled[i])
             {
                 gpio_init(config.rmtsw_relay_gpio[i]);
-                gpio_put(config.rmtsw_relay_gpio[i], config.rmtsw_relay_default_state[i]);
+                rmtsw_gpio_put(i, config.rmtsw_relay_default_state[i]);
+                //gpio_put(config.rmtsw_relay_gpio[i], config.rmtsw_relay_default_state[i]);
                 gpio_set_dir(config.rmtsw_relay_gpio[i], true);
                 
                 // set web ui desired state to match initial relay state
@@ -405,3 +408,13 @@ int rmtsw_initialize_queue(void)
 
     return(err);
 }
+
+ static inline void rmtsw_gpio_put(uint relay, bool value)
+ {
+    if (config.rmtsw_relay_normally_closed[relay])
+    {
+        value = !value;
+    }
+
+    gpio_put(config.rmtsw_relay_gpio[relay], value); 
+ }
