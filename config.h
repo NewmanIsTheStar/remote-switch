@@ -68,6 +68,7 @@ typedef struct
     char wifi_password[32];
     char wifi_country[32];
     char dhcp_enable;
+    char host_name[32];
     char ip_address[32];
     char network_mask[32];    
     char gateway[32];      

@@ -63,7 +63,7 @@ void config_blank_to_v1(void)
     {
         config.rmtsw_relay_normally_closed[i] = false;
         config.rmtsw_relay_default_state[i]  = false;
-        sprintf(config.rmtsw_relay_name[i], "RELAY-%d", i);  
+        sprintf(config.rmtsw_relay_name[i], "RELAY-%d", i+1);  
         config.rmtsw_relay_gpio[i] = -1;  
        
     }  
@@ -325,6 +325,7 @@ void config_system_variable_initialize(void)
     config.wifi_ssid[0] = 0;
     config.wifi_password[0] = 0;
     config.dhcp_enable = 1;
+    STRNCPY(config.host_name, APP_NAME, sizeof(config.host_name));
     config.ip_address[0] = 0;
     config.network_mask[0] = 0;
     

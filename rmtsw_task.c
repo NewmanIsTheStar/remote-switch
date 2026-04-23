@@ -225,7 +225,7 @@ int rmtsw_initialize(void)
             if (!initialization_table[i].initialization_complete)
             {
                 err++;
-                printf("Error initializing subsystem %d\n", i);
+                printf("RMTSW task Error initializing subsystem %d\n", i);
             }
         }
     }

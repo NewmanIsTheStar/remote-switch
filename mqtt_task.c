@@ -65,6 +65,8 @@ void mqtt_pub_request_cb(void *arg, err_t result);
 void rmtsw_mqtt_publish_discovery(mqtt_client_t *client, void *arg);
 int mqtt_initialize_ha_discovery(void);
 void rmtsw_mqtt_publish_state(int relay, mqtt_client_t *client, void *arg);
+int rmtsw_mqtt_construct_discovery_topic(char *buffer, size_t len);
+int rmtsw_mqtt_construct_discovery_payload(char *buffer, size_t len);
 
 // external variables
 extern uint32_t unix_time;
@@ -85,6 +87,8 @@ int relay_desired_state = -1;
 
 // static variables
 static mqtt_client_t *mqtt_client;
+
+
 
 
 const char ha_device_discovery_payload[] =
@@ -216,12 +220,12 @@ int mqtt_initialize(void)
     {
         if (!mqtt_initialization_table[i].initialization_complete)
         {
-            mqtt_initialization_table[i].initialization_complete = !mqtt_initialization_table[i].initialization();
+            mqtt_initialization_table[i].initialization_complete = !mqtt_initialization_table[i].initialization();            
 
             if (!mqtt_initialization_table[i].initialization_complete)
             {
                 err++;
-                printf("Error initializing subsystem %d\n", i);
+                printf("MQTT Error initializing subsystem %d\n", i);
             }
         }
     }
@@ -299,9 +303,12 @@ int mqtt_initialize_connection(void)
     if (mqtt_client != NULL) 
     {
         err = mqtt_client_connect(mqtt_client, &broker_ip, MQTT_PORT, mqtt_connection_cb, NULL, &ci);
+        printf("mqtt connect returned %d\n", err);
     }
 
     connection_initialized = true;
+
+    printf("initialize connection returning %d\n", err);
 
     return(err);
 }
@@ -317,12 +324,18 @@ int mqtt_initialize_ha_discovery(void)
 {
     int err = -1;
 
+    printf("about to call publish discovery\n");
+
     rmtsw_mqtt_publish_discovery(mqtt_client, NULL);
     
-    err = 0;
+    
 
     discovery_initialized = true;
 
+    err = 0;
+
+    printf("initialize discovery returning %d\n", err);
+    
     return(err);
 }
 
@@ -350,13 +363,13 @@ void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
 {
     printf("Topic: %s, Total Length: %u\n", topic, (unsigned int)tot_len);
 
-    if (strlen(topic) == strlen("relayX/command"))
+    if (strlen(topic) == strlen("relay/X/command"))
     {
         if ((strncasecmp(topic, "relay", strlen("relay")) == 0) &&
-            (strncasecmp(topic + strlen("relayX/"), "command", strlen("command")) == 0) &&
-            isdigit(topic[strlen("relay")]))
+            (strncasecmp(topic + strlen("relay/X/"), "command", strlen("command")) == 0) &&
+            isdigit(topic[strlen("relay/")]))
         {
-            relay_to_switch = topic[strlen("relay")] - '0' - 1;  // switch to zero base
+            relay_to_switch = topic[strlen("relay/")] - '0' - 1;  // switch to zero base
         }
     }
 }
@@ -366,7 +379,7 @@ void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
 {
   if(flags & MQTT_DATA_FLAG_LAST)
     {
-        printf("Final message received: %.*s\n", len, (const char*)data);
+        printf("Final message received: %.*s AND relay to switch = %d\n", len, (const char*)data, relay_to_switch);
 
         if ((relay_to_switch >=0) && (relay_to_switch < config.rmtsw_relay_max))
         {
@@ -404,30 +417,31 @@ void start_mqtt_sub(mqtt_client_t *client)
     mqtt_set_inpub_callback(client, mqtt_incoming_publish_cb, mqtt_incoming_data_cb, NULL);
 
     // Subscribe
-    err = mqtt_subscribe(client, "relay1/command", 1, mqtt_sub_request_cb, NULL);
+    //err = mqtt_subscribe(client, "relay/#/command", 1, mqtt_sub_request_cb, NULL);
+    err = mqtt_subscribe(client, "relay/#", 1, mqtt_sub_request_cb, NULL);    
     printf("subscribe result = %d\n", err);
-    SLEEP_MS(2000);
-    err = mqtt_subscribe(client, "relay2/command", 1, mqtt_sub_request_cb, NULL);
-    printf("subscribe result = %d\n", err);
-    SLEEP_MS(2000);
-    err = mqtt_subscribe(client, "relay3/command", 1, mqtt_sub_request_cb, NULL);
-    printf("subscribe result = %d\n", err);
-    SLEEP_MS(2000);    
-    err = mqtt_subscribe(client, "relay4/command", 1, mqtt_sub_request_cb, NULL);
-    printf("subscribe result = %d\n", err);
-    SLEEP_MS(2000);
-    err = mqtt_subscribe(client, "relay5/command", 1, mqtt_sub_request_cb, NULL);
-    printf("subscribe result = %d\n", err);
-    SLEEP_MS(2000);
-    err = mqtt_subscribe(client, "relay6/command", 1, mqtt_sub_request_cb, NULL);
-    printf("subscribe result = %d\n", err);
-    SLEEP_MS(2000);
-    err = mqtt_subscribe(client, "relay7/command", 1, mqtt_sub_request_cb, NULL);
-    printf("subscribe result = %d\n", err);
-    SLEEP_MS(2000);
-    err = mqtt_subscribe(client, "relay8/command", 1, mqtt_sub_request_cb, NULL);
-    printf("subscribe result = %d\n", err);
-    SLEEP_MS(2000);
+    // SLEEP_MS(2000);
+    // err = mqtt_subscribe(client, "relay2/command", 1, mqtt_sub_request_cb, NULL);
+    // printf("subscribe result = %d\n", err);
+    // SLEEP_MS(2000);
+    // err = mqtt_subscribe(client, "relay3/command", 1, mqtt_sub_request_cb, NULL);
+    // printf("subscribe result = %d\n", err);
+    // SLEEP_MS(2000);    
+    // err = mqtt_subscribe(client, "relay4/command", 1, mqtt_sub_request_cb, NULL);
+    // printf("subscribe result = %d\n", err);
+    // SLEEP_MS(2000);
+    // err = mqtt_subscribe(client, "relay5/command", 1, mqtt_sub_request_cb, NULL);
+    // printf("subscribe result = %d\n", err);
+    // SLEEP_MS(2000);
+    // err = mqtt_subscribe(client, "relay6/command", 1, mqtt_sub_request_cb, NULL);
+    // printf("subscribe result = %d\n", err);
+    // SLEEP_MS(2000);
+    // err = mqtt_subscribe(client, "relay7/command", 1, mqtt_sub_request_cb, NULL);
+    // printf("subscribe result = %d\n", err);
+    // SLEEP_MS(2000);
+    // err = mqtt_subscribe(client, "relay8/command", 1, mqtt_sub_request_cb, NULL);
+    // printf("subscribe result = %d\n", err);
+    // SLEEP_MS(2000);
 }
 
 /*PUBLISH**********************************************************************************************/
@@ -451,8 +465,18 @@ void rmtsw_mqtt_publish_discovery(mqtt_client_t *client, void *arg)
     err_t err;
     u8_t qos = 1; // 0, 1, or 2
     u8_t retain = 0;
+    static char discovery_payload[1800];
+    static char discovery_topic[60];
 
-    printf("size of payload = %d\n", sizeof(ha_device_discovery_payload));
+    printf("Constructing discovery topic\n");
+    rmtsw_mqtt_construct_discovery_topic(discovery_topic, sizeof(discovery_topic));
+    printf("Topic follows\n%s\n", discovery_topic);    
+    printf("Constructing discovery payload\n");
+    rmtsw_mqtt_construct_discovery_payload(discovery_payload, sizeof(discovery_payload));
+    printf("Payload follows\n%s\n", discovery_payload);
+    printf("size of payload = %d\n", strlen(discovery_payload));
+    
+    //printf("size of payload = %d\n", sizeof(ha_device_discovery_payload));
 
     //err = mqtt_publish(client, "test/test", pub_payload, strlen(pub_payload), qos, retain, mqtt_pub_request_cb, arg);
    
@@ -462,7 +486,8 @@ void rmtsw_mqtt_publish_discovery(mqtt_client_t *client, void *arg)
 
     // add device to ha
     retain = 0;
-    err = mqtt_publish(client, "homeassistant/device/rmtsw-00-11-22-33-44-55/config", ha_device_discovery_payload, strlen(ha_device_discovery_payload), qos, retain, mqtt_pub_request_cb, arg);
+    //err = mqtt_publish(client, "homeassistant/device/rmtsw-00-11-22-33-44-55/config", ha_device_discovery_payload, strlen(ha_device_discovery_payload), qos, retain, mqtt_pub_request_cb, arg);
+    err = mqtt_publish(client, discovery_topic, discovery_payload, strlen(discovery_payload), qos, retain, mqtt_pub_request_cb, arg);
 
     if(err != ERR_OK) 
     {
@@ -482,7 +507,7 @@ void rmtsw_mqtt_publish_state(int relay, mqtt_client_t *client, void *arg)
 
     CLIP(relay, 0, 7);
 
-    sprintf(state, "relay%d/state", relay+1);
+    sprintf(state, "relay/%d/state", relay+1);
 
     // if (config.rmtsw_relay_default_state[relay])   TODO: this is the proper way!
     if (web.rmtsw_relay_desired_state[relay])
@@ -506,4 +531,65 @@ void rmtsw_mqtt_publish_state(int relay, mqtt_client_t *client, void *arg)
     printf("published new state. %s = %s\n", state, state_payload);
 }
 
+int rmtsw_mqtt_construct_discovery_payload(char *buffer, size_t len)
+{
+    int err = 0;
+    int i; 
+    char temp_string[32];
+
+    *buffer = 0;
+
+    STRNCAT(buffer, "{\"dev\": {\"ids\": \"", len);
+    sprintf(temp_string, "rs-%02x-%02x-%02x-%02x-%02x-%02x", web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);
+    STRNCAT(buffer, temp_string, len);
+    STRNCAT(buffer, "\",\"name\": \"", len); 
+    STRNCAT(buffer, config.host_name, len);
+    STRNCAT(buffer, "\"},\"o\": {\"name\":\"", len);
+    STRNCAT(buffer, config.host_name, len);
+    STRNCAT(buffer, "\",\"sw\": \"", len);
+    STRNCAT(buffer, PLUTO_VER, len);
+    STRNCAT(buffer, "\",\"url\": \"https://github.com/NewmanIsTheStar/remote-switch/wiki\"},\"cmps\": {", len);
+    for(i=0; i<config.rmtsw_relay_max; i++)
+    {
+        STRNCAT(buffer, "\"", len);
+        sprintf(temp_string, "rs-r%d-%02x-%02x-%02x-%02x-%02x-%02x", i+1, web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);
+        STRNCAT(buffer, temp_string, len);
+        STRNCAT(buffer, "\": {\"p\": \"switch\",\"command_topic\":\"", len);
+        sprintf(temp_string, "relay/%d/command", i+1);
+        STRNCAT(buffer, temp_string, len);
+        STRNCAT(buffer, "\",\"state_topic\":\"", len);
+        sprintf(temp_string, "relay/%d/state", i+1);
+        STRNCAT(buffer, temp_string, len);
+        STRNCAT(buffer, " \",\"unique_id\":\"", len);
+        sprintf(temp_string, "rs-id%d-%02x-%02x-%02x-%02x-%02x-%02x", i+1, web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);
+        STRNCAT(buffer, temp_string, len);
+        STRNCAT(buffer, "\",\"name\":\"", len);   
+        STRNCAT(buffer, config.rmtsw_relay_name[i], len); 
+        STRNCAT(buffer, "\"}", len);         
+        if (i < (config.rmtsw_relay_max -1))
+        {
+            STRNCAT(buffer, ",", len);  // home assistant is very fussy about trailing commas
+        }
+        
+    }
+    STRNCAT(buffer, "},\"qos\": 0}", len);
+
+    return(err);
+}
+
+int rmtsw_mqtt_construct_discovery_topic(char *buffer, size_t len)
+{
+    int err = 0;
+    int i; 
+    char temp_string[32];
+
+    *buffer = 0;
+
+    STRNCAT(buffer, "homeassistant/device/rmtsw-", len);
+    sprintf(temp_string, "%02x-%02x-%02x-%02x-%02x-%02x", web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);
+    STRNCAT(buffer, temp_string, len);
+    STRNCAT(buffer, "/config", len);  
+    
+    return(0);
+}
 
