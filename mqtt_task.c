@@ -363,13 +363,13 @@ void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
 {
     printf("Topic: %s, Total Length: %u\n", topic, (unsigned int)tot_len);
 
-    if (strlen(topic) == strlen("relay/X/command"))
+    if (strlen(topic) == strlen("relay-c/X/command"))
     {
-        if ((strncasecmp(topic, "relay", strlen("relay")) == 0) &&
-            (strncasecmp(topic + strlen("relay/X/"), "command", strlen("command")) == 0) &&
-            isdigit(topic[strlen("relay/")]))
+        if ((strncasecmp(topic, "relay-c", strlen("relay-c")) == 0) &&
+            (strncasecmp(topic + strlen("relay-c/X/"), "command", strlen("command")) == 0) &&
+            isdigit(topic[strlen("relay-c/")]))
         {
-            relay_to_switch = topic[strlen("relay/")] - '0' - 1;  // switch to zero base
+            relay_to_switch = topic[strlen("relay-c/")] - '0' - 1;  // switch to zero base
         }
     }
 }
@@ -418,7 +418,7 @@ void start_mqtt_sub(mqtt_client_t *client)
 
     // Subscribe
     //err = mqtt_subscribe(client, "relay/#/command", 1, mqtt_sub_request_cb, NULL);
-    err = mqtt_subscribe(client, "relay/#", 1, mqtt_sub_request_cb, NULL);    
+    err = mqtt_subscribe(client, "relay-c/#", 1, mqtt_sub_request_cb, NULL);    
     printf("subscribe result = %d\n", err);
     // SLEEP_MS(2000);
     // err = mqtt_subscribe(client, "relay2/command", 1, mqtt_sub_request_cb, NULL);
@@ -484,8 +484,14 @@ void rmtsw_mqtt_publish_discovery(mqtt_client_t *client, void *arg)
     // retain = 1;
     // err = mqtt_publish(client, "homeassistant/device/rmtsw-00-11-22-33-44-55/config", "", 0, qos, retain, mqtt_pub_request_cb, arg);
 
-    // add device to ha
-    retain = 0;
+    // remove device from home assistant
+    retain = 1;
+    err = mqtt_publish(client, discovery_topic, "", 0, qos, retain, mqtt_pub_request_cb, arg);
+
+    SLEEP_MS(1000);
+
+    // add device to home assistant
+    retain = 1;
     //err = mqtt_publish(client, "homeassistant/device/rmtsw-00-11-22-33-44-55/config", ha_device_discovery_payload, strlen(ha_device_discovery_payload), qos, retain, mqtt_pub_request_cb, arg);
     err = mqtt_publish(client, discovery_topic, discovery_payload, strlen(discovery_payload), qos, retain, mqtt_pub_request_cb, arg);
 
@@ -500,14 +506,14 @@ void rmtsw_mqtt_publish_state(int relay, mqtt_client_t *client, void *arg)
 {
     const char *pub_payload = "Pico2W Hello!";
     err_t err;
-    u8_t qos = 1; // 0, 1, or 2
+    u8_t qos = 2; // 0, 1, or 2
     u8_t retain = 0;
     char state[64];
     char state_payload[8];
 
     CLIP(relay, 0, 7);
 
-    sprintf(state, "relay/%d/state", relay+1);
+    sprintf(state, "relay-s/%d/state", relay+1);
 
     // if (config.rmtsw_relay_default_state[relay])   TODO: this is the proper way!
     if (web.rmtsw_relay_desired_state[relay])
@@ -555,12 +561,12 @@ int rmtsw_mqtt_construct_discovery_payload(char *buffer, size_t len)
         sprintf(temp_string, "rs-r%d-%02x-%02x-%02x-%02x-%02x-%02x", i+1, web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);
         STRNCAT(buffer, temp_string, len);
         STRNCAT(buffer, "\": {\"p\": \"switch\",\"command_topic\":\"", len);
-        sprintf(temp_string, "relay/%d/command", i+1);
+        sprintf(temp_string, "relay-c/%d/command", i+1);
         STRNCAT(buffer, temp_string, len);
         STRNCAT(buffer, "\",\"state_topic\":\"", len);
-        sprintf(temp_string, "relay/%d/state", i+1);
+        sprintf(temp_string, "relay-s/%d/state", i+1);
         STRNCAT(buffer, temp_string, len);
-        STRNCAT(buffer, " \",\"unique_id\":\"", len);
+        STRNCAT(buffer, "\",\"unique_id\":\"", len);
         sprintf(temp_string, "rs-id%d-%02x-%02x-%02x-%02x-%02x-%02x", i+1, web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);
         STRNCAT(buffer, temp_string, len);
         STRNCAT(buffer, "\",\"name\":\"", len);   
