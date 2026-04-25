@@ -28,6 +28,7 @@
 #include "config.h"
 #include "led_strip.h"
 #include "rmtsw.h"
+#include "mqtt.h"
 #include "worker_tasks.h"
 #include "pluto.h"
 
@@ -3280,6 +3281,9 @@ const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *p
 
     // tell rmtsw_task that a relay state change might have occured
     rmtsw_queue_send((uint8_t)relay_num);
+
+    // tell mqtt_task that a relay state change might have occured
+    mqtt_config_refresh();
 
     config_changed();
 

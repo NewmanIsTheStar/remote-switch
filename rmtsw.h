@@ -24,6 +24,8 @@
 #define TEMPERATURE_INVALID              (2000)
 
 
+
+
 typedef enum
 {
     RMSW_ACTION_DO_NOTHING = 0,
