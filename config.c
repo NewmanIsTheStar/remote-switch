@@ -352,5 +352,10 @@ void config_system_variable_initialize(void)
     for(i=0; i<NUM_ROWS(config.gpio_default); i++)
     {
         config.gpio_default[i] = GP_UNINITIALIZED;
-    }       
+    } 
+    
+    // mqtt
+    config.mqtt_user[0] = 0;
+    config.mqtt_password[0] = 0;
+    config.mqtt_broker_address[0] = 0;
 }

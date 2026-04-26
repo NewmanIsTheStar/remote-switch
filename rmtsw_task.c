@@ -71,7 +71,7 @@ THERMOSTAT_INITIALIZATION_T initialization_table[] =
 bool relays_initialized = false;
 
 /*!
- * \brief Monitor temperature and control hvac system based on schedule
+ * \brief Control relays based on webui, mqtt and schedule
  *
  * \param params unused garbage
  * 

@@ -1092,3 +1092,36 @@ void urldecode(char *dst, const char *src)
     }
     *dst++ = '\0';
 }
+
+/*!
+ * \brief convert ascii string to 32 bit IP address
+ *
+ * \param[in]   address_string         IPv4 address or hostname in ascii e.g. "192.168.1.1" or "google.com"   
+ * 
+ * \return 32 bit number representing IPv4 address
+ */
+uint32_t address_string_to_ip(char *address_string)
+{
+    struct addrinfo hints, *res;
+    struct sockaddr_in *saddr;
+    uint32_t ip_raw;
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET; // IPv4 only
+    
+    if (getaddrinfo(address_string, NULL, &hints, &res) == 0) 
+    {
+        // cast to sockaddr_in
+        saddr = (struct sockaddr_in *)res->ai_addr;
+        
+        // extract 32-bit raw IP (Network Byte Order)
+        ip_raw = saddr->sin_addr.s_addr;
+        
+        printf("Raw 32-bit (Network Order): %08x\n", ip_raw);
+        printf("Raw 32-bit (Host Order):    %08x\n", ntohl(ip_raw));
+        
+        freeaddrinfo(res);
+    }
+
+    return (ip_raw);
+}

@@ -660,7 +660,12 @@ const char * cgi_network_handler(int iIndex, int iNumParams, char *pcParam[], ch
                 {
                     STRNCPY(config.wifi_password, value, sizeof(config.wifi_password));
                 }
-            }        
+            }   
+
+            if (strcasecmp("hostn", param) == 0)
+            {
+                STRNCPY(config.host_name, value, sizeof(config.host_name));
+            }
 
             if (strcasecmp("ipad", param) == 0)
             {
@@ -3283,7 +3288,7 @@ const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *p
     rmtsw_queue_send((uint8_t)relay_num);
 
     // tell mqtt_task that a relay state change might have occured
-    mqtt_config_refresh();
+    mqtt_relay_refresh();
 
     config_changed();
 
@@ -3931,6 +3936,64 @@ const char * cgi_relay_copy_handler(int iIndex, int iNumParams, char *pcParam[],
     return "/rs_schedule.shtml";    
 }
 
+/*!
+ * \brief cgi handler
+ *
+ * \param[in]  iIndex       index of cgi handler in cgi_handlers table
+ * \param[in]  iNumParams   number of parameters
+ * \param[in]  pcParam      parameter name
+ * \param[in]  pcValue      parameter value 
+ * 
+ * \return nothing
+ */
+const char * cgi_mqtt_handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
+{
+    int i = 0;
+    //int whole_part = 0;
+    //int tenths_part = 0;
+    char *param = NULL;
+    char *value = NULL;
+    //int new_value = 0;
+       
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+
+    i = 0;
+    while (i < iNumParams)
+    {
+        param = pcParam[i];
+        value = pcValue[i];
+
+        if (param && value)
+        {
+            //printf("Parameter: %s has Value: %s\n", param, value);
+            
+            if (strcasecmp("mquser", param) == 0)
+            {
+                STRNCPY(config.mqtt_user, value, sizeof(config.mqtt_user));
+            }
+
+            if (strcasecmp("mqpass", param) == 0)
+            {
+                if (strcasecmp(value, "********") != 0)
+                {
+                    STRNCPY(config.mqtt_password, value, sizeof(config.mqtt_password));
+                }
+            }   
+
+            if (strcasecmp("mqaddr", param) == 0)
+            {
+                STRNCPY(config.mqtt_broker_address, value, sizeof(config.mqtt_broker_address));
+            }            
+        }
+
+        i++;
+    }
+
+
+    // Send the next page back to the user
+    config_changed();
+    return "/mqtt.shtml";
+}
 
 // CGI requests and their respective handlers  --Add new entires at bottom--
 static const tCGI cgi_handlers[] = {
@@ -3991,6 +4054,7 @@ static const tCGI cgi_handlers[] = {
     {"/rs_add.cgi",                     cgi_relay_period_add_handler},   
     {"/rs_schedule.cgi",                cgi_relay_schedule_handler}, 
     {"/rs_copy.cgi",                    cgi_relay_copy_handler},  
+    {"/mqtt.cgi",                       cgi_mqtt_handler},     
                            
 };
 

@@ -83,7 +83,12 @@ typedef struct
     int use_simplified_english;
     int use_monday_as_week_start; 
     GPIO_DEFAULT_T gpio_default[29];
+    char mqtt_user[32];
+    char mqtt_password[32];
+    char mqtt_broker_address[32];
+    // ***system config end*** 
     uint16_t system_crc;
+
     // ***application specific config start***
     int rmtsw_enable;
     int rmtsw_relay_max;

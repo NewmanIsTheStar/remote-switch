@@ -1147,7 +1147,11 @@ extern NON_VOL_VARIABLES_T config;
     x(rs5nc)            \
     x(rs6nc)            \
     x(rs7nc)            \
-    x(rs8nc)
+    x(rs8nc) \
+    x(hostn) \
+    x(mquser) \
+    x(mqpass) \
+    x(mqaddr)
 
 
     
@@ -3806,6 +3810,27 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }             
         }
         break; 
+        case SSI_hostn: // hostn
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.host_name);
+        }               
+        break; 
+        case SSI_mquser: // mquser
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.mqtt_user);
+        }               
+        break; 
+        case SSI_mqpass: // mqpass
+        {
+            //printed = snprintf(pcInsert, iInsertLen, "%s", config.mqtt_password);
+            printed = snprintf(pcInsert, iInsertLen, "********");
+        }               
+        break; 
+        case SSI_mqaddr: // mqaddr
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.mqtt_broker_address);
+        }               
+        break;                         
 
         /******/
         default:

@@ -32,6 +32,7 @@
 #include "watchdog.h"
 //#include "weather.h"
 #include "rmtsw.h"
+#include "mqtt.h"
 #include "flash.h"
 #include "calendar.h"
 #include "utility.h"
@@ -68,13 +69,8 @@ typedef enum
 } SETPOINT_BIAS_T;
 
 // prototypes
-int set_hvac_gpio(THERMOSTAT_STATE_T thermostat_state);
-int hvac_timer_start(CLIMATE_TIMER_INDEX_T timer_index, int minutes);
-int hvac_timer_stop(CLIMATE_TIMER_INDEX_T timer_index);
-bool hvac_timer_expired(CLIMATE_TIMER_INDEX_T timer_index);
 void vTimerCallback(TimerHandle_t xTimer);
-int update_current_setpoints(THERMOSTAT_STATE_T last_active, long int temperaturex10, int temporary_set_point_offsetx10);
-int update_relay_scheduled_actions(void);
+int rmtsw_execute_scheduled_actions(void);
 long int sanitize_setpoint(long int setpoint);
 bool temporary_setpoint_offset_changed(void);
 int thermostat_relay_lockout_stop(void);
@@ -84,10 +80,8 @@ int thermostat_relay_lockout_stop(void);
 extern uint32_t unix_time;
 extern NON_VOL_VARIABLES_T config;
 extern WEB_VARIABLES_T web;
-//extern long int temperaturex10;
 
 // gloabl variables
-static THERMOSTAT_MODE_T scheduled_mode = HVAC_AUTO;         // scheduled mode
 static CLIMATE_TIMERS_T climate_timers[NUM_HVAC_TIMERS];     // set of timers used to control state
 static bool relay_gpio_ok = false;                           // ok to use configured gpio
 static QueueHandle_t relay_queue = NULL;                     // indicates user has change relay state
@@ -105,9 +99,10 @@ uint32_t rmtsw_relay_control(void)
     static uint32_t relay_timestamp[8] = {0,0,0,0,0,0,0,0};
     static uint32_t relay_delay[8] = {1,1,1,1,1,1,1,1};    
     int i;
+    bool relay_switched = false;
 
     // update desired states based on schedule
-    update_relay_scheduled_actions();
+    rmtsw_execute_scheduled_actions();
 
     CLIP(config.rmtsw_relay_max, 0, 8);
 
@@ -124,14 +119,20 @@ uint32_t rmtsw_relay_control(void)
                 // check if sufficient time has passed since last state change
                 if ((unix_time - relay_timestamp[i]) >  relay_delay[i])
                 {
+                    // switch relay
                     rmtsw_gpio_put(i, web.rmtsw_relay_desired_state[i]);
-                    //pio_put(config.rmtsw_relay_gpio[i], web.rmtsw_relay_desired_state[i]);
                     relay_state[i] = web.rmtsw_relay_desired_state[i]; 
                     relay_timestamp[i] = unix_time; 
+                    
+                    // remember that at least one relay was switched
+                    relay_switched = true; 
+                    
+                    // increase delay before next switch allowed
                     if (relay_delay[i] < 5*60)
                     {
                         relay_delay[i] *= 2; // double delay up to max of approx 5 minutes
-                    }  
+                    }
+                                         
                 }
             }
             else
@@ -147,88 +148,16 @@ uint32_t rmtsw_relay_control(void)
             }          
         }
     }
-                                   
+    
+    if (relay_switched)
+    {
+        // publish updated relay states
+        mqtt_relay_refresh();
+    }
+
     return(0);
 }
 
-/*!
- * \brief Start timer
- * 
- * \return non-zero on error
- */
-int hvac_timer_start(CLIMATE_TIMER_INDEX_T timer_index, int minutes)
-{
-    int err = 0;          
-
-    if (climate_timers[HVAC_LOCKOUT_TIMER].timer_handle)
-    {
-        if (minutes > 0)
-        {
-            // begin new lockout period  TODO error checking
-            climate_timers[HVAC_LOCKOUT_TIMER].timer_expired = false;
-            xTimerChangePeriod(climate_timers[HVAC_LOCKOUT_TIMER].timer_handle, minutes*60*1000, 1000);
-            xTimerStart(climate_timers[HVAC_LOCKOUT_TIMER].timer_handle, 1000);
-        }
-    }
-    else
-    {
-        err = 1;
-    }
-
-    return(err);
-}
-
-/*!
- * \brief Stop timer
- * 
- * \return true if timer expired
- */
-int hvac_timer_stop(CLIMATE_TIMER_INDEX_T timer_index)
-{
-    int err = 0;         
- 
-    xTimerStart(climate_timers[HVAC_LOCKOUT_TIMER].timer_handle, 0);
-    climate_timers[timer_index].timer_expired = true;
-    
-    return(err);
-}
-
-/*!
- * \brief Check timer
- * 
- * \return true if timer expired
- */
-bool hvac_timer_expired(CLIMATE_TIMER_INDEX_T timer_index)
-{
-    bool expired = false;          
- 
-    expired = climate_timers[timer_index].timer_expired;
-    
-    return(expired);
-}
-
-
-/*!
- * \brief Timer callback
- *
- * \param[in]   timer handle      handle of timer that expired
- * 
- * \return nothing
- */
-void vTimerCallback(TimerHandle_t xTimer)
- {
-    int id;
-
-    if (xTimer)
-    {
-        id = (int)pvTimerGetTimerID(xTimer);
-
-        if ((id >= 0) && (id < NUM_HVAC_TIMERS))
-        {
-            climate_timers[id].timer_expired = true;
-        }
-    }
- }
 
 int rmtsw_relay_initialize(void)
 {
@@ -267,44 +196,13 @@ int rmtsw_relay_gpio_enable(bool enable)
     relay_gpio_ok = enable;
 }
 
-long int sanitize_setpoint(long int setpoint)
-{
-    // sanitize setpoint
-    if (config.use_archaic_units)
-    {
-        // fahrenheit between 60 and 90
-        if ((setpoint > SETPOINT_MAX_FAHRENHEIT_X_10) || (setpoint < SETPOINT_MIN_FAHRENHEIT_X_10))
-        {
-            setpoint = SETPOINT_DEFAULT_FAHRENHEIT_X_10;
-        }
-    }
-    else
-    {
-        // celsius between 15 and 32
-        if ((setpoint > SETPOINT_MAX_CELSIUS_X_10) || (setpoint < SETPOINT_MIN_CELSIUS_X_10))
-        {
-            setpoint = SETPOINT_DEFAULT_CELSIUS_X_10;
-        }
-    }        
-
-    return(setpoint);
-}
-
-
-int thermostat_relay_lockout_stop(void)
-{
-    hvac_timer_stop(HVAC_LOCKOUT_TIMER);
-    hvac_timer_stop(HVAC_OVERSHOOT_TIMER);
-      
-    return(0);
-}
 
 /*!
  * \brief  Update the relay state based on schedule
  * 
  * \return nothing
  */
-int update_relay_scheduled_actions(void)
+int rmtsw_execute_scheduled_actions(void)
 {
     int err = 0;
     int i;

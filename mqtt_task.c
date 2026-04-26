@@ -45,6 +45,7 @@
 #include "tm1637.h"
 
 #define DISCOVERY_PAYLOAD_BUFFER_SIZE (2400)   // large payload sent to home assistant for automatic device discovery
+#define ALL_RELAYS (8)                         // message indicating all relay states need to be published
 
 // typdedefs
 typedef struct
@@ -106,81 +107,6 @@ static mqtt_client_t *mqtt_client;
 static char *homeassistant_discovery_payload = NULL;
 
 
-
-
-const char ha_device_discovery_payload[] =
-"{"
-"  \"dev\": {"
-"    \"ids\": \"rmtsw-00-11-22-33-44-55\","
-"    \"name\": \"cluster-power\""
-"  },"
-"  \"o\": {"
-"    \"name\":\"cluster-power\","
-"    \"sw\": \"2.1\","
-"    \"url\": \"https://bla2mqtt.example.com/support\""
-"  },"
-"  \"cmps\": {"
-"    \"rmtsw-relay1-00-11-22-33-44-55\": {"
-"      \"p\": \"switch\","
-"      \"command_topic\":\"relay1/command\","
-"      \"state_topic\":\"relay1/state\","   
-"      \"unique_id\":\"monkey1\","
-"      \"name\":\"RELAY-1\""
-"    },"
-"    \"rmtsw-relay2-00-11-22-33-44-55\": {"
-"      \"p\": \"switch\","
-"      \"command_topic\":\"relay2/command\","
-"      \"state_topic\":\"relay2/state\","      
-"      \"unique_id\":\"monkey2\","
-"      \"name\":\"RELAY-2\""
-"    },"
-"    \"rmtsw-relay3-00-11-22-33-44-55\": {"
-"      \"p\": \"switch\","
-"      \"command_topic\":\"relay3/command\","
-"      \"state_topic\":\"relay3/state\","      
-"      \"unique_id\":\"monkey3\","
-"      \"name\":\"RELAY-3\""
-"    },"
-"    \"rmtsw-relay4-00-11-22-33-44-55\": {"
-"      \"p\": \"switch\","
-"      \"command_topic\":\"relay4/command\","
-"      \"state_topic\":\"relay4/state\","      
-"      \"unique_id\":\"monkey4\","
-"      \"name\":\"RELAY-4\""
-"    },"
-"    \"rmtsw-relay5-00-11-22-33-44-55\": {"
-"      \"p\": \"switch\","
-"      \"command_topic\":\"relay5/command\","
-"      \"state_topic\":\"relay5/state\","      
-"      \"unique_id\":\"monkey5\","
-"      \"name\":\"RELAY-5\""
-"    },"
-"    \"rmtsw-relay6-00-11-22-33-44-55\": {"
-"      \"p\": \"switch\","
-"      \"command_topic\":\"relay6/command\","
-"      \"state_topic\":\"relay6/state\","      
-"      \"unique_id\":\"monkey6\","
-"      \"name\":\"RELAY-6\""
-"    },"
-"    \"rmtsw-relay7-00-11-22-33-44-55\": {"
-"      \"p\": \"switch\","
-"      \"command_topic\":\"relay7/command\","
-"      \"state_topic\":\"relay7/state\","      
-"      \"unique_id\":\"monkey7\","
-"      \"name\":\"RELAY-7\""
-"    },"
-"    \"rmtsw-relay8-00-11-22-33-44-55\": {"
-"      \"p\": \"switch\","
-"      \"command_topic\":\"relay8/command\","
-"      \"state_topic\":\"relay8/state\","      
-"      \"unique_id\":\"monkey8\","
-"      \"name\":\"RELAY-8\""
-"    }"
-"  },"
-"  \"qos\": 0"
-"}";
-
-
 /*!
  * \brief Monitor temperature and control hvac system based on schedule
  *
@@ -198,15 +124,15 @@ void mqtt_task(void *params)
     mqtt_sanitize_user_config();
      
     while (true)
-    {
-         
+    {         
         // initialize all subsystems that are not already up
         mqtt_initialize();
 
-        // wait for timeout period or user change
+        // wait for timeout period but abort immediately if a relay changes state
         err = mqtt_wait(MQTT_TASK_LOOP_DELAY);
 
-        if (err) // config changed
+        // check if a relay state changed
+        if (err) 
         {
             // if a specific relay has changed then publish it first
             if ((mqtt_message >=0) && (mqtt_message < config.rmtsw_relay_max))
@@ -308,16 +234,15 @@ int mqtt_sanitize_user_config(void)
 int mqtt_initialize_connection(void)
 {
     int err = -1;
+    struct mqtt_connect_client_info_t ci;
     
-    IP4_ADDR(&broker_ip, 192, 168, 22, 130); // broker IP
-
-    struct mqtt_connect_client_info_t ci = 
-    {
-        .client_id = "pi_pico2w_client",
-        .client_user = "bob",
-        .client_pass = "monkey",
-        .keep_alive = 60
-    };
+    broker_ip.addr = address_string_to_ip(config.mqtt_broker_address);
+    
+    memset(&ci, 0, sizeof(ci));
+    ci.client_id = "pi_pico2w_client";
+    ci.client_user = config.mqtt_user;
+    ci.client_pass = config.mqtt_password;
+    ci.keep_alive = 60;
 
     mqtt_client = mqtt_client_new();
     
@@ -389,6 +314,13 @@ int mqtt_initialize_ha_states(void)
 
 
 // Callback for connection status
+/*!
+ * \brief do something
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
 void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status)
 {
     if (status == MQTT_CONNECT_ACCEPTED)
@@ -409,6 +341,13 @@ void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status
 
 /*SUBSCRIBE************************************************************************************/
 // 1. Publish Callback: Receives the topic
+/*!
+ * \brief do something
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
 void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len) 
 {
     char expected_domain[32];
@@ -430,6 +369,13 @@ void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
 }
 
 // 2. Data Callback: Receives payload chunks
+/*!
+ * \brief do something
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
 void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags) 
 {
   if(flags & MQTT_DATA_FLAG_LAST)
@@ -460,12 +406,26 @@ void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
 }
 
 // 3. Sub Request Callback: Confirms subscription status
+/*!
+ * \brief do something
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
 void mqtt_sub_request_cb(void *arg, err_t result) 
 {
   printf("Subscribe result: %d\n", result);
 }
 
 // 4. Setup
+/*!
+ * \brief do something
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
 void start_mqtt_sub(mqtt_client_t *client)
 {
     int err;
@@ -482,6 +442,13 @@ void start_mqtt_sub(mqtt_client_t *client)
 
 /*PUBLISH**********************************************************************************************/
 // 1. Define callback for publish completion
+/*!
+ * \brief do something
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
 void mqtt_pub_request_cb(void *arg, err_t result) 
 {
     if(result != ERR_OK) 
@@ -520,6 +487,13 @@ void mqtt_pub_request_cb(void *arg, err_t result)
 }
 
 // 2. Example publish function
+/*!
+ * \brief do something
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
 void mqtt_publish_discovery(mqtt_client_t *client, void *arg)
 {
     //const char *pub_payload = "Pico2W Hello!";
@@ -568,7 +542,13 @@ void mqtt_publish_discovery(mqtt_client_t *client, void *arg)
     }
 }
 
-
+/*!
+ * \brief publish a relay state
+ *
+ * \param relay 0 - 7
+ * 
+ * \return nothing
+ */
 void mqtt_publish_state(int relay, mqtt_client_t *client, void *arg)
 {
     const char *pub_payload = "Pico2W Hello!";
@@ -583,7 +563,6 @@ void mqtt_publish_state(int relay, mqtt_client_t *client, void *arg)
 
     sprintf(state, "relay-s-%02x-%02x-%02x-%02x-%02x-%02x/%d/state", web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5], relay+1);
 
-    // if (config.rmtsw_relay_default_state[relay])   TODO: this is the proper way!
     if (web.rmtsw_relay_desired_state[relay])
     {
         sprintf(state_payload, "ON");
@@ -605,6 +584,13 @@ void mqtt_publish_state(int relay, mqtt_client_t *client, void *arg)
     printf("published new state. %s = %s\n", state, state_payload);
 }
 
+/*!
+ * \brief print home assistant discovery payload into callers buffer
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
 int mqtt_construct_discovery_payload(char *buffer, size_t len)
 {
     int err = 0;
@@ -651,6 +637,13 @@ int mqtt_construct_discovery_payload(char *buffer, size_t len)
     return(err);
 }
 
+/*!
+ * \brief print home assistant discovery topic into callers buffer
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
 int mqtt_construct_discovery_topic(char *buffer, size_t len)
 {
     int err = 0;
@@ -667,6 +660,13 @@ int mqtt_construct_discovery_topic(char *buffer, size_t len)
     return(0);
 }
 
+/*!
+ * \brief send all relay states to the mqtt broker sequentially
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
 void mqtt_publish_all_relay_states(mqtt_client_t *client, void *arg)
 {
     int i = 0;
@@ -690,6 +690,13 @@ void mqtt_publish_all_relay_states(mqtt_client_t *client, void *arg)
     }
 }
 
+/*!
+ * \brief send relay state to the mqtt broker and wait for callback confirmation
+ *
+ * \param relay 0 - 7
+ * 
+ * \return nothing
+ */
 void mqtt_publish_relay_state(int relay, mqtt_client_t *client, void *arg)
 {
     int j = 0;
@@ -707,12 +714,15 @@ void mqtt_publish_relay_state(int relay, mqtt_client_t *client, void *arg)
     }
 }
 
-
-void mqtt_config_refresh(void)
+/*!
+ * \brief trigger publication of relay states by mqtt task
+ * 
+ * \return nothing
+ */
+void mqtt_relay_refresh(void)
 {
-    // config has changed
-    //mqtt_publish_all_relay_states(mqtt_client, NULL);
-    mqtt_queue_send(8);
+    // relay states have changed
+    mqtt_queue_send(ALL_RELAYS);
 }
 
 /*!
@@ -726,13 +736,20 @@ int mqtt_wait(TickType_t timeout)
 
     if (xQueueReceive(mqtt_queue, &mqtt_message, timeout) == pdPASS)
     {
-        // user changed relay state so abort wait
+        // got a message
         err = 1;
     }
 
     return(err);
 }
 
+/*!
+ * \brief send a message to the mqtt_task queue
+ *
+ * \param message one byte message
+ * 
+ * \return nothing
+ */
 void mqtt_queue_send(uint8_t message)
 {
     static uint8_t message_store = 0;
@@ -746,6 +763,11 @@ void mqtt_queue_send(uint8_t message)
     }
 }
 
+/*!
+ * \brief initialize a queue for sending messages to the mqtt_task
+ * 
+ * \return nothing
+ */
 int mqtt_initialize_queue(void)
 {
     int err = 0;
