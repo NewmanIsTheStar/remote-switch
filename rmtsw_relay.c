@@ -75,6 +75,7 @@ long int sanitize_setpoint(long int setpoint);
 bool temporary_setpoint_offset_changed(void);
 int thermostat_relay_lockout_stop(void);
  static inline void rmtsw_gpio_put(uint relay, bool value);
+ int rmtsw_generate_relay_status_message(void);
 
 // external variables
 extern uint32_t unix_time;
@@ -151,6 +152,8 @@ uint32_t rmtsw_relay_control(void)
     
     if (relay_switched)
     {
+        rmtsw_generate_relay_status_message();
+        
         // publish updated relay states
         mqtt_relay_refresh();
     }
@@ -178,13 +181,57 @@ int rmtsw_relay_initialize(void)
                 gpio_set_dir(config.rmtsw_relay_gpio[i], true);
                 
                 // set web ui desired state to match initial relay state
-                web.rmtsw_relay_desired_state[i] = config.rmtsw_relay_default_state[i];
+                web.rmtsw_relay_desired_state[i] = config.rmtsw_relay_default_state[i];                
             }
-        }        
+        }
+                       
         err = 0;
     }
     else
     {
+        err = 1;
+    }
+
+    rmtsw_generate_relay_status_message();
+
+    return(err);
+}
+
+
+int rmtsw_generate_relay_status_message(void)
+{
+    int err = 0;
+    int i;
+
+    if (relay_gpio_ok)
+    {
+        CLIP(config.rmtsw_relay_max, 0, 8);
+
+        snprintf(web.status_message, sizeof(web.status_message), "Relay states: ");
+        for(i=0; i<config.rmtsw_relay_max; i++)
+        {
+            if (web.rmtsw_relay_enabled[i])
+            {
+                if (web.rmtsw_relay_desired_state[i])
+                {
+                    STRNCAT(web.status_message, "1", sizeof(web.status_message));  // ON
+                }
+                else
+                {
+                    STRNCAT(web.status_message, "0", sizeof(web.status_message));  // OFF
+                }                
+            }
+            else
+            {
+                STRNCAT(web.status_message, "X", sizeof(web.status_message));  // no alteration                
+            }
+        }
+                       
+        err = 0;
+    }
+    else
+    {
+        snprintf(web.status_message, sizeof(web.status_message), "No valid GPIOs configured");
         err = 1;
     }
 
@@ -255,7 +302,24 @@ int rmtsw_execute_scheduled_actions(void)
             }
         }
 
-        printf("New scheduled relay state.  start mow = %d off = %08b on = %08b\n", candidate_start_mow, candidate_off_bitmap, candidate_on_bitmap);
+        snprintf(web.status_message, sizeof(web.status_message), "Relay transition: ");
+        for(i=0; i < config.rmtsw_relay_max; i++)
+        {
+            if (candidate_on_bitmap & (1<<i))
+            {
+                STRNCAT(web.status_message, "1", sizeof(web.status_message));  // ON
+            }
+            else if (candidate_off_bitmap & (1<<i))
+            {
+                STRNCAT(web.status_message, "0", sizeof(web.status_message));  // OFF
+            }
+            else
+            {
+                STRNCAT(web.status_message, "X", sizeof(web.status_message));  // no alteration
+            }            
+        }
+        send_syslog_message("scheduled", "%s", web.status_message);
+        //printf("SYSLOG: %s\n", web.status_message);
     }  
 
     return(err);

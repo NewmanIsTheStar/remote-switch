@@ -75,43 +75,32 @@ body {
       <td font-weight: bold; colspan="2"><!--#status--></td>
     </tr>
     <tr>
+      <td><i>where</i></td>      
+      <td>&nbsp;</td> 
+    </tr>
+    <tr>
+      <td>&nbsp;</td>       
+      <td> Relays read left to right</td>     
+    </tr>
+    <tr>
+      <td>&nbsp;</td> 
+      <td> 1 means relay turned ON</td>      
+    </tr> 
+    <tr>
+      <td>&nbsp;</td> 
+      <td> 0 means relay turned OFF</td>      
+    </tr> 
+    <tr>
+      <td>&nbsp;</td> 
+      <td> X means relay didn't change</td>      
+    </tr>                      
+    <tr>
       <td colspan="2">&nbsp;</td> 
     </tr>      
     <tr>
       <td>Local Time</td>
       <td><!--#ltme--></td>
     </tr>
-    <tr>
-      <td>Temperature</td>
-      <td><!--#tct--> &deg;<!--#tmpu--></td>      
-    </tr>
-    <tr>
-      <td>Set point</td>
-      <td><!--#tcs--> &deg;<!--#tmpu--></td>
-    </tr>
-    <tr>
-      <td>Heating target</td>
-      <td><!--#tchs--></td>
-    </tr>    
-    <tr>
-      <td>Cooling target</td>
-      <td><!--#tccs--></td>
-    </tr>  
-    <tr>
-      <td colspan="2">&nbsp;</td> 
-    </tr>     
-    <tr>
-      <td>Grid Status</td>
-      <td><!--#grids--></td>
-    </tr> 
-    <tr>
-      <td>Battery</td>
-      <td><!--#batp--> %</td>
-    </tr> 
-    <tr>
-      <td colspan="2">&nbsp;</td> 
-    </tr>     
-    <tr>
       <td>Network Time</td>
       <td><!--#time--></td>
     </tr> 

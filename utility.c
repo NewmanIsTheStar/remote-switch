@@ -1117,8 +1117,8 @@ uint32_t address_string_to_ip(char *address_string)
         // extract 32-bit raw IP (Network Byte Order)
         ip_raw = saddr->sin_addr.s_addr;
         
-        printf("Raw 32-bit (Network Order): %08x\n", ip_raw);
-        printf("Raw 32-bit (Host Order):    %08x\n", ntohl(ip_raw));
+        // printf("Raw 32-bit (Network Order): %08x\n", ip_raw);
+        // printf("Raw 32-bit (Host Order):    %08x\n", ntohl(ip_raw));
         
         freeaddrinfo(res);
     }

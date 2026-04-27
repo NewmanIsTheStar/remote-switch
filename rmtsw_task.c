@@ -213,6 +213,7 @@ int rmtsw_initialize_relays(void)
  */
 int rmtsw_initialize(void)
 {
+    static bool init_complete = false;
     int err = 0;
     int i;
 
@@ -232,9 +233,13 @@ int rmtsw_initialize(void)
 
     if (err)
     {
-        printf("%d subsystems failed to initialize\n", err);
-    }
+        printf("RMTSW %d subsystems failed to initialize\n", err);
 
+    } else if (!init_complete)
+    {
+        printf("RMTSW all subsystems sucessfully initialized\n");
+        init_complete = true;
+    }
     return(err);
 }
 

@@ -160,6 +160,7 @@ void mqtt_task(void *params)
  */
 int mqtt_initialize(void)
 {
+    static bool init_complete = false;
     int err = 0;
     int i;
 
@@ -179,7 +180,12 @@ int mqtt_initialize(void)
 
     if (err)
     {
-        printf("%d subsystems failed to initialize\n", err);
+        printf("MQTT %d subsystems failed to initialize\n", err);
+        
+    } else if (!init_complete)
+    {
+        printf("MQTT all subsystems sucessfully initialized\n");
+        init_complete = true;
     }
 
     return(err);
@@ -249,12 +255,12 @@ int mqtt_initialize_connection(void)
     if (mqtt_client != NULL) 
     {
         err = mqtt_client_connect(mqtt_client, &broker_ip, MQTT_PORT, mqtt_connection_cb, NULL, &ci);
-        printf("mqtt connect returned %d\n", err);
+        //printf("mqtt connect returned %d\n", err);
     }
 
     connection_initialized = true;
 
-    printf("initialize connection returning %d\n", err);
+    //printf("initialize connection returning %d\n", err);
 
     return(err);
 }
@@ -272,7 +278,7 @@ int mqtt_initialize_ha_discovery(void)
 
     if (connection_completed)
     {
-        printf("about to call publish discovery\n");
+        //printf("about to call publish discovery\n");
 
         mqtt_publish_discovery(mqtt_client, NULL);
         
@@ -281,7 +287,7 @@ int mqtt_initialize_ha_discovery(void)
         err = 0;
     }
 
-    printf("initialize discovery returning %d\n", err);
+    //printf("initialize discovery returning %d\n", err);
     
     return(err);
 }
@@ -299,7 +305,7 @@ int mqtt_initialize_ha_states(void)
 
     if (discovery_completed)
     {
-        printf("about to call publish all states\n");
+        //printf("about to call publish all states\n");
 
         mqtt_publish_all_relay_states(mqtt_client, NULL);
         
@@ -307,7 +313,7 @@ int mqtt_initialize_ha_states(void)
 
         err = 0;
     }
-    printf("initialize states returning %d\n", err);
+    //printf("initialize states returning %d\n", err);
     
     return(err);
 }
@@ -325,7 +331,7 @@ void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status
 {
     if (status == MQTT_CONNECT_ACCEPTED)
     {
-        printf("MQTT Connected!\n");
+        //printf("MQTT Connected!\n");
         connection_completed = true;
 
         // Subscribe to a topic here
@@ -354,7 +360,7 @@ void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
     
     sprintf(expected_domain, "relay-c-%02x-%02x-%02x-%02x-%02x-%02x", web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]); 
     
-    printf("Topic: %s, Total Length: %u\n", topic, (unsigned int)tot_len);
+    //printf("Topic: %s, Total Length: %u\n", topic, (unsigned int)tot_len);
 
     if (strlen(topic) == strlen("relay-c-00-11-22-33-44-55/X/command"))
     {
@@ -363,7 +369,7 @@ void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
             isdigit(topic[strlen(expected_domain) + strlen("/")]))
         {
             relay_to_switch = topic[strlen(expected_domain) + strlen("/")] - '0' - 1;  // switch to zero base
-            printf("got relay to switch = %d\n", relay_to_switch);
+            //printf("got relay to switch = %d\n", relay_to_switch);
         }
     }
 }
@@ -380,7 +386,7 @@ void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
 {
   if(flags & MQTT_DATA_FLAG_LAST)
     {
-        printf("Final message received: %.*s AND relay to switch = %d\n", len, (const char*)data, relay_to_switch);
+        //printf("Final message received: %.*s AND relay to switch = %d\n", len, (const char*)data, relay_to_switch);
 
         if ((relay_to_switch >=0) && (relay_to_switch < config.rmtsw_relay_max))
         {
@@ -415,7 +421,7 @@ void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
  */
 void mqtt_sub_request_cb(void *arg, err_t result) 
 {
-  printf("Subscribe result: %d\n", result);
+  //printf("Subscribe result: %d\n", result);
 }
 
 // 4. Setup
@@ -437,7 +443,7 @@ void start_mqtt_sub(mqtt_client_t *client)
     // Subscribe
     sprintf(topic, "relay-c-%02x-%02x-%02x-%02x-%02x-%02x/#", web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);    
     err = mqtt_subscribe(client, topic, 1, mqtt_sub_request_cb, NULL);    
-    printf("subscribe result = %d\n", err);
+    //printf("subscribe result = %d\n", err);
 }
 
 /*PUBLISH**********************************************************************************************/
@@ -456,12 +462,12 @@ void mqtt_pub_request_cb(void *arg, err_t result)
         printf("Publish failed: %d\n", result);
     } else 
     {
-        printf("Publish success\n");
+        //printf("Publish success\n");
     }
 
     if (arg)
     {
-        printf("publish callback received argument %d\n", *(MQTT_CALLBACK_ID_T *)arg);
+        //printf("publish callback received argument %d\n", *(MQTT_CALLBACK_ID_T *)arg);
         switch(*(MQTT_CALLBACK_ID_T *)arg)
         {
         case MQTT_CALLBACK_DISCOVERY_ID:
@@ -469,7 +475,7 @@ void mqtt_pub_request_cb(void *arg, err_t result)
             {
                 free(homeassistant_discovery_payload);
                 homeassistant_discovery_payload = NULL;
-                printf("freed discovery payload buffer\n");
+                //printf("freed discovery payload buffer\n");
                 discovery_completed = true;
             }
             break;
@@ -504,9 +510,9 @@ void mqtt_publish_discovery(mqtt_client_t *client, void *arg)
     static char discovery_topic[60];
     static MQTT_CALLBACK_ID_T discovery_arg = MQTT_CALLBACK_DISCOVERY_ID;
 
-    printf("Constructing discovery topic\n");
+    //printf("Constructing discovery topic\n");
     mqtt_construct_discovery_topic(discovery_topic, sizeof(discovery_topic));
-    printf("Topic follows\n%s\n", discovery_topic);    
+    //printf("Topic follows\n%s\n", discovery_topic);    
 
 
     if (!homeassistant_discovery_payload)
@@ -516,10 +522,10 @@ void mqtt_publish_discovery(mqtt_client_t *client, void *arg)
 
     if (homeassistant_discovery_payload)
     {    
-        printf("Constructing discovery payload\n");
+        //printf("Constructing discovery payload\n");
         mqtt_construct_discovery_payload(homeassistant_discovery_payload, DISCOVERY_PAYLOAD_BUFFER_SIZE);
-        printf("Payload follows\n%s\n", homeassistant_discovery_payload);
-        printf("size of payload = %d\n", strlen(homeassistant_discovery_payload));
+        //printf("Payload follows\n%s\n", homeassistant_discovery_payload);
+        //printf("size of payload = %d\n", strlen(homeassistant_discovery_payload));
     
         // remove device from home assistant
         retain = 1;
@@ -581,7 +587,7 @@ void mqtt_publish_state(int relay, mqtt_client_t *client, void *arg)
         printf("Publish state error: %d\n", err);
     }
 
-    printf("published new state. %s = %s\n", state, state_payload);
+    //printf("published new state. %s = %s\n", state, state_payload);
 }
 
 /*!
