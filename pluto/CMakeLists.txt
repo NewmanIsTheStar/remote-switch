@@ -1,5 +1,5 @@
-target_include_directories(remote-switch PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_sources(remote-switch PRIVATE
+target_include_directories(${APP_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_sources(${APP_NAME} PRIVATE
     pluto.c
     web.c
     flash.c
@@ -18,7 +18,7 @@ target_sources(remote-switch PRIVATE
     ping_core.c
 )
 
-target_include_directories(remote-switch PUBLIC
+target_include_directories(${APP_NAME} PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}
         ${PROJECT_SOURCE_DIR}/pico-sdk/lib/lwip/contrib/ports/freertos/include/ 
         if(PICO_BOARD STREQUAL "pico_w")
@@ -59,7 +59,7 @@ if(NOT PICO_BOARD STREQUAL "pico_w")
                 pico_mbedtls)        
 endif()
 
-target_link_libraries(remote-switch ${pluto_link_libraries})
+target_link_libraries(${APP_NAME} ${pluto_link_libraries})
 
 # create githash used instead of APP_VERSION for debug builds
 message("Creating githash.h")

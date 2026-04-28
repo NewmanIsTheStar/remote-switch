@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.13..3.27)
 
 # ====================================================================================
 # Set release version
+set(APP_NAME remote-switch)
 set(APP_VERSION "01.00.03")
 
 # Set build type
@@ -48,7 +49,7 @@ add_compile_definitions(FAKE_RTC)
 include(pico-sdk/pico_sdk_init.cmake)
 
 # set the project name ${PROJECT_NAME}
-project(remote-switch C CXX ASM)
+project(${APP_NAME} C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
@@ -69,29 +70,29 @@ endif()
 
       
 # ====================================================================================
-# remote-switch
+# ${APP_NAME}
 
-add_executable(remote-switch)
+add_executable(${APP_NAME})
 add_subdirectory(pluto)  
 add_subdirectory(application)
 
-target_compile_definitions(remote-switch PRIVATE APP_NAME="remote-switch")
-target_compile_definitions(remote-switch PRIVATE INCORPORATE_REMOTE_SWITCH)
+target_compile_definitions(${APP_NAME} PRIVATE APP_NAME="${APP_NAME}")
+target_compile_definitions(${APP_NAME} PRIVATE INCORPORATE_REMOTE_SWITCH)
 
-pico_set_program_name(remote-switch "remote-switch")
-pico_set_program_version(remote-switch ${APP_VERSION})
+pico_set_program_name(${APP_NAME} "${APP_NAME}")
+pico_set_program_version(${APP_NAME} ${APP_VERSION})
 
 # enable/disable output over UART/USB  ***TODO: had to disable stdio over usb in Release builds as it causes random crashes/resets during startup
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        pico_enable_stdio_usb(remote-switch 0)
-        pico_enable_stdio_uart(remote-switch 0)        
+        pico_enable_stdio_usb(${APP_NAME} 0)
+        pico_enable_stdio_uart(${APP_NAME} 0)        
 else() 
-        pico_enable_stdio_usb(remote-switch 0)
-        pico_enable_stdio_uart(remote-switch 1)        
+        pico_enable_stdio_usb(${APP_NAME} 0)
+        pico_enable_stdio_uart(${APP_NAME} 1)        
 endif()
 
 # create uf2 
-pico_add_extra_outputs(remote-switch)
+pico_add_extra_outputs(${APP_NAME})
 
 
 
