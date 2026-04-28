@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.13..3.27)
 
 # ====================================================================================
-# Set release version
-set(APP_NAME remote-switch)
+# Set name and release version
+set(APP_NAME remote-switch)                 # you must also set the project name below
 set(APP_VERSION "01.00.03")
 
 # Set build type
@@ -49,7 +49,7 @@ add_compile_definitions(FAKE_RTC)
 include(pico-sdk/pico_sdk_init.cmake)
 
 # set the project name ${PROJECT_NAME}
-project(${APP_NAME} C CXX ASM)
+project(remote-switch C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
@@ -70,7 +70,7 @@ endif()
 
       
 # ====================================================================================
-# ${APP_NAME}
+# remote-switch
 
 add_executable(${APP_NAME})
 add_subdirectory(pluto)  
