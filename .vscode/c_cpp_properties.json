@@ -4,6 +4,8 @@
             "name": "Pico",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/pluto/**",
+                "${workspaceFolder}/application/**",
                 "${userHome}/.pico-sdk/sdk/2.1.1/**"
             ],
             "forcedInclude": [

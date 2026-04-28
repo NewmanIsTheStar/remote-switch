@@ -22,8 +22,8 @@
 #include "rmtsw.h"
 
 #include "pluto.h"
-#include "powerwall.h"
-#include "led_strip.h"
+// #include "powerwall.h"
+// #include "led_strip.h"
 
 #ifdef USE_GIT_HASH_AS_VERSION
 #include "githash.h"

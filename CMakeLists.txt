@@ -63,93 +63,18 @@ endif()
 # create "generated" directory
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/generated)
 
-# create githash used instead of APP_VERSION for debug builds
-message("Creating githash.h")
-execute_process(COMMAND
-        ./create_githash_h
-        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-        )
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")       
         add_compile_definitions(USE_GIT_HASH_AS_VERSION)
 endif()
 
-# create pio header file for controlling addressable led strips 
-add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/generated/ws2812.py
-        DEPENDS ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio
-        COMMAND Pioasm -o python ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio ${CMAKE_CURRENT_LIST_DIR}/generated/ws2812.py
-        VERBATIM)
-
-# create pio header file for controlling seven segnment display 
-add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/generated/tm1637.py
-        DEPENDS ${CMAKE_CURRENT_LIST_DIR}/tm1637.pio
-        COMMAND Pioasm -o python ${CMAKE_CURRENT_LIST_DIR}/tm1637.pio ${CMAKE_CURRENT_LIST_DIR}/generated/tm1637.py
-        VERBATIM)        
-
-set(common_source_files
-        pluto.c
-        web.c
-        # weather.c
-        flash.c
-        ssi.c
-        cgi.c
-        calendar.c
-        utility.c
-        config.c
-        dhcpserver.c
-        dnsserver.c
-        # led_strip.c
-        sdk_callback.c
-        watchdog.c
-        # message.c
-        udp.c
-        wifi.c
-        usurper_ping.c
-        ping_core.c
-        )
-
-# ====================================================================================
-# pluto common libraries
-set(pluto_link_libraries
-        pico_cyw43_arch_lwip_sys_freertos
-        pico_lwip_freertos
-        pico_lwip_api        
-        pico_lwip_sntp
-        pico_lwip_http
-        pico_lwip_mqtt
-        pico_stdlib
-        pico_rand
-        FreeRTOS-Kernel-Heap4
-        pico_flash
-        hardware_pio
-        hardware_i2c
-        pico_httpd_content
-        )
-
-
-# pico_w has insufficent RAM to incorporate HTTPS web client (thus tesla powerwall monitoring is disabled on pico_w)
-if(NOT PICO_BOARD STREQUAL "pico_w")
-        set(pluto_link_libraries ${pluto_link_libraries}        
-                pico_lwip_mbedtls
-                pico_mbedtls)        
-endif()
-
-
+      
 # ====================================================================================
 # remote-switch
-set(WEB_FILES)
-file(GLOB WEB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/remote-switch/html_files/*.shtml")
-pico_add_library(pico_httpd_content NOFLAG)
-pico_set_lwip_httpd_content(pico_httpd_content INTERFACE ${WEB_FILES})
 
-set(remote-switch_source_files ${common_source_files}
-        remote-switch/worker_tasks.c        
-        rmtsw_task.c
-        rmtsw_web_ui.c
-        rmtsw_relay.c
-        mqtt_task.c
-)        
+add_executable(remote-switch)
+add_subdirectory(pluto)  
+add_subdirectory(application)
 
-add_executable(remote-switch ${remote-switch_source_files})  
 target_compile_definitions(remote-switch PRIVATE APP_NAME="remote-switch")
 target_compile_definitions(remote-switch PRIVATE INCORPORATE_REMOTE_SWITCH)
 
@@ -164,25 +89,6 @@ else()
         pico_enable_stdio_usb(remote-switch 0)
         pico_enable_stdio_uart(remote-switch 1)        
 endif()
-
-target_include_directories(remote-switch PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
-        ${CMAKE_CURRENT_LIST_DIR}/pico-sdk/lib/lwip/contrib/ports/freertos/include/ 
-        if(PICO_BOARD STREQUAL "pico_w")
-        ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2040/
-        else()
-        ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2350_ARM_NTZ/include/
-        endif()        
-        ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/include/
-        ${CMAKE_CURRENT_LIST_DIR}/pico-sdk/src/rp2_common/pico_cyw43_arch/include/
-        ${CMAKE_CURRENT_LIST_DIR}/pico-sdk/lib/cyw43-driver/src/
-        ${CMAKE_CURRENT_LIST_DIR}/pico-sdk/src/rp2_common/pico_cyw43_driver/include/
-        ${CMAKE_CURRENT_LIST_DIR}/pico-sdk/lib/lwip/src/apps/altcp_tls/
-        ${CMAKE_CURRENT_LIST_DIR}/pico-sdk/lib/mbedtls/include/
-        ${CMAKE_CURRENT_LIST_DIR}/pico-sdk/lib/lwip/contrib/apps/ping/
-        )
-
-target_link_libraries(remote-switch ${pluto_link_libraries})
 
 # create uf2 
 pico_add_extra_outputs(remote-switch)

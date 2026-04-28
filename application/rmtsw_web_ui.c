@@ -36,12 +36,12 @@
 #include "calendar.h"
 #include "utility.h"
 #include "config.h"
-#include "led_strip.h"
-#include "message.h"
-#include "altcp_tls_mbedtls_structs.h"
-#include "powerwall.h"
+// #include "led_strip.h"
+// #include "message.h"
+// #include "altcp_tls_mbedtls_structs.h"
+// #include "powerwall.h"
 #include "pluto.h"
-#include "tm1637.h"
+//#include "tm1637.h"
 
 // external variables
 extern NON_VOL_VARIABLES_T config;

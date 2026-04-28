@@ -37,12 +37,12 @@
 #include "calendar.h"
 #include "utility.h"
 #include "config.h"
-#include "led_strip.h"
-#include "message.h"
-#include "altcp_tls_mbedtls_structs.h"
-#include "powerwall.h"
+//#include "led_strip.h"
+//#include "message.h"
+//#include "altcp_tls_mbedtls_structs.h"
+//#include "powerwall.h"
 #include "pluto.h"
-#include "tm1637.h"
+//#include "tm1637.h"
 
 #define DISCOVERY_PAYLOAD_BUFFER_SIZE (2400)   // large payload sent to home assistant for automatic device discovery
 #define ALL_RELAYS (8)                         // message indicating all relay states need to be published

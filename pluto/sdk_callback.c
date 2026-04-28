@@ -27,7 +27,7 @@
 #include "task.h"
 
 //#include "weather.h"
-#include "led_strip.h"
+//#include "led_strip.h"
 #include "cgi.h"
 #include "ssi.h"
 #include "flash.h"

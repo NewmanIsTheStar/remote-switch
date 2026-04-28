@@ -26,7 +26,7 @@
 #include "calendar.h"
 #include "utility.h"
 #include "config.h"
-#include "led_strip.h"
+//#include "led_strip.h"
 #include "rmtsw.h"
 #include "mqtt.h"
 #include "worker_tasks.h"
