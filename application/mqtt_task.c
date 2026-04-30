@@ -46,6 +46,7 @@
 
 #define DISCOVERY_PAYLOAD_BUFFER_SIZE (2400)   // large payload sent to home assistant for automatic device discovery
 #define ALL_RELAYS (8)                         // message indicating all relay states need to be published
+#define CONNECTION_BACKOFF_MS_DEFAULT (500)    // minimum number of milliseconds to wait between attempt to connect to the broker
 
 // typdedefs
 typedef struct
@@ -63,9 +64,10 @@ void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status
 void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len); 
 void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags);
 void mqtt_sub_request_cb(void *arg, err_t result);
-void start_mqtt_sub(mqtt_client_t *client);
+void mqtt_start_sub(mqtt_client_t *client);
 void mqtt_pub_request_cb(void *arg, err_t result);
 void mqtt_publish_discovery(mqtt_client_t *client, void *arg);
+int mqtt_initialize_subscription(void);
 int mqtt_initialize_ha_discovery(void);
 int mqtt_initialize_ha_states(void);
 void mqtt_publish_state(int relay, mqtt_client_t *client, void *arg);
@@ -86,7 +88,8 @@ extern WEB_VARIABLES_T web;
 MQTT_INITIALIZATION_T mqtt_initialization_table[] =
 {
     {mqtt_initialize_queue,                     false},     
-    {mqtt_initialize_connection,                false},    
+    {mqtt_initialize_connection,                false}, 
+    {mqtt_initialize_subscription,              false},  
     {mqtt_initialize_ha_discovery,              false}, 
     {mqtt_initialize_ha_states,                 false},                 
 };
@@ -94,6 +97,7 @@ bool connection_initialized = false;
 bool discovery_initialized = false;
 bool states_initialized = false;
 bool connection_completed = false;
+bool subscription_complete = false;
 bool discovery_completed = false;
 bool states_completed = false;
 int states_outstanding = 0;
@@ -105,10 +109,10 @@ static uint8_t mqtt_message = 0;                            // relay that has ch
 static bool mqtt_queue_initialized = false;                 // queue initialization status
 static mqtt_client_t *mqtt_client;
 static char *homeassistant_discovery_payload = NULL;
-
+static int connection_backoff_ms = CONNECTION_BACKOFF_MS_DEFAULT;
 
 /*!
- * \brief Monitor temperature and control hvac system based on schedule
+ * \brief Support relay control and monitoring via MQTT
  *
  * \param params unused garbage
  * 
@@ -116,7 +120,7 @@ static char *homeassistant_discovery_payload = NULL;
  */
 void mqtt_task(void *params)
 {
-    int err;
+    int relay_changed = 0;
 
     printf("MQTT task started!\n");
 
@@ -129,19 +133,21 @@ void mqtt_task(void *params)
         mqtt_initialize();
 
         // wait for timeout period but abort immediately if a relay changes state
-        err = mqtt_wait(MQTT_TASK_LOOP_DELAY);
+        relay_changed = mqtt_wait(MQTT_TASK_LOOP_DELAY);
 
-        // check if a relay state changed
-        if (err) 
+        if (relay_changed) 
         {
-            // if a specific relay has changed then publish it first
-            if ((mqtt_message >=0) && (mqtt_message < config.rmtsw_relay_max))
+            if (connection_completed)
             {
-                mqtt_publish_relay_state(mqtt_message, mqtt_client, NULL);
-            }
+                // if a specific relay has changed then publish it first
+                if ((mqtt_message >=0) && (mqtt_message < config.rmtsw_relay_max))
+                {
+                    mqtt_publish_relay_state(mqtt_message, mqtt_client, NULL);
+                }
 
-            // publish all relay states
-            mqtt_publish_all_relay_states(mqtt_client, NULL);
+                // publish all relay states
+                mqtt_publish_all_relay_states(mqtt_client, NULL);
+            }
         }
 
         // tell watchdog task that we are still alive
@@ -231,7 +237,7 @@ int mqtt_sanitize_user_config(void)
 }
 
  /*!
- * \brief perform sanity check on critical user config values
+ * \brief Begin MQTT connection process
  *
  * \param params none
  * 
@@ -241,32 +247,64 @@ int mqtt_initialize_connection(void)
 {
     int err = -1;
     struct mqtt_connect_client_info_t ci;
-    
-    broker_ip.addr = address_string_to_ip(config.mqtt_broker_address);
-    
-    memset(&ci, 0, sizeof(ci));
-    ci.client_id = "pi_pico2w_client";
-    ci.client_user = config.mqtt_user;
-    ci.client_pass = config.mqtt_password;
-    ci.keep_alive = 60;
 
-    mqtt_client = mqtt_client_new();
-    
-    if (mqtt_client != NULL) 
+    if (config.mqtt_broker_address[0] != 0)
     {
-        err = mqtt_client_connect(mqtt_client, &broker_ip, MQTT_PORT, mqtt_connection_cb, NULL, &ci);
-        //printf("mqtt connect returned %d\n", err);
+        broker_ip.addr = address_string_to_ip(config.mqtt_broker_address);
+   
+        if (broker_ip.addr)
+        {
+            memset(&ci, 0, sizeof(ci));
+            ci.client_id = "pi_pico2w_client";
+            ci.client_user = config.mqtt_user;
+            ci.client_pass = config.mqtt_password;
+            ci.keep_alive = 60;
+
+            mqtt_client = mqtt_client_new();
+            
+            if (mqtt_client != NULL) 
+            {
+                err = mqtt_client_connect(mqtt_client, &broker_ip, MQTT_PORT, mqtt_connection_cb, NULL, &ci);
+                //printf("mqtt connect returned %d\n", err);
+
+                if (err == ERR_OK)
+                {
+                    connection_initialized = true;
+                }
+            }
+        }
+
+        SLEEP_MS(connection_backoff_ms);        
     }
-
-    connection_initialized = true;
-
     //printf("initialize connection returning %d\n", err);
 
     return(err);
 }
 
  /*!
- * \brief send home assistant mqtt device discovery
+ * \brief Begin subscription process
+ *
+ * \param params none
+ * 
+ * \return 0 on success
+ */
+int mqtt_initialize_subscription(void)
+{
+    int err = -1;
+    struct mqtt_connect_client_info_t ci;
+
+    if (connection_completed)
+    {
+        // Subscribe to a topic here
+        mqtt_start_sub(mqtt_client);
+        err = 0;
+    }
+
+    return(err);
+}
+
+ /*!
+ * \brief Begin home assistant mqtt device discovery process
  *
  * \param params none
  * 
@@ -293,7 +331,7 @@ int mqtt_initialize_ha_discovery(void)
 }
 
  /*!
- * \brief send home assistant mqtt device discovery
+ * \brief Initial publication of relay states
  *
  * \param params none
  * 
@@ -321,7 +359,7 @@ int mqtt_initialize_ha_states(void)
 
 // Callback for connection status
 /*!
- * \brief do something
+ * \brief Receive connection process completion status
  *
  * \param params unused garbage
  * 
@@ -333,22 +371,27 @@ void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status
     {
         //printf("MQTT Connected!\n");
         connection_completed = true;
+        connection_backoff_ms = CONNECTION_BACKOFF_MS_DEFAULT;
 
-        // Subscribe to a topic here
-        //mqtt_sub_unsub(client, "homeassistant/#", 0, NULL, NULL, 1);
-
-        start_mqtt_sub(client);
+        // // Subscribe to a topic here
+        // mqtt_start_sub(client);
 
     } else
     {
         printf("MQTT Connection failed: %d\n", status);
+
+        // double connection attempt backoff time up to approx 5 minutes
+        if (connection_backoff_ms < 5*60000)
+        {
+            connection_backoff_ms *=2;
+        } 
     }
 }
 
 /*SUBSCRIBE************************************************************************************/
 // 1. Publish Callback: Receives the topic
 /*!
- * \brief do something
+ * \brief Receive MQTT command topic that identifies the relay
  *
  * \param params unused garbage
  * 
@@ -376,7 +419,7 @@ void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
 
 // 2. Data Callback: Receives payload chunks
 /*!
- * \brief do something
+ * \brief Receive MQTT command data that specifies the relay state (ON or OFF)
  *
  * \param params unused garbage
  * 
@@ -384,7 +427,7 @@ void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
  */
 void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags) 
 {
-  if(flags & MQTT_DATA_FLAG_LAST)
+  if(flags & MQTT_DATA_FLAG_LAST)  // TODO: make this accept and aggregate data received in multiple chunks
     {
         //printf("Final message received: %.*s AND relay to switch = %d\n", len, (const char*)data, relay_to_switch);
 
@@ -413,7 +456,7 @@ void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
 
 // 3. Sub Request Callback: Confirms subscription status
 /*!
- * \brief do something
+ * \brief Receives status of subscripton process upon completetion
  *
  * \param params unused garbage
  * 
@@ -421,18 +464,25 @@ void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
  */
 void mqtt_sub_request_cb(void *arg, err_t result) 
 {
-  //printf("Subscribe result: %d\n", result);
+    if (result == ERR_OK)
+    {
+        subscription_complete = true;
+    }
+    else
+    {
+        printf("Subscribe result: %d\n", result);
+    }
 }
 
 // 4. Setup
 /*!
- * \brief do something
+ * \brief Send subscription
  *
  * \param params unused garbage
  * 
  * \return nothing
  */
-void start_mqtt_sub(mqtt_client_t *client)
+void mqtt_start_sub(mqtt_client_t *client)
 {
     int err;
     static char topic[32];
@@ -449,7 +499,7 @@ void start_mqtt_sub(mqtt_client_t *client)
 /*PUBLISH**********************************************************************************************/
 // 1. Define callback for publish completion
 /*!
- * \brief do something
+ * \brief Receive publication process status upon completion
  *
  * \param params unused garbage
  * 
@@ -494,7 +544,7 @@ void mqtt_pub_request_cb(void *arg, err_t result)
 
 // 2. Example publish function
 /*!
- * \brief do something
+ * \brief Send discovery publication
  *
  * \param params unused garbage
  * 
@@ -549,7 +599,7 @@ void mqtt_publish_discovery(mqtt_client_t *client, void *arg)
 }
 
 /*!
- * \brief publish a relay state
+ * \brief Send relay state publication
  *
  * \param relay 0 - 7
  * 

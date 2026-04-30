@@ -184,7 +184,7 @@ int rmtsw_validate_gpio_set(void)
 
 
 /*!
- * \brief initialize front panel buttons
+ * \brief Configure gpio and set initial relay states
  *
  * \param params none
  * 
@@ -277,7 +277,9 @@ int rmtsw_deinitialize(int (*subsytem_init_func)(void))
  * \return 0 on success
  */
 int rmtsw_sanitize_user_config(void)
-{   
+{
+    //TODO: sanatize config
+       
     // // make sure safeguards are valid to prevent short cycling
     // CLIP(config.heating_to_cooling_lockout_mins, 1, 60);
     // CLIP(config.minimum_heating_on_mins, 1, 60);

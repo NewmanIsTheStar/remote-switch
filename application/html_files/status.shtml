@@ -70,30 +70,11 @@ body {
 
 <div class="main">
   <h2>Status</h2>  
-  <table>
-    <tr>
-      <td font-weight: bold; colspan="2"><!--#status--></td>
-    </tr>
-    <tr>
-      <td><i>where</i></td>      
-      <td>&nbsp;</td> 
-    </tr>
-    <tr>
-      <td>&nbsp;</td>       
-      <td> Relays read left to right</td>     
-    </tr>
-    <tr>
-      <td>&nbsp;</td> 
-      <td> 1 means relay turned ON</td>      
-    </tr> 
-    <tr>
-      <td>&nbsp;</td> 
-      <td> 0 means relay turned OFF</td>      
-    </tr> 
-    <tr>
-      <td>&nbsp;</td> 
-      <td> X means relay didn't change</td>      
-    </tr>                      
+  <table>   
+      <tr>
+        <td>Relay states</td>
+        <td><!--#status--></td>
+    </tr>                    
     <tr>
       <td colspan="2">&nbsp;</td> 
     </tr>      

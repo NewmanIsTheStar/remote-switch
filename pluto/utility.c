@@ -1104,7 +1104,7 @@ uint32_t address_string_to_ip(char *address_string)
 {
     struct addrinfo hints, *res;
     struct sockaddr_in *saddr;
-    uint32_t ip_raw;
+    uint32_t ip_raw = 0;
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET; // IPv4 only

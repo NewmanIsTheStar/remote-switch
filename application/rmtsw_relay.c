@@ -161,7 +161,11 @@ uint32_t rmtsw_relay_control(void)
     return(0);
 }
 
-
+/*!
+ * \brief Configure gpio and set initial relay state
+ * 
+ * \return true if timeout preempted
+ */
 int rmtsw_relay_initialize(void)
 {
     int err = 0;
@@ -197,7 +201,12 @@ int rmtsw_relay_initialize(void)
     return(err);
 }
 
-
+/*!
+ * \brief Create status message containing current relay states for web ui
+ * 
+ * \return true if timeout preempted
+ */
+//TODO add relay numbers <td>&#x2460;&#x2461;&#x2462;&#x2463;&#x2464;&#x2465;&#x2466;&#x2467;</td>
 int rmtsw_generate_relay_status_message(void)
 {
     int err = 0;
@@ -207,18 +216,18 @@ int rmtsw_generate_relay_status_message(void)
     {
         CLIP(config.rmtsw_relay_max, 0, 8);
 
-        snprintf(web.status_message, sizeof(web.status_message), "Relay states: ");
+        snprintf(web.status_message, sizeof(web.status_message), "");
         for(i=0; i<config.rmtsw_relay_max; i++)
         {
             if (web.rmtsw_relay_enabled[i])
             {
                 if (web.rmtsw_relay_desired_state[i])
                 {
-                    STRNCAT(web.status_message, "1", sizeof(web.status_message));  // ON
+                    STRNCAT(web.status_message, "&#x1F7E2;", sizeof(web.status_message));  // ON
                 }
                 else
                 {
-                    STRNCAT(web.status_message, "0", sizeof(web.status_message));  // OFF
+                    STRNCAT(web.status_message, "&#x1F534;", sizeof(web.status_message));  // OFF
                 }                
             }
             else
@@ -238,6 +247,11 @@ int rmtsw_generate_relay_status_message(void)
     return(err);
 }
 
+/*!
+ * \brief Receive indication that at least on valid gpio exists in relay configuration
+ * 
+ * \return true if timeout preempted
+ */
 int rmtsw_relay_gpio_enable(bool enable)
 {
     relay_gpio_ok = enable;
@@ -345,7 +359,11 @@ int rmtsw_wait(TickType_t timeout)
     return(err);
 }
 
-
+/*!
+ * \brief Send a one byte message to rmtsw task
+ * 
+ * \return true if timeout preempted
+ */
 void rmtsw_queue_send(uint8_t message)
 {
     static uint8_t message_store = 0;
@@ -359,6 +377,11 @@ void rmtsw_queue_send(uint8_t message)
     }
 }
 
+/*!
+ * \brief Initialize a queue for sending messages to rmtsw task
+ * 
+ * \return true if timeout preempted
+ */
 int rmtsw_initialize_queue(void)
 {
     int err = 0;
@@ -371,6 +394,11 @@ int rmtsw_initialize_queue(void)
     return(err);
 }
 
+/*!
+ * \brief Set gpio output value with awareness of normally connection / active low output
+ * 
+ * \return true if timeout preempted
+ */
  static inline void rmtsw_gpio_put(uint relay, bool value)
  {
     if (config.rmtsw_relay_normally_closed[relay])

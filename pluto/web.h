@@ -22,7 +22,7 @@ typedef struct WEB_VARIABLES
   uint8_t soil_moisture[16];
   char watchdog_timestring[50];
   uint32_t us_last_rx_packet;
-  char status_message[50];
+  char status_message[100];
   char stack_message[256];
   char ip_address_string[50];
   char network_mask_string[50];
