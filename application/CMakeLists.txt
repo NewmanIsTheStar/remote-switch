@@ -1,10 +1,12 @@
-target_include_directories(${APP_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_sources(${APP_NAME} PRIVATE
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_sources(${PROJECT_NAME} PRIVATE
         worker_tasks.c        
         rmtsw_task.c
         rmtsw_web_ui.c
         rmtsw_relay.c
         mqtt_task.c
+        ssi.c
+        cgi.c        
 )
 
 set(WEB_FILES)

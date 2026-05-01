@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.13..3.27)
 
 # ====================================================================================
-# Set name and release version
-set(APP_NAME remote-switch)                 # you must also set the project name below
+# Set release version
 set(APP_VERSION "01.00.03")
 
 # Set build type
@@ -38,7 +37,6 @@ endif()
 
 set(PICO_SDK_PATH ${CMAKE_CURRENT_LIST_DIR}/pico-sdk)
 set(FREERTOS_KERNEL_PATH ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel)
-#set(PICOTOOL_FORCE_FETCH_FROM_GIT 1)
 
 add_compile_definitions(PLUTO_VER="${APP_VERSION}")
 add_compile_definitions(PICO_CYW43_ARCH_FREERTOS)
@@ -48,6 +46,7 @@ add_compile_definitions(FAKE_RTC)
 # initialize pico-sdk from submodule
 include(pico-sdk/pico_sdk_init.cmake)
 
+# ====================================================================================
 # set the project name ${PROJECT_NAME}
 project(remote-switch C CXX ASM)
 
@@ -56,7 +55,6 @@ pico_sdk_init()
 
 if(NOT PICO_BOARD STREQUAL "pico_w") 
 include(FreeRTOS-Kernel/portable/ThirdParty/Community-Supported-Ports/GCC/RP2350_ARM_NTZ/FreeRTOS_Kernel_import.cmake)
-#include(FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2350_ARM_NTZ/FreeRTOS_Kernel_import.cmake)  
 else()
 include(FreeRTOS_Kernel_import.cmake)
 endif()
@@ -72,27 +70,27 @@ endif()
 # ====================================================================================
 # remote-switch
 
-add_executable(${APP_NAME})
+add_executable(${PROJECT_NAME})
 add_subdirectory(pluto)  
 add_subdirectory(application)
 
-target_compile_definitions(${APP_NAME} PRIVATE APP_NAME="${APP_NAME}")
-target_compile_definitions(${APP_NAME} PRIVATE INCORPORATE_REMOTE_SWITCH)
+target_compile_definitions(${PROJECT_NAME} PRIVATE APP_NAME="${PROJECT_NAME}")
+target_compile_definitions(${PROJECT_NAME} PRIVATE INCORPORATE_REMOTE_SWITCH)
 
-pico_set_program_name(${APP_NAME} "${APP_NAME}")
-pico_set_program_version(${APP_NAME} ${APP_VERSION})
+pico_set_program_name(${PROJECT_NAME} "${PROJECT_NAME}")
+pico_set_program_version(${PROJECT_NAME} ${APP_VERSION})
 
 # enable/disable output over UART/USB  ***TODO: had to disable stdio over usb in Release builds as it causes random crashes/resets during startup
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        pico_enable_stdio_usb(${APP_NAME} 0)
-        pico_enable_stdio_uart(${APP_NAME} 0)        
+        pico_enable_stdio_usb(${PROJECT_NAME} 0)
+        pico_enable_stdio_uart(${PROJECT_NAME} 0)        
 else() 
-        pico_enable_stdio_usb(${APP_NAME} 0)
-        pico_enable_stdio_uart(${APP_NAME} 1)        
+        pico_enable_stdio_usb(${PROJECT_NAME} 0)
+        pico_enable_stdio_uart(${PROJECT_NAME} 1)        
 endif()
 
 # create uf2 
-pico_add_extra_outputs(${APP_NAME})
+pico_add_extra_outputs(${PROJECT_NAME})
 
 
 
