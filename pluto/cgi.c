@@ -2142,7 +2142,7 @@ const char * cgi_thermostat_schedule_change_handler(int iIndex, int iNumParams, 
     int new_zone_max = 0;
     int len = 0;
        
-    printf("Got request to change schedule\n");
+    //printf("Got request to change schedule\n");
 
     dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
@@ -2154,7 +2154,7 @@ const char * cgi_thermostat_schedule_change_handler(int iIndex, int iNumParams, 
 
         if (param && value)
         {
-            printf("Parameter: %s has Value: %s\n", param, value);  
+            //printf("Parameter: %s has Value: %s\n", param, value);  
 
             len = strlen(param);
             if ((len >= 1) && (param[0] == 'x'))
@@ -2417,7 +2417,7 @@ const char * cgi_thermostat_period_delete_handler(int iIndex, int iNumParams, ch
        
 
 
-    printf("Got request to delete thermostat period. row = %d\n", web.thermostat_period_row);
+    //printf("Got request to delete thermostat period. row = %d\n", web.thermostat_period_row);
 
     dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
@@ -2429,17 +2429,17 @@ const char * cgi_thermostat_period_delete_handler(int iIndex, int iNumParams, ch
 
         if (param && value)
         {
-            printf("Parameter: %s has Value: %s\n", param, value);  
+            //printf("Parameter: %s has Value: %s\n", param, value);  
 
             len = strlen(param);
             if ((len >= 1) && (param[0] == 'x'))
             { 
                 sscanf(value, "%d", &(web.thermostat_period_row));
-                printf("Got request to delete thermostat period. row = %d\n", web.thermostat_period_row);
+                //printf("Got request to delete thermostat period. row = %d\n", web.thermostat_period_row);
                 CLIP(web.thermostat_period_row, 0, NUM_ROWS(config.setpoint_start_mow));  
                 if ((web.thermostat_period_row >=0) && (web.thermostat_period_row < NUM_ROWS(config.setpoint_start_mow)))
                 {
-                    printf("Deleting row %d by setting mow to -1\n", web.thermostat_period_row);
+                    //printf("Deleting row %d by setting mow to -1\n", web.thermostat_period_row);
                     config.setpoint_start_mow[web.thermostat_period_row] = -1;
 
                     // update the schedule grid
@@ -2597,7 +2597,7 @@ const char * cgi_thermostat_period_cancel_handler(int iIndex, int iNumParams, ch
        
 
 
-    printf("Got request to cancel editing thermostat period. row = %d\n", web.thermostat_period_row);
+    //printf("Got request to cancel editing thermostat period. row = %d\n", web.thermostat_period_row);
 
     dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
@@ -2631,7 +2631,7 @@ const char * cgi_thermostat_schedule_handler(int iIndex, int iNumParams, char *p
        
 
 
-    printf("Got request to display thermostat schedule. row = %d\n", web.thermostat_period_row);
+    //printf("Got request to display thermostat schedule. row = %d\n", web.thermostat_period_row);
 
     dump_parameters(iIndex, iNumParams, pcParam, pcValue);
 
@@ -2643,7 +2643,7 @@ const char * cgi_thermostat_schedule_handler(int iIndex, int iNumParams, char *p
 
         if (param && value)
         {
-            printf("Parameter: %s has Value: %s\n", param, value);    
+            //printf("Parameter: %s has Value: %s\n", param, value);    
 
             len = strlen(param);
             if ((len >= 3) && (param[0] == 'd') && (param[1] == 'a') && (param[2] == 'y'))
@@ -2779,7 +2779,7 @@ const char * cgi_thermostat_copy_handler(int iIndex, int iNumParams, char *pcPar
        
 
 
-    printf("Got request to copy thermostat schedule from day %sd\n", web.thermostat_day);
+    //printf("Got request to copy thermostat schedule from day %sd\n", web.thermostat_day);
 
     dump_parameters(iIndex, iNumParams, pcParam, pcValue);
 
@@ -2791,7 +2791,7 @@ const char * cgi_thermostat_copy_handler(int iIndex, int iNumParams, char *pcPar
 
         if (param && value)
         {
-            printf("Parameter: %s has Value: %s\n", param, value);    
+            //printf("Parameter: %s has Value: %s\n", param, value);    
 
             len = strlen(param);
             if ((len >= 3) && (param[0] == 'd') && (param[1] == 'a') && (param[2] == 'y'))
@@ -2806,7 +2806,7 @@ const char * cgi_thermostat_copy_handler(int iIndex, int iNumParams, char *pcPar
                 sscanf(value, "%d", &(copy_destination));
                 CLIP(copy_destination, 0, 9);  
 
-                printf("copy destination is %d\n", copy_destination);
+                //printf("copy destination is %d\n", copy_destination);
                 copy_schedule(web.thermostat_day, copy_destination);
             }             
         }
@@ -3030,7 +3030,7 @@ const char * cgi_gpio_default_handler(int iIndex, int iNumParams, char *pcParam[
 
         if (param && value)
         {
-            printf("Parameter: %s has Value: %s\n", param, value);    
+            //printf("Parameter: %s has Value: %s\n", param, value);    
 
             len = strlen(param);
 
@@ -3256,7 +3256,7 @@ const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *p
 
         if (param && value)
         {
-            printf("Parameter: %s has Value: %s\n", param, value);  
+            //printf("Parameter: %s has Value: %s\n", param, value);  
 
 
             sscanf(param, "rsrly%d", &relay_num);
@@ -3402,7 +3402,7 @@ const char * cgi_rs_gpio_handler(int iIndex, int iNumParams, char *pcParam[], ch
 
                 new_normally_closed[gpio_zone] = true;  
 
-                printf("hit %d with param %s\n", gpio_zone, param);
+                //printf("hit %d with param %s\n", gpio_zone, param);
             }              
         }
         i++;
@@ -3412,7 +3412,7 @@ const char * cgi_rs_gpio_handler(int iIndex, int iNumParams, char *pcParam[], ch
     for (i=0; i<config.rmtsw_relay_max; i++)
     {
         config.rmtsw_relay_normally_closed[i] = new_normally_closed[i];
-        printf("set relay[%d] normally closed to %d\n", i, config.rmtsw_relay_normally_closed[i]);
+        //printf("set relay[%d] normally closed to %d\n", i, config.rmtsw_relay_normally_closed[i]);
     }
 
     config_changed();
@@ -3510,7 +3510,7 @@ const char * cgi_relay_schedule_change_handler(int iIndex, int iNumParams, char 
        
     //printf("Got request to change relay schedule.  row initially = %d\n", web.rmtsw_relay_period_row);
 
-    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
     i = 0;
     while (i < iNumParams)

@@ -216,7 +216,8 @@ int rmtsw_generate_relay_status_message(void)
     {
         CLIP(config.rmtsw_relay_max, 0, 8);
 
-        snprintf(web.status_message, sizeof(web.status_message), "");
+        //snprintf(web.status_message, sizeof(web.status_message), "");
+        memset(web.status_message, 0, sizeof(web.status_message));
         for(i=0; i<config.rmtsw_relay_max; i++)
         {
             if (web.rmtsw_relay_enabled[i])
@@ -316,6 +317,7 @@ int rmtsw_execute_scheduled_actions(void)
             }
         }
 
+        memset(web.status_message, 0, sizeof(web.status_message));
         snprintf(web.status_message, sizeof(web.status_message), "Relay transition: ");
         for(i=0; i < config.rmtsw_relay_max; i++)
         {

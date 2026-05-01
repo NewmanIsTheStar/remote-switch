@@ -5,7 +5,7 @@ Remote switch based on Raspberry Pi Pico2 W.
 - Supports up to 8 relays.
 - Supports scheduling on/off times.
 - Provides a web inteface.
-- Provides an MQTT interface/
+- Provides an MQTT interface.
 - Integrates with Home Assistant.
 
 ## Installation of tools on Ubuntu Linux

@@ -9,6 +9,10 @@ body {
   font-size: 25px;
 }
 
+td.state {
+  writing-mode: vertical-rl;
+  text-orientation: upright; 
+}
 
 .sidenav {
   height: 100%;
@@ -70,11 +74,21 @@ body {
 
 <div class="main">
   <h2>Status</h2>  
-  <table>   
-      <tr>
-        <td>Relay states</td>
-        <td><!--#status--></td>
-    </tr>                    
+  <table>  
+    <tr>
+      <td>Relay states</td>
+      <td class="state"><!--#rsbulb1--></td>
+      <td class="state"><!--#rsbulb2--></td>
+      <td class="state"><!--#rsbulb3--></td>
+      <td class="state"><!--#rsbulb4--></td>
+      <td class="state"><!--#rsbulb5--></td>
+      <td class="state"><!--#rsbulb6--></td>
+      <td class="state"><!--#rsbulb7--></td>
+      <td class="state"><!--#rsbulb8--></td>
+    </tr>
+  </table>
+  <br>
+  <table>                      
     <tr>
       <td colspan="2">&nbsp;</td> 
     </tr>      

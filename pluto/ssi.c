@@ -1151,7 +1151,15 @@ extern NON_VOL_VARIABLES_T config;
     x(hostn) \
     x(mquser) \
     x(mqpass) \
-    x(mqaddr)
+    x(mqaddr) \
+    x(rsbulb1) \
+    x(rsbulb2) \
+    x(rsbulb3) \
+    x(rsbulb4) \
+    x(rsbulb5) \
+    x(rsbulb6) \
+    x(rsbulb7) \
+    x(rsbulb8) 
 
 
     
@@ -3727,22 +3735,22 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             schedule_relay = (iIndex-SSI_rsact10) / 3;   // relay number
             schedule_slot  = (iIndex-SSI_rsact10) % 3;   // action number
 
-            printf("tag = %d row = %d relay = %d action = %d  OFF = %08b  ON = %08bn ", iIndex, web.rmtsw_relay_period_row, schedule_relay, schedule_slot, config.rmtsw_relay_schedule_action_off[web.rmtsw_relay_period_row], config.rmtsw_relay_schedule_action_on[web.rmtsw_relay_period_row]);
+            //printf("tag = %d row = %d relay = %d action = %d  OFF = %08b  ON = %08bn ", iIndex, web.rmtsw_relay_period_row, schedule_relay, schedule_slot, config.rmtsw_relay_schedule_action_off[web.rmtsw_relay_period_row], config.rmtsw_relay_schedule_action_on[web.rmtsw_relay_period_row]);
 
             if ((config.rmtsw_relay_schedule_action_on[web.rmtsw_relay_period_row] & (1<<schedule_relay)) && (schedule_slot == RMSW_ACTION_ON))
             {
                 printed = snprintf(pcInsert, iInsertLen, "selected");
-                printf("relay %d ON\n", schedule_relay);   
+                //printf("relay %d ON\n", schedule_relay);   
             }
             else if ((config.rmtsw_relay_schedule_action_off[web.rmtsw_relay_period_row] & (1<<schedule_relay)) && (schedule_slot == RMSW_ACTION_OFF))
             {
                 printed = snprintf(pcInsert, iInsertLen, "selected");
-                printf("relay %d OFF\n", schedule_relay);   
+                //printf("relay %d OFF\n", schedule_relay);   
             }
             else
             {
                 printed = snprintf(pcInsert, iInsertLen, "");  
-                printf("relay %d blank assuming browser will pick first value X\n", schedule_relay);
+                //printf("relay %d blank assuming browser will pick first value X\n", schedule_relay);
             }
             // TODO: may need to select do nothing option if first option not automatically used by browser
         }
@@ -3830,7 +3838,26 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         {
             printed = snprintf(pcInsert, iInsertLen, "%s", config.mqtt_broker_address);
         }               
-        break;                         
+        break;
+        case SSI_rsbulb1:
+        case SSI_rsbulb2:
+        case SSI_rsbulb3:
+        case SSI_rsbulb4:
+        case SSI_rsbulb5:
+        case SSI_rsbulb6:
+        case SSI_rsbulb7:
+        case SSI_rsbulb8:
+        {
+            if ((iIndex-SSI_rsbulb1) < config.rmtsw_relay_max)
+            {     
+                printed = snprintf(pcInsert, iInsertLen, "%d%s", (iIndex-SSI_rsbulb1+1), web.rmtsw_relay_desired_state[iIndex-SSI_rsbulb1]?"&#x1F7E2;":"&#x1F534;"); 
+            }
+            else
+            {
+                printed = 0;
+            }             
+        }
+        break;                                  
 
         /******/
         default:
