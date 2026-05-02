@@ -89,7 +89,7 @@ typedef struct
     // ***system config end*** 
     uint16_t system_crc;
 
-    // ***application specific config start***
+    // ***application config start***
     int rmtsw_enable;
     int rmtsw_relay_max;
     bool rmtsw_relay_normally_closed[8];
@@ -99,8 +99,9 @@ typedef struct
     int rmtsw_relay_schedule_action_on[32];
     int rmtsw_relay_schedule_action_off[32];   
     int rmtsw_relay_schedule_start_mow[32]; 
-    // ***application specific config end***    
+    // ***application config end***    
     uint16_t crc;
+    
 } NON_VOL_VARIABLES_T;
 
 

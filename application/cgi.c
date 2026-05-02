@@ -3997,6 +3997,36 @@ const char * cgi_mqtt_handler(int iIndex, int iNumParams, char *pcParam[], char 
 
 // CGI requests and their respective handlers  --Add new entires at bottom--
 static const tCGI cgi_handlers[] = {
+
+    // *** system handlers start ***
+    {"/gpio_default.cgi",               cgi_gpio_default_handler}, 
+    {"/wificountry.cgi",                cgi_wificountry_handler},      
+    {"/network.cgi",                    cgi_network_handler}, 
+    {"/reboot.cgi",                     cgi_reboot_handler},              
+    {"/time.cgi",                       cgi_time_handler},
+    {"/syslog.cgi",                     cgi_syslog_handler}, 
+    {"/mqtt.cgi",                       cgi_mqtt_handler},    
+    {"/units.cgi",                      cgi_units_handler},   
+    {"/swload.cgi",                     cgi_software_load_handler},
+    {"/personality.cgi",                cgi_personality_handler},                 
+    // *** system handlers end ***
+
+    // *** application handlers start ***   
+    {"/rs_default.cgi",                 cgi_remote_switch_relay_handler},     
+    {"/rs_gpio_max.cgi",                cgi_rs_gpio_max_handler},   
+    {"/rs_gpio.cgi",                    cgi_rs_gpio_handler},      
+    {"/rs_names.cgi",                   cgi_rs_names_handler}, 
+    {"/rs_change.cgi",                  cgi_relay_schedule_change_handler}, 
+    {"/rs_edit.cgi",                    cgi_relay_period_edit_handler}, 
+    {"/rs_delete.cgi",                  cgi_relay_period_delete_handler}, 
+    {"/rs_add.cgi",                     cgi_relay_period_add_handler},   
+    {"/rs_schedule.cgi",                cgi_relay_schedule_handler}, 
+    {"/rs_copy.cgi",                    cgi_relay_copy_handler},  
+       
+    // *** application handlers end ***  
+
+    // TODO:  For removal -- useful context for partitioning other applications
+
     // {"/schedule.cgi",                   cgi_schedule_handler},
     // {"/sunday.cgi",                     cgi_weekday_handler},   //-START- days of week must be consecutive AND start at index 1
     // {"/monday.cgi",                     cgi_weekday_handler},
@@ -4010,22 +4040,14 @@ static const tCGI cgi_handlers[] = {
     // {"/hrinc.cgi",                      cgi_inc_hour_handler}, 
     // {"/mininc.cgi",                     cgi_inc_minute_handler},  
     // {"/hrdec.cgi",                      cgi_dec_hour_handler}, 
-    // {"/mindec.cgi",                     cgi_dec_minute_handler}, 
-    {"/time.cgi",                       cgi_time_handler},      
+    // {"/mindec.cgi",                     cgi_dec_minute_handler},  
     // {"/ecowitt.cgi",                    cgi_ecowitt_handler},   
-    {"/network.cgi",                    cgi_network_handler},    
-    {"/reboot.cgi",                     cgi_reboot_handler},    
     // {"/aled.cgi",                       cgi_led_handler},   
     // {"/psched.cgi",                     cgi_portrait_schedule_handler},     
     // {"/dsched.cgi",                     cgi_day_schedule_handler},   
     // {"/mood.cgi",                       cgi_mood_handler},       
-    {"/syslog.cgi",                     cgi_syslog_handler}, 
-    {"/units.cgi",                      cgi_units_handler},   
-    {"/swload.cgi",                     cgi_software_load_handler},     
     // {"/remote_led_strips.cgi",          cgi_remote_led_strips},  
-    {"/personality.cgi",                cgi_personality_handler},   
     // {"/relay.cgi",                      cgi_relay_handler}, 
-    {"/wificountry.cgi",                cgi_wificountry_handler}, 
     // {"/relay_test_stop.cgi",            cgi_relay_test_stop_handler}, 
     // {"/relay_test_start.cgi",           cgi_relay_test_start_handler},     
     // {"/led_pattern.cgi",                cgi_led_pattern_handler},   
@@ -4040,22 +4062,9 @@ static const tCGI cgi_handlers[] = {
     // {"/t_schedule.cgi",                 cgi_thermostat_schedule_handler}, 
     // {"/powerwall.cgi",                  cgi_powerwall_handler},   
     // {"/t_copy.cgi",                     cgi_thermostat_copy_handler},
-    // {"/t_gpio.cgi",                     cgi_thermostat_gpio_handler},   
-    {"/gpio_default.cgi",               cgi_gpio_default_handler},  
+    // {"/t_gpio.cgi",                     cgi_thermostat_gpio_handler},    
     // {"/t_sensors.cgi",                  cgi_temperature_sensors},
-    // {"/t_advanced.cgi",                 cgi_advanced_settings}, 
-    {"/rs_default.cgi",                 cgi_remote_switch_relay_handler},     
-    {"/rs_gpio_max.cgi",                cgi_rs_gpio_max_handler},   
-    {"/rs_gpio.cgi",                    cgi_rs_gpio_handler},      
-    {"/rs_names.cgi",                   cgi_rs_names_handler}, 
-    {"/rs_change.cgi",                  cgi_relay_schedule_change_handler}, 
-    {"/rs_edit.cgi",                    cgi_relay_period_edit_handler}, 
-    {"/rs_delete.cgi",                  cgi_relay_period_delete_handler}, 
-    {"/rs_add.cgi",                     cgi_relay_period_add_handler},   
-    {"/rs_schedule.cgi",                cgi_relay_schedule_handler}, 
-    {"/rs_copy.cgi",                    cgi_relay_copy_handler},  
-    {"/mqtt.cgi",                       cgi_mqtt_handler},     
-                           
+    // {"/t_advanced.cgi",                 cgi_advanced_settings},                            
 };
 
 /*!

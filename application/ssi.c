@@ -35,22 +35,76 @@
 extern WEB_VARIABLES_T web;
 extern NON_VOL_VARIABLES_T config;
 
+
+#define SYSTEM_SSI_TAGS \
+    x(time) \
+    x(dogtme) \
+    x(status) \
+    x(tz) \
+    x(dss) \
+    x(dse) \
+    x(ts1) \
+    x(ts2) \
+    x(ts3) \
+    x(ts4) \
+    x(dlse) \
+    x(ssid) \
+    x(wpass) \
+    x(dhcp) \
+    x(ipad) \
+    x(nmsk) \
+    x(ltme) \
+    x(slog) \
+    x(ghsh) \
+    x(dstu) \
+    x(spdu) \
+    x(tmpu) \
+    x(uau) \
+    x(stck) \
+    x(ipaddr) \
+    x(netmsk) \
+    x(gatewy) \
+    x(msck) \
+    x(bfail) \
+    x(cfail) \
+    x(sfail) \
+    x(simpe) \
+    x(mweek) \
+    x(colour) \
+    x(swlhst) \
+    x(swlurl) \
+    x(swlfle) \
+    x(sloge) \
+    x(pertyp) \
+    x(wific) \
+    x(gway) \
+    x(pernme) \
+    x(gpiou) \
+    x(gpioif) \
+    x(gpioih) \
+    x(gpioil) \
+    x(gpiooh) \
+    x(gpiool) \
+    x(macadr) \
+    x(hostn) \
+    x(mquser) \
+    x(mqpass) \
+    x(mqaddr) 
+
+
 /*List of SSI tags used in html files
   Notes:-
     1. This list is used to create a matching enum and string constant for each SSI tag
     2. Only append to end of list.  Do not insert, delete or reorder the existing items!
     3. Related items are assumed to be in sequence in the code e.g. days of week
 */
-#define SSI_TAGS \
+#define APPLICATION_SSI_TAGS \
     x(usurped)   \
-    x(time)      \
     x(temp)      \
     x(wind)      \
     x(rain)      \
     x(lstpck)    \
-    x(dogtme)    \
     x(rainwk)    \
-    x(status)    \
     x(sun)       \
     x(mon)       \
     x(tue)       \
@@ -72,24 +126,10 @@ extern NON_VOL_VARIABLES_T config;
     x(dur5)      \
     x(dur6)      \
     x(dur7)      \
-    x(tz)        \
-    x(dss)       \
-    x(dse)       \
-    x(ts1)       \
-    x(ts2)       \
-    x(ts3)       \
-    x(ts4)       \
-    x(dlse)      \
     x(ecoip)     \
     x(wkrn)      \
     x(dyrn)      \
     x(wndt)      \
-    x(ssid)      \
-    x(wpass)     \
-    x(dhcp)      \
-    x(ipad)      \
-    x(nmsk)      \
-    x(ltme)      \
     x(rly)       \
     x(gpio)      \
     x(lpat)      \
@@ -97,7 +137,6 @@ extern NON_VOL_VARIABLES_T config;
     x(lpin)      \
     x(lrgbw)     \
     x(lnum)      \
-    x(slog)      \
     x(gvea)      \
     x(wthr)      \
     x(day1)      \
@@ -115,32 +154,12 @@ extern NON_VOL_VARIABLES_T config;
     x(lia)       \
     x(liu)       \
     x(lis)       \
-    x(ghsh)      \
     x(lstsvn)    \
-    x(dstu)      \
-    x(spdu)      \
-    x(tmpu)      \
-    x(uau)       \
-    x(stck)      \
-    x(ipaddr)    \
-    x(netmsk)    \
-    x(gatewy)    \
-    x(msck)      \
-    x(bfail)     \
-    x(cfail)     \
-    x(sfail)     \
     x(wfail)     \
     x(gfail)     \
-    x(simpe)     \
-    x(mweek)     \
-    x(colour)    \
     x(calpge)    \
     x(porpge)    \
-    x(swlhst)    \
-    x(swlurl)    \
-    x(swlfle)    \
     x(wse)       \
-    x(sloge)     \
     x(rsadr1)    \
     x(rsadr2)    \
     x(rsadr3)    \
@@ -148,9 +167,6 @@ extern NON_VOL_VARIABLES_T config;
     x(rsadr5)    \
     x(rsadr6)    \
     x(rse)       \
-    x(pertyp)    \
-    x(wific)     \
-    x(gway)      \
     x(soilm1)    \
     x(soilt1)    \
     x(z1d1d)     \
@@ -255,7 +271,6 @@ extern NON_VOL_VARIABLES_T config;
     x(z7zviz)    \
     x(z8zviz)    \
     x(z1dur)     \
-    x(pernme)    \
     x(irgnow)    \
     x(sp1viz)    \
     x(sp2viz)    \
@@ -497,12 +512,6 @@ extern NON_VOL_VARIABLES_T config;
     x(thgpio) \
     x(tcgpio) \
     x(tfgpio) \
-    x(gpiou) \
-    x(gpioif) \
-    x(gpioih) \
-    x(gpioil) \
-    x(gpiooh) \
-    x(gpiool) \
     x(tsadr1)    \
     x(tsadr2)    \
     x(tsadr3)    \
@@ -1139,7 +1148,6 @@ extern NON_VOL_VARIABLES_T config;
     x(rscvz10)       \
     x(rscvz11)       \
     x(home)          \
-    x(macadr)        \
     x(rs1nc)            \
     x(rs2nc)            \
     x(rs3nc)            \
@@ -1148,10 +1156,6 @@ extern NON_VOL_VARIABLES_T config;
     x(rs6nc)            \
     x(rs7nc)            \
     x(rs8nc) \
-    x(hostn) \
-    x(mquser) \
-    x(mqpass) \
-    x(mqaddr) \
     x(rsbulb1) \
     x(rsbulb2) \
     x(rsbulb3) \
@@ -1167,7 +1171,8 @@ extern NON_VOL_VARIABLES_T config;
 enum ssi_index
 {
 #define x(name) SSI_ ## name,
-SSI_TAGS
+SYSTEM_SSI_TAGS
+APPLICATION_SSI_TAGS
 #undef x
 };
 
@@ -1175,7 +1180,8 @@ SSI_TAGS
 const char * ssi_tags[] =
 {
 #define x(name) #name,
-SSI_TAGS
+SYSTEM_SSI_TAGS
+APPLICATION_SSI_TAGS
 #undef x
 };
 
@@ -1198,6 +1204,377 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
     int schedule_relay;
 
     switch(iIndex) {
+
+        // *** system SSI start ***
+        case SSI_time: // time
+        {
+            if(!get_timestamp(timestamp, sizeof(timestamp), false, false)) {
+                printed = snprintf(pcInsert, iInsertLen, "%s", timestamp);
+            }
+            else {
+                printed = snprintf(pcInsert, iInsertLen, "Time unavailable");   
+            }
+        }
+        break;
+        case SSI_dogtme: // dogtme
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", web.watchdog_timestring); 
+        }  
+        break; 
+        case SSI_status: // status
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", web.status_message); 
+        }  
+        break;
+        case SSI_tz:
+        {
+            if (config.timezone_offset > 0)
+            {
+                // leading + sign added
+                if (config.timezone_offset%60 == 0)
+                {
+                    // normal time zone with whole number of hours
+                    printed = snprintf(pcInsert, iInsertLen, "+%d", config.timezone_offset/60);                 
+                }
+                else
+                {   // unusual time zone with hours and minutes
+                    printed = snprintf(pcInsert, iInsertLen, "+%d:%d", config.timezone_offset/60, abs(config.timezone_offset%60));    
+                }                
+            }
+            else
+            {
+                // leading - sign automatically added
+                if (config.timezone_offset%60 == 0)
+                {
+                    // normal time zone with whole number of hours
+                    printed = snprintf(pcInsert, iInsertLen, "%d", config.timezone_offset/60);                 
+                }
+                else
+                {   // unusual time zone with hours and minutes
+                    printed = snprintf(pcInsert, iInsertLen, "%d:%d", config.timezone_offset/60, abs(config.timezone_offset%60));    
+                }
+            }
+        }
+        break;
+        case SSI_dss:
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.daylightsaving_start);
+        }
+        break;
+        case SSI_dse:
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.daylightsaving_end);
+        }
+        break;   
+        case SSI_ts1:    // ts1
+        case SSI_ts2:    // ts2
+        case SSI_ts3:    // ts3
+        case SSI_ts4:    // ts4
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.time_server[iIndex-SSI_ts1]); 
+        }  
+        break; 
+        case SSI_dlse:    // dlse -- daylight saving enable
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.daylightsaving_enable?"checked":""); 
+        }  
+        break;    
+       case SSI_ssid: //ssid
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.wifi_ssid);
+        }               
+        break;    
+        case SSI_wpass: //wpass
+        {
+            //printed = snprintf(pcInsert, iInsertLen, "%s", config.wifi_password);
+            printed = snprintf(pcInsert, iInsertLen, "********");
+        }               
+        break;    
+        case SSI_dhcp: //dhcp
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.dhcp_enable?"checked":"");
+        }               
+        break;    
+        case SSI_ipad: //ipad
+        {
+            if (!config.dhcp_enable)
+            {
+                if (strncasecmp(config.ip_address, "automatic+via+DHCP", sizeof(config.ip_address))==0)
+                {
+                    //config.ip_address[0] = 0;
+                    STRNCPY(config.ip_address, web.ip_address_string, sizeof(config.ip_address));   
+                }
+                printed = snprintf(pcInsert, iInsertLen, "%s", config.ip_address);
+            }
+            else
+            {
+                printed = snprintf(pcInsert, iInsertLen, "automatic via DHCP");
+            }            
+        }               
+        break;    
+        case SSI_nmsk: //nmsk
+        {
+            if (!config.dhcp_enable)
+            {
+                if (strncasecmp(config.network_mask, "automatic+via+DHCP", sizeof(config.network_mask))==0)
+                {
+                    //config.network_mask[0] = 0;
+                    STRNCPY(config.network_mask, web.network_mask_string, sizeof(config.network_mask));  
+                }                
+                printed = snprintf(pcInsert, iInsertLen, "%s", config.network_mask);
+            }
+            else
+            {
+                printed = snprintf(pcInsert, iInsertLen, "automatic via DHCP");
+            }                          
+        }               
+        break;  
+        case SSI_ltme: //ltme
+        {
+            printed = get_local_time_string(pcInsert, iInsertLen);
+        }               
+        break;
+        case SSI_slog: //slog
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.syslog_server_ip);
+        }
+        break; 
+        case SSI_ghsh: //ghsh
+        {
+            #ifdef USE_GIT_HASH_AS_VERSION
+            printed = snprintf(pcInsert, iInsertLen, "%s", GITHASH);
+            #else
+            printed = snprintf(pcInsert, iInsertLen, "%s", PLUTO_VER);
+            #endif
+        }                        
+        break;
+        case SSI_dstu: //dstu
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_archaic_units?"inches":"mm"); 
+        }                        
+        break;  
+        case SSI_spdu: //spdu
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_archaic_units?"ft/s":"m/s"); 
+        }                        
+        break;  
+        case SSI_tmpu: //tmpu
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_archaic_units?"F":"C"); 
+        }                        
+        break;
+        case SSI_uau: //uau
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_archaic_units?"checked":"");
+        }               
+        break; 
+        case SSI_stck: //stck
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", web.stack_message);
+        }               
+        break; 
+        case SSI_ipaddr: //ipaddr
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", web.ip_address_string);
+        }               
+        break;   
+        case SSI_netmsk: //netmsk
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", web.network_mask_string);
+        }               
+        break;   
+        case SSI_gatewy: //gatewy
+        {
+            if (!config.dhcp_enable)
+            {
+                if (strncasecmp(config.gateway, "automatic+via+DHCP", sizeof(config.gateway))==0)
+                {
+                    //config.gateway[0] = 0;
+                    STRNCPY(config.gateway, web.gateway_string, sizeof(config.gateway));                  
+                }                
+                printed = snprintf(pcInsert, iInsertLen, "%s", config.gateway);
+            }
+            else
+            {
+                printed = snprintf(pcInsert, iInsertLen, "automatic via DHCP");
+            }                          
+        }                   
+        break;
+        case SSI_msck: //msck
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%d", web.socket_max);
+        }               
+        break;  
+        case SSI_bfail: //bfail
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%d", web.bind_failures);
+        }               
+        break;  
+        case SSI_cfail: //cfail
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%d", web.connect_failures);
+        }               
+        break;  
+        case SSI_sfail: //sfail
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%d", web.syslog_transmit_failures);
+        }               
+        break;  
+        case SSI_simpe: //simpe
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_simplified_english?"checked":"");
+        }  
+        break;         
+        case SSI_mweek: //mweek
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_monday_as_week_start?"checked":"");
+        }  
+        break;         
+        case SSI_colour: //colour
+        {
+            if (config.use_simplified_english)
+            {
+                printed = snprintf(pcInsert, iInsertLen, "color");
+            }
+            else
+            {
+                printed = snprintf(pcInsert, iInsertLen, "colour");
+            }
+        }                                                                                                                                                   
+        break; 
+        case SSI_swlhst: //swlhst
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", web.software_server);
+        }               
+        break; 
+        case SSI_swlurl: //swlurl
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", web.software_url);
+        }               
+        break; 
+        case SSI_swlfle: //swlfle
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", web.software_file);
+        }               
+        break;    
+        case SSI_sloge: //sloge
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.syslog_enable?"checked":"");
+        } 
+        break;
+        case SSI_pertyp: //pertyp
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%d", config.personality);
+        } 
+        break; 
+        case SSI_wific: //wific
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.wifi_country);
+        } 
+        break;  
+        case SSI_gway: //gway
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", web.gateway_string);
+        }                       
+        break;
+        case SSI_pernme: //pernme
+        {
+            switch(config.personality)
+            {
+            case SPRINKLER_USURPER:
+                printed = snprintf(pcInsert, iInsertLen, "Sprinkler Usurper");
+                break;
+            case SPRINKLER_CONTROLLER:
+                printed = snprintf(pcInsert, iInsertLen, "Sprinkler Controller");
+                break;
+            case LED_STRIP_CONTROLLER:
+                printed = snprintf(pcInsert, iInsertLen, "LED Controller");
+                break;
+            case HVAC_THERMOSTAT:
+                printed = snprintf(pcInsert, iInsertLen, "HVAC Thermostat");
+                break;     
+            case HOME_CONTROLLER:
+                printed = snprintf(pcInsert, iInsertLen, "Home Controller");
+                break;                                             
+            default:
+            case NO_PERSONALITY:
+                printed = snprintf(pcInsert, iInsertLen, "No personality");
+                break;
+            }
+        }             
+        break;
+        case SSI_gpiou:
+        {
+            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_UNINITIALIZED);
+            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);
+        }
+        break;  
+        case SSI_gpioif:
+        {
+
+            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_INPUT_FLOATING);
+            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);
+        
+        }
+        break; 
+        case SSI_gpioih:
+        {
+               
+            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_INPUT_PULLED_HIGH);
+            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);
+
+        }
+        break;   
+        case SSI_gpioil:
+        {            
+            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_INPUT_PULLED_LOW);
+            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);        
+        }
+        break;          
+        case SSI_gpiooh:
+        {               
+            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_OUTPUT_HIGH);
+            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);        
+        }
+        break; 
+        case SSI_gpiool:
+        {              
+            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_OUTPUT_LOW);
+            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);       
+        }
+        break;
+        case SSI_macadr:                        
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%02x:%02x:%02x:%02x:%02x:%02x\n", web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);              
+        }
+        break; 
+        case SSI_hostn: // hostn
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.host_name);
+        }               
+        break; 
+        case SSI_mquser: // mquser
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.mqtt_user);
+        }               
+        break; 
+        case SSI_mqpass: // mqpass
+        {
+            //printed = snprintf(pcInsert, iInsertLen, "%s", config.mqtt_password);
+            printed = snprintf(pcInsert, iInsertLen, "********");
+        }               
+        break; 
+        case SSI_mqaddr: // mqaddr
+        {
+            printed = snprintf(pcInsert, iInsertLen, "%s", config.mqtt_broker_address);
+        }               
+        break;
+
+
+        // *** system SSI end ***
+        /************************************************************************************************************************* */
+
+        // *** application  SSI start ***
         case SSI_usurped:  // usurped
         {
             printed = snprintf(pcInsert, iInsertLen, "%s", web.last_usurped_timestring);    
@@ -1208,16 +1585,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             printed = snprintf(pcInsert, iInsertLen, "%s", web.last_completed_timestring);    
         }
         break;        
-        case SSI_time: // time
-        {
-            if(!get_timestamp(timestamp, sizeof(timestamp), false, false)) {
-                printed = snprintf(pcInsert, iInsertLen, "%s", timestamp);
-            }
-            else {
-                printed = snprintf(pcInsert, iInsertLen, "Time unavailable");   
-            }
-        }
-        break;        
+        
         case SSI_temp: // temp
         {
             if (!config.use_archaic_units)
@@ -1270,11 +1638,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }
         }  
         break;     
-        case SSI_dogtme: // dogtme
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", web.watchdog_timestring); 
-        }  
-        break;   
+  
         case SSI_rainwk: // rainwk
         {          
             if (!config.use_archaic_units)
@@ -1288,11 +1652,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }             
         }  
         break;   
-        case SSI_status: // status
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", web.status_message); 
-        }  
-        break;
+
         // case SSI_sun:    // sun
         // case SSI_mon:    // mon
         // case SSI_tue:    // tue
@@ -1373,59 +1733,6 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         //     }
         // }
         // break;
-        case SSI_tz:
-        {
-            if (config.timezone_offset > 0)
-            {
-                // leading + sign added
-                if (config.timezone_offset%60 == 0)
-                {
-                    // normal time zone with whole number of hours
-                    printed = snprintf(pcInsert, iInsertLen, "+%d", config.timezone_offset/60);                 
-                }
-                else
-                {   // unusual time zone with hours and minutes
-                    printed = snprintf(pcInsert, iInsertLen, "+%d:%d", config.timezone_offset/60, abs(config.timezone_offset%60));    
-                }                
-            }
-            else
-            {
-                // leading - sign automatically added
-                if (config.timezone_offset%60 == 0)
-                {
-                    // normal time zone with whole number of hours
-                    printed = snprintf(pcInsert, iInsertLen, "%d", config.timezone_offset/60);                 
-                }
-                else
-                {   // unusual time zone with hours and minutes
-                    printed = snprintf(pcInsert, iInsertLen, "%d:%d", config.timezone_offset/60, abs(config.timezone_offset%60));    
-                }
-            }
-        }
-        break;
-        case SSI_dss:
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.daylightsaving_start);
-        }
-        break;
-        case SSI_dse:
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.daylightsaving_end);
-        }
-        break;   
-        case SSI_ts1:    // ts1
-        case SSI_ts2:    // ts2
-        case SSI_ts3:    // ts3
-        case SSI_ts4:    // ts4
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.time_server[iIndex-SSI_ts1]); 
-        }  
-        break; 
-        case SSI_dlse:    // dlse -- daylight saving enable
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.daylightsaving_enable?"checked":""); 
-        }  
-        break;    
         // case SSI_ecoip: //ecoip
         // {
         //     printed = snprintf(pcInsert, iInsertLen, "%s", config.weather_station_ip);
@@ -1446,62 +1753,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         //     printed = snprintf(pcInsert, iInsertLen, "%d.%d", config.wind_threshold/10, config.wind_threshold%10);
         // }               
         // break;
-        case SSI_ssid: //ssid
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.wifi_ssid);
-        }               
-        break;    
-        case SSI_wpass: //wpass
-        {
-            //printed = snprintf(pcInsert, iInsertLen, "%s", config.wifi_password);
-            printed = snprintf(pcInsert, iInsertLen, "********");
-        }               
-        break;    
-        case SSI_dhcp: //dhcp
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.dhcp_enable?"checked":"");
-        }               
-        break;    
-        case SSI_ipad: //ipad
-        {
-            if (!config.dhcp_enable)
-            {
-                if (strncasecmp(config.ip_address, "automatic+via+DHCP", sizeof(config.ip_address))==0)
-                {
-                    //config.ip_address[0] = 0;
-                    STRNCPY(config.ip_address, web.ip_address_string, sizeof(config.ip_address));   
-                }
-                printed = snprintf(pcInsert, iInsertLen, "%s", config.ip_address);
-            }
-            else
-            {
-                printed = snprintf(pcInsert, iInsertLen, "automatic via DHCP");
-            }            
-        }               
-        break;    
-        case SSI_nmsk: //nmsk
-        {
-            if (!config.dhcp_enable)
-            {
-                if (strncasecmp(config.network_mask, "automatic+via+DHCP", sizeof(config.network_mask))==0)
-                {
-                    //config.network_mask[0] = 0;
-                    STRNCPY(config.network_mask, web.network_mask_string, sizeof(config.network_mask));  
-                }                
-                printed = snprintf(pcInsert, iInsertLen, "%s", config.network_mask);
-            }
-            else
-            {
-                printed = snprintf(pcInsert, iInsertLen, "automatic via DHCP");
-            }                          
-        }               
-        break;  
-        case SSI_ltme: //ltme
-        {
-            printed = get_local_time_string(pcInsert, iInsertLen);
-        }               
-        break;
-        // case SSI_rly: //rly
+         // case SSI_rly: //rly
         // {
         //     printed = snprintf(pcInsert, iInsertLen, "%s", config.relay_normally_open?"checked":"");
         // }               
@@ -1536,11 +1788,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         //     printed = snprintf(pcInsert, iInsertLen, "%d", config.led_number);
         // }               
         // break;  
-        case SSI_slog: //slog
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.syslog_server_ip);
-        }
-        break;     
+    
         // case SSI_gvea: //gvea
         // {
         //     printed = snprintf(pcInsert, iInsertLen, "%s", config.govee_light_ip);
@@ -1602,15 +1850,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         //     printed = snprintf(pcInsert, iInsertLen, "%d", config.led_sustain_duration);
         // }
         // break; 
-        case SSI_ghsh: //ghsh
-        {
-            #ifdef USE_GIT_HASH_AS_VERSION
-            printed = snprintf(pcInsert, iInsertLen, "%s", GITHASH);
-            #else
-            printed = snprintf(pcInsert, iInsertLen, "%s", PLUTO_VER);
-            #endif
-        }                        
-        break;
+
         // case SSI_lstsvn: //lstsvn
         // {
         //     if (!config.use_archaic_units)
@@ -1625,78 +1865,6 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             
         // }                        
         // break;    
-        case SSI_dstu: //dstu
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_archaic_units?"inches":"mm"); 
-        }                        
-        break;  
-        case SSI_spdu: //spdu
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_archaic_units?"ft/s":"m/s"); 
-        }                        
-        break;  
-        case SSI_tmpu: //tmpu
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_archaic_units?"F":"C"); 
-        }                        
-        break;
-        case SSI_uau: //uau
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_archaic_units?"checked":"");
-        }               
-        break; 
-        case SSI_stck: //stck
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", web.stack_message);
-        }               
-        break; 
-        case SSI_ipaddr: //ipaddr
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", web.ip_address_string);
-        }               
-        break;   
-        case SSI_netmsk: //netmsk
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", web.network_mask_string);
-        }               
-        break;   
-        case SSI_gatewy: //gatewy
-        {
-            if (!config.dhcp_enable)
-            {
-                if (strncasecmp(config.gateway, "automatic+via+DHCP", sizeof(config.gateway))==0)
-                {
-                    //config.gateway[0] = 0;
-                    STRNCPY(config.gateway, web.gateway_string, sizeof(config.gateway));                  
-                }                
-                printed = snprintf(pcInsert, iInsertLen, "%s", config.gateway);
-            }
-            else
-            {
-                printed = snprintf(pcInsert, iInsertLen, "automatic via DHCP");
-            }                          
-        }                   
-        break;
-        case SSI_msck: //msck
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%d", web.socket_max);
-        }               
-        break;  
-        case SSI_bfail: //bfail
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%d", web.bind_failures);
-        }               
-        break;  
-        case SSI_cfail: //cfail
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%d", web.connect_failures);
-        }               
-        break;  
-        case SSI_sfail: //sfail
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%d", web.syslog_transmit_failures);
-        }               
-        break;  
         case SSI_wfail: //wfail
         {
             printed = snprintf(pcInsert, iInsertLen, "%d", web.weather_station_transmit_failures);
@@ -1707,28 +1875,6 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             printed = snprintf(pcInsert, iInsertLen, "%d", web.govee_transmit_failures);
         }               
         break;   
-        case SSI_simpe: //simpe
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_simplified_english?"checked":"");
-        }  
-        break;         
-        case SSI_mweek: //mweek
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.use_monday_as_week_start?"checked":"");
-        }  
-        break;         
-        case SSI_colour: //colour
-        {
-            if (config.use_simplified_english)
-            {
-                printed = snprintf(pcInsert, iInsertLen, "color");
-            }
-            else
-            {
-                printed = snprintf(pcInsert, iInsertLen, "colour");
-            }
-        }                                                                                                                                                   
-        break; 
         case SSI_calpge: //calpge
         {
             if (web.access_point_mode)
@@ -1838,31 +1984,12 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }
         }                                                                                                                                                   
         break;        
-        case SSI_swlhst: //swlhst
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", web.software_server);
-        }               
-        break; 
-        case SSI_swlurl: //swlurl
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", web.software_url);
-        }               
-        break; 
-        case SSI_swlfle: //swlfle
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", web.software_file);
-        }               
-        break;    
         // case SSI_wse: //wse
         // {
         //     printed = snprintf(pcInsert, iInsertLen, "%s", config.weather_station_enable?"checked":"");
         // }   
         // break;   
-        case SSI_sloge: //sloge
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.syslog_enable?"checked":"");
-        } 
-        break;                                    
+                                    
         // case SSI_rsadr1: //rsdar1
         // case SSI_rsadr2: //rsdar2
         // case SSI_rsadr3: //rsdar3
@@ -1878,21 +2005,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         //     printed = snprintf(pcInsert, iInsertLen, "%s", config.led_strip_remote_enable?"checked":"");
         // } 
         // break;
-        case SSI_pertyp: //pertyp
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%d", config.personality);
-        } 
-        break; 
-        case SSI_wific: //wific
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.wifi_country);
-        } 
-        break;  
-        case SSI_gway: //gway
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", web.gateway_string);
-        }                       
-        break;
+
         case SSI_soilm1: //soilm1
         {
             printed = snprintf(pcInsert, iInsertLen, "%d", web.soil_moisture[0]);
@@ -2187,32 +2300,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         //     }
         // }
         // break;
-        case SSI_pernme: //pernme
-        {
-            switch(config.personality)
-            {
-            case SPRINKLER_USURPER:
-                printed = snprintf(pcInsert, iInsertLen, "Sprinkler Usurper");
-                break;
-            case SPRINKLER_CONTROLLER:
-                printed = snprintf(pcInsert, iInsertLen, "Sprinkler Controller");
-                break;
-            case LED_STRIP_CONTROLLER:
-                printed = snprintf(pcInsert, iInsertLen, "LED Controller");
-                break;
-            case HVAC_THERMOSTAT:
-                printed = snprintf(pcInsert, iInsertLen, "HVAC Thermostat");
-                break;     
-            case HOME_CONTROLLER:
-                printed = snprintf(pcInsert, iInsertLen, "Home Controller");
-                break;                                             
-            default:
-            case NO_PERSONALITY:
-                printed = snprintf(pcInsert, iInsertLen, "No personality");
-                break;
-            }
-        }             
-        break;
+
         // case SSI_irgnow: //irgnow
         // {
         //     printed = snprintf(pcInsert, iInsertLen, "%s", web.irrigation_test_enable?"checked":"");
@@ -2814,46 +2902,6 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
 //             }            
 //         }
 //         break;                  
-        case SSI_gpiou:
-        {
-            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_UNINITIALIZED);
-            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);
-        }
-        break;  
-        case SSI_gpioif:
-        {
-
-            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_INPUT_FLOATING);
-            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);
-        
-        }
-        break; 
-        case SSI_gpioih:
-        {
-               
-            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_INPUT_PULLED_HIGH);
-            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);
-
-        }
-        break;   
-        case SSI_gpioil:
-        {            
-            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_INPUT_PULLED_LOW);
-            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);        
-        }
-        break;          
-        case SSI_gpiooh:
-        {               
-            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_OUTPUT_HIGH);
-            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);        
-        }
-        break; 
-        case SSI_gpiool:
-        {              
-            print_gpio_pins_matching_default(gpio_list, sizeof(gpio_list), GP_OUTPUT_LOW);
-            printed = snprintf(pcInsert, iInsertLen, "%s", gpio_list);       
-        }
-        break;
 //         case SSI_tsadr1: //tsdar1
 //         case SSI_tsadr2: //tsdar2
 //         case SSI_tsadr3: //tsdar3
@@ -3794,11 +3842,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }                       
         }
         break;                  
-        case SSI_macadr:                        
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%02x:%02x:%02x:%02x:%02x:%02x\n", web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);              
-        }
-        break; 
+
         case SSI_rs1nc:
         case SSI_rs2nc:
         case SSI_rs3nc:
@@ -3818,27 +3862,6 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
             }             
         }
         break; 
-        case SSI_hostn: // hostn
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.host_name);
-        }               
-        break; 
-        case SSI_mquser: // mquser
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.mqtt_user);
-        }               
-        break; 
-        case SSI_mqpass: // mqpass
-        {
-            //printed = snprintf(pcInsert, iInsertLen, "%s", config.mqtt_password);
-            printed = snprintf(pcInsert, iInsertLen, "********");
-        }               
-        break; 
-        case SSI_mqaddr: // mqaddr
-        {
-            printed = snprintf(pcInsert, iInsertLen, "%s", config.mqtt_broker_address);
-        }               
-        break;
         case SSI_rsbulb1:
         case SSI_rsbulb2:
         case SSI_rsbulb3:
@@ -3859,7 +3882,10 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         }
         break;                                  
 
-        /******/
+
+         // *** application  SSI end ***
+        /************************************************************************************************/
+
         default:
         {
             printed = snprintf(pcInsert, iInsertLen, "Unhandled SSI tag");    
