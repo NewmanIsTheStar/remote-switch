@@ -51,11 +51,11 @@ set(pluto_link_libraries
         )
 
 # pico_w has insufficent RAM to incorporate HTTPS web client
-if(NOT PICO_BOARD STREQUAL "pico_w")
+# if(NOT PICO_BOARD STREQUAL "pico_w")
         set(pluto_link_libraries ${pluto_link_libraries}        
                 pico_lwip_mbedtls
                 pico_mbedtls)        
-endif()
+# endif()
 
 target_link_libraries(${PROJECT_NAME} ${pluto_link_libraries})
 

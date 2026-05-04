@@ -1,7 +1,7 @@
 # Remote Switch
 
 ## Description
-Remote switch based on Raspberry Pi Pico2 W. 
+Remote switch based on Raspberry Pi Pico W or Pico2 W. 
 - Supports up to 8 relays.
 - Supports scheduling on/off times.
 - Provides a web inteface.
@@ -23,6 +23,12 @@ make
 ```
 Upon completion of a successful build the file remote-switch.uf2 should be created.  This may be loaded onto the Pico by dragging and dropping in the usual manner.
 
+**NB:** The default board type is Pico2_W.  The board type is set by uncommenting **one** of the following lines in CMakeLists.txt.
+```
+#set(PICO_BOARD pico_w CACHE STRING "Board type")
+set(PICO_BOARD pico2_w CACHE STRING "Board type")
+```
+
 ## Initial Configuration
 - The Pico will initially create a WiFi network called **pluto**.  Connect to this WiFi network and then point your web browser to http://192.168.4.1
   - Note that many web browsers automatically change the URL from http:// to https:// so if it is not connecting you might need to reenter the URL.
@@ -30,7 +36,7 @@ Upon completion of a successful build the file remote-switch.uf2 should be creat
 - Use the GPIO settings page to configure the hardware connections for relays, temperature sensor, display and buttons
 
 ## Hardware
-- Raspberry Pi Pico2 W
+- Raspberry Pi Pico W or Pico2 W
 - Raspberry Pi Pico Relay Board (1 to 8 relays)
 
 ## Licenses

@@ -8,7 +8,7 @@
 
 #include "FreeRTOS.h"
 
-#define REMOTE_SWITCH_TASK_LOOP_DELAY    (10000)
+#define REMOTE_SWITCH_TASK_LOOP_DELAY    (1000)
 
 
 typedef enum
