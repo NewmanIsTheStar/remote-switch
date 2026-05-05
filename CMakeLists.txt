@@ -47,16 +47,18 @@ add_compile_definitions(FAKE_RTC)
 include(pico-sdk/pico_sdk_init.cmake)
 
 # ====================================================================================
-# set the project name ${PROJECT_NAME}
+# Set the project name ${PROJECT_NAME}
 project(remote-switch C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-if(NOT PICO_BOARD STREQUAL "pico_w") 
-include(FreeRTOS-Kernel/portable/ThirdParty/Community-Supported-Ports/GCC/RP2350_ARM_NTZ/FreeRTOS_Kernel_import.cmake)
+if(PICO_BOARD STREQUAL "pico_w") 
+    include(FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
+elseif(PICO_BOARD STREQUAL "pico2_w") 
+    include(FreeRTOS-Kernel/portable/ThirdParty/Community-Supported-Ports/GCC/RP2350_ARM_NTZ/FreeRTOS_Kernel_import.cmake)
 else()
-include(FreeRTOS_Kernel_import.cmake)
+    message(FATAL_ERROR "Unsupported board type: ${BOARD_TYPE}")
 endif()
 
 # create "generated" directory
@@ -80,9 +82,9 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE INCORPORATE_REMOTE_SWITCH)
 pico_set_program_name(${PROJECT_NAME} "${PROJECT_NAME}")
 pico_set_program_version(${PROJECT_NAME} ${APP_VERSION})
 
-# enable/disable output over UART/USB  ***TODO: had to disable stdio over usb in Release builds as it causes random crashes/resets during startup
+# enable/disable output over UART/USB
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        pico_enable_stdio_usb(${PROJECT_NAME} 0)
+        pico_enable_stdio_usb(${PROJECT_NAME} 0)    # this should be 1 but it started causing random crashes at startup with some sdk versions!
         pico_enable_stdio_uart(${PROJECT_NAME} 0)        
 else() 
         pico_enable_stdio_usb(${PROJECT_NAME} 0)
