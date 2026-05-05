@@ -72,7 +72,7 @@ void setTimeSec(uint32_t sec);
 #define LWIP_IGMP                   1 // Newman added this row and enabled
 
 // Newman added these for apps that make https reqests 
-#if defined(INCORPORATE_THERMOSTAT) || defined(INCORPORATE_HOME_CONTROLLER) || defined(INCORPORATE_REMOTE_SWITCH)
+#if defined(INCORPORATE_THERMOSTAT) || defined(INCORPORATE_HOME_CONTROLLER) //|| defined(INCORPORATE_REMOTE_SWITCH)
 #define LWIP_ALTCP               1  // Newman used for TLS testing
 #define LWIP_ALTCP_TLS           1  // Newman used for TLS testing 
 #define LWIP_ALTCP_TLS_MBEDTLS   1  // Newman used for TLS testing

@@ -43,12 +43,8 @@ add_compile_definitions(PICO_CYW43_ARCH_FREERTOS)
 add_compile_definitions(PICO_INCLUDE_RTC_DATETIME)
 add_compile_definitions(FAKE_RTC)
 
-# initialize pico-sdk from submodule
-include(pico-sdk/pico_sdk_init.cmake)
-
 # ====================================================================================
-# Set the project name ${PROJECT_NAME}
-project(remote-switch C CXX ASM)
+include(pico-sdk/pico_sdk_init.cmake)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
@@ -71,6 +67,8 @@ endif()
       
 # ====================================================================================
 # remote-switch
+
+project(remote-switch C CXX ASM)   # set the project name ${PROJECT_NAME}
 
 add_executable(${PROJECT_NAME})
 add_subdirectory(pluto)  
