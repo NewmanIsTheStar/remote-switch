@@ -33,7 +33,7 @@ set(PICO_BOARD pico2_w CACHE STRING "Board type")
 - The Pico will initially create a WiFi network called **pluto**.  Connect to this WiFi network and then point your web browser to http://192.168.4.1
   - Note that many web browsers automatically change the URL from http:// to https:// so if it is not connecting you might need to reenter the URL.
 - Set the WiFi country, network and password then hit save and reboot.  The Pico will attempt to connect to the WiFi network.  If it fails then it will fall back to AP mode and you can once again connect to the pluto network and correct your mistakes.  
-- Use the GPIO settings page to configure the hardware connections for relays, temperature sensor, display and buttons
+- Use the GPIO settings page to configure the relays
 
 ## Hardware
 - Raspberry Pi Pico W or Pico2 W
