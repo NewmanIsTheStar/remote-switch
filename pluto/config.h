@@ -10,7 +10,6 @@
 
 void config_changed(void);
 bool config_dirty(bool clear_flag);
-void config_blank_to_v1(void);
 int config_timeserver_failsafe(void);
 int config_read(void);
 int config_write(void);
@@ -34,7 +33,7 @@ typedef struct
     int version;
     size_t version_offset;
     size_t crc_offset;
-    void (*upgrade_function)(void);
+    void (*upgrade_function)(void *previous_config);
 } NON_VOL_CONVERSION_T;
 
 // gpio defaults
@@ -52,10 +51,11 @@ typedef enum
 
 /*
 * current non-volatile memory structure
-* Modification Rule 1 -- copy this structure, append a version number and place at the bottom of this file before making changes
+* Modification Rule 1 -- copy this structure, append a version number(format "_VERSION_X") and place at the bottom of this file before making changes
 * Modification Rule 2 -- only add new fields, do not reorder or resize existing fields (except crc)
 * Modification Rule 3 -- crc field must always be last (used to find end of config in flash)
 * Modification Rule 4 -- add an upgrade function to convert from previous version and add this function to the config_info table
+* Modification Rule 5 -- the config size must never reduce as conversions occur within memory allocated for the latest version
 */
 
 // current version

@@ -28,7 +28,7 @@
 
 int config_validate(void);
 void config_system_variable_initialize(void);
-void config_blank_to_v1(void);
+void config_blank_to_v1(void *previous_config);
 
 
 NON_VOL_VARIABLES_T config;
@@ -44,7 +44,7 @@ static NON_VOL_CONVERSION_T config_info[] =
  * 
  * \return 0 on success, -1 on error
  */
-void config_blank_to_v1(void)
+void config_blank_to_v1(void *previous_config)
 {
     int i;
 
@@ -225,6 +225,7 @@ int config_validate(void)
     uint16_t crc_from_flash = 0;
     uint16_t calculated_crc = 0;
     int latest_valid_config_version = 0;
+    void *previous_config = NULL;
 
     // read configuration into RAM
     flash_read_non_volatile_variables(); 
@@ -262,13 +263,20 @@ int config_validate(void)
         }
     }
 
-#ifndef DISABLE_CONFIG_UPGRADE    
+#ifndef DISABLE_CONFIG_UPGRADE
+
+    // obtain pointer to previous config if available
+    if (version_from_flash > 0)
+    {
+        previous_config = flash_get_config_location();
+    }
+
     // upgrade configuration sequentially to latest version 
     for(i=0; i < NUM_ROWS(config_info); i++)
     {
         if (latest_valid_config_version < config_info[i].version)
         {
-            config_info[i].upgrade_function();
+            config_info[i].upgrade_function(previous_config);
         }
     }
 #else
