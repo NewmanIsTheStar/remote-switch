@@ -156,7 +156,7 @@ void setTimeSec(uint32_t sec);
 
 #define LWIP_HTTPD_MAX_TAG_NAME_LEN (10)  // Newman added for testing (default is 8)
 
-//MQTT stuff added by Newman
+// MQTT stuff added by Newman
 #define LWIP_MQTT
 #define MEMP_NUM_SYS_TIMEOUT            (LWIP_NUM_SYS_TIMEOUT_INTERNAL+10) 
 #define MQTT_VAR_HEADER_BUFFER_LEN (2048)

@@ -3288,7 +3288,7 @@ const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *p
     rmtsw_queue_send((uint8_t)relay_num);
 
     // tell mqtt_task that a relay state change might have occured
-    mqtt_relay_refresh();
+    mqttrs_relay_refresh();
 
     config_changed();
 

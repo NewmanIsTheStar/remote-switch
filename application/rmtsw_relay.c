@@ -155,7 +155,7 @@ uint32_t rmtsw_relay_control(void)
         rmtsw_generate_relay_status_message();
         
         // publish updated relay states
-        mqtt_relay_refresh();
+        mqttrs_relay_refresh();
     }
 
     return(0);
