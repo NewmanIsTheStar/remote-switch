@@ -78,6 +78,8 @@ int mqttrs_wait(TickType_t timeout);
 void mqttrs_queue_send(uint8_t message);
 int mqttrs_initialize_queue(void);
 void mqttrs_publish_relay_state(int relay, mqtt_client_t *client, void *arg);
+void mqttrs_tear_down(void);
+void mqttrs_request_connection_restart(void);
 
 // external variables
 extern uint32_t unix_time;
@@ -85,7 +87,7 @@ extern NON_VOL_VARIABLES_T config;
 extern WEB_VARIABLES_T web;
 
 // global variables
-MQTT_INITIALIZATION_T mqtt_initialization_table[] =
+static MQTT_INITIALIZATION_T mqtt_initialization_table[] =
 {
     {mqttrs_initialize_queue,                     false},     
     {mqttrs_initialize_connection,                false}, 
@@ -93,17 +95,18 @@ MQTT_INITIALIZATION_T mqtt_initialization_table[] =
     {mqttrs_initialize_ha_discovery,              false}, 
     {mqttrs_initialize_ha_states,                 false},                 
 };
-bool connection_initialized = false;
-bool discovery_initialized = false;
-bool states_initialized = false;
-bool connection_completed = false;
-bool subscription_complete = false;
-bool discovery_completed = false;
-bool states_completed = false;
-int states_outstanding = 0;
-ip_addr_t broker_ip;
-int relay_to_switch = -1;
-int relay_desired_state = -1;
+static bool connection_process_started = false;
+static bool discovery_initialized = false;
+static bool states_initialized = false;
+static bool connection_completed = false;
+static bool subscription_complete = false;
+static bool discovery_completed = false;
+static bool states_completed = false;
+static int states_outstanding = 0;
+static bool connection_restart_request = false;
+static ip_addr_t broker_ip;
+static int relay_to_switch = -1;
+static int relay_desired_state = -1;
 static QueueHandle_t mqtt_queue = NULL;                     // indicates user has change relay state
 static uint8_t mqtt_message = 0;                            // relay that has changed state
 static bool mqtt_queue_initialized = false;                 // queue initialization status
@@ -150,6 +153,11 @@ void mqtt_task(void *params)
             }
         }
 
+        if (connection_restart_request)
+        {
+            mqttrs_tear_down();
+            connection_restart_request = false;
+        }
         // tell watchdog task that we are still alive
         watchdog_pulse((int *)params);           
     }              
@@ -274,7 +282,7 @@ int mqttrs_initialize_connection(void)
 
                 if (err == ERR_OK)
                 {
-                    connection_initialized = true;
+                    connection_process_started = true;
                 }
             }
         }
@@ -361,8 +369,6 @@ int mqttrs_initialize_ha_states(void)
     return(err);
 }
 
-
-// Callback for connection status
 /*!
  * \brief Receive connection process completion status
  *
@@ -397,8 +403,6 @@ void mqttrs_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_stat
     }
 }
 
-/*SUBSCRIBE************************************************************************************/
-// 1. Publish Callback: Receives the topic
 /*!
  * \brief Receive MQTT command topic that identifies the relay
  *
@@ -430,7 +434,6 @@ void mqttrs_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
     }
 }
 
-// 2. Data Callback: Receives payload chunks
 /*!
  * \brief Receive MQTT command data that specifies the relay state (ON or OFF)
  *
@@ -469,7 +472,6 @@ void mqttrs_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
     }
 }
 
-// 3. Sub Request Callback: Confirms subscription status
 /*!
  * \brief Receives status of subscripton process upon completetion
  *
@@ -490,7 +492,6 @@ void mqttrs_sub_request_cb(void *arg, err_t result)
     }
 }
 
-// 4. Setup
 /*!
  * \brief Send subscription
  *
@@ -517,8 +518,6 @@ void mqttrs_start_sub(mqtt_client_t *client)
     //printf("subscribe result = %d\n", err);
 }
 
-/*PUBLISH**********************************************************************************************/
-// 1. Define callback for publish completion
 /*!
  * \brief Receive publication process status upon completion
  *
@@ -565,7 +564,6 @@ void mqttrs_pub_request_cb(void *arg, err_t result)
     } 
 }
 
-// 2. Example publish function
 /*!
  * \brief Send discovery publication
  *
@@ -865,4 +863,53 @@ int mqttrs_initialize_queue(void)
     mqtt_queue_initialized = true;
 
     return(err);
+}
+
+/*!
+ * \brief safely tear down the mqtt connection
+ * 
+ * \return nothing
+ */
+void mqttrs_tear_down(void)
+{
+    u8_t connection_up = 0;
+
+    if (mqtt_client != NULL)
+    {
+        cyw43_arch_lwip_begin();
+        connection_up = mqtt_client_is_connected(mqtt_client);
+        cyw43_arch_lwip_end();
+
+        if (connection_up)
+        {
+            cyw43_arch_lwip_begin();
+            mqtt_disconnect(mqtt_client);
+            cyw43_arch_lwip_end();           
+        }
+
+        mqtt_client = NULL;
+    }
+
+    // mark connection down
+    connection_process_started = false;
+    connection_completed = false;
+    discovery_completed = false;
+
+    // deinitialize connection related functions (so that they will be rerun)
+    mqttrs_deinitialize(mqttrs_initialize_ha_states);
+    mqttrs_deinitialize(mqttrs_initialize_ha_discovery);
+    mqttrs_deinitialize(mqttrs_initialize_subscription);
+    mqttrs_deinitialize(mqttrs_initialize_connection);
+
+    SLEEP_MS(connection_backoff_ms);
+}
+
+/*!
+ * \brief request connection restart
+ * 
+ * \return nothing
+ */
+void mqttrs_request_connection_restart(void)
+{
+    connection_restart_request = true;
 }
