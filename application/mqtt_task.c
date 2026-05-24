@@ -254,7 +254,7 @@ int mqttrs_sanitize_user_config(void)
 int mqttrs_initialize_connection(void)
 {
     int err = -1;
-    struct mqtt_connect_client_info_t ci;
+    static struct mqtt_connect_client_info_t ci;
 
     if (config.mqtt_broker_address[0] != 0)
     {
