@@ -121,7 +121,7 @@ int config_read(void)
     int err = 0;
 
     // read configuration from flash
-    flash_read_non_volatile_variables(); 
+    flash_read_non_volatile_variables(CONFIG_STANDARD);
 
 #ifdef DISABLE_CONFIG_VALIDATION
     printf("Configuration validation disabled!  Using whatever random garbage happens to be in flash...\n");
@@ -226,41 +226,52 @@ int config_validate(void)
     uint16_t calculated_crc = 0;
     int latest_valid_config_version = 0;
     void *previous_config = NULL;
+    CONFIG_TYPE_T config_type;
 
-    // read configuration into RAM
-    flash_read_non_volatile_variables(); 
-
-
-    // check for valid configuration
-    for(i=0; i < NUM_ROWS(config_info); i++)
+    for(config_type=CONFIG_STANDARD; config_type < NUM_CONFIG_TYPES; config_type++)
     {
-        version_from_flash = *((int *)((uint8_t *)&config + config_info[i].version_offset));
-        crc_from_flash = *((uint16_t *)((uint8_t *)&config + config_info[i].crc_offset));
-        calculated_crc = crc_buffer((uint8_t *)&config, config_info[i].crc_offset);        
 
-        if ((version_from_flash == config_info[i].version) && (crc_from_flash == calculated_crc))
+        // read configuration into RAM
+        flash_read_non_volatile_variables(config_type); 
+
+        // check for valid configuration
+        for(i=0; i < NUM_ROWS(config_info); i++)
         {
-            printf("Found valid configuration version %d\n", version_from_flash);
-            latest_valid_config_version = version_from_flash;
+            version_from_flash = *((int *)((uint8_t *)&config + config_info[i].version_offset));
+            crc_from_flash = *((uint16_t *)((uint8_t *)&config + config_info[i].crc_offset));
+            calculated_crc = crc_buffer((uint8_t *)&config, config_info[i].crc_offset);        
+
+            if ((version_from_flash == config_info[i].version) && (crc_from_flash == calculated_crc))
+            {
+                printf("Found valid configuration version %d\n", version_from_flash);
+                latest_valid_config_version = version_from_flash;
+            }
         }
-    }
 
-    // check if we did not find valid config version
-    if (latest_valid_config_version == 0)
-    {
-        // no valid config --- try to fallback to system config only
-        crc_from_flash = *((uint16_t *)((uint8_t *)&config + offsetof(NON_VOL_VARIABLES_T, system_crc)));
-        calculated_crc = crc_buffer((uint8_t *)&config, offsetof(NON_VOL_VARIABLES_T, system_crc));
-
-        if(crc_from_flash == calculated_crc)
+        // check if we found a valid config version
+        if (latest_valid_config_version != 0)        
         {
-            printf("Found valid system configuration variables (e.g. network config).  These will be preserved.\n");
+            // we found a valid config so stop searching
+            break;
         }
         else
         {
-            printf("Initializing system configuration variables\n");
-            config_system_variable_initialize();
+            // no valid config so try to fallback to system config only
+            crc_from_flash = *((uint16_t *)((uint8_t *)&config + offsetof(NON_VOL_VARIABLES_T, system_crc)));
+            calculated_crc = crc_buffer((uint8_t *)&config, offsetof(NON_VOL_VARIABLES_T, system_crc));
+
+            if(crc_from_flash == calculated_crc)
+            {
+                printf("Found valid system configuration variables (e.g. network config).  These will be preserved.\n");
+                break;
+            }
+            else
+            {
+                printf("Initializing system configuration variables\n");
+                config_system_variable_initialize();
+            }
         }
+
     }
 
 #ifndef DISABLE_CONFIG_UPGRADE
@@ -268,7 +279,7 @@ int config_validate(void)
     // obtain pointer to previous config if available
     if (version_from_flash > 0)
     {
-        previous_config = flash_get_config_location();
+        previous_config = flash_get_config_location(config_type);
     }
 
     // upgrade configuration sequentially to latest version 

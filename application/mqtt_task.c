@@ -80,6 +80,7 @@ int mqttrs_initialize_queue(void);
 void mqttrs_publish_relay_state(int relay, mqtt_client_t *client, void *arg);
 void mqttrs_tear_down(void);
 void mqttrs_request_connection_restart(void);
+void mqttrs_end_sub(mqtt_client_t *client);
 
 // external variables
 extern uint32_t unix_time;
@@ -155,6 +156,9 @@ void mqtt_task(void *params)
 
         if (connection_restart_request)
         {
+            printf("performing teardown\n");
+            send_syslog_message("mqtt", "Performing teardown");
+
             mqttrs_tear_down();
             connection_restart_request = false;
         }
@@ -284,6 +288,11 @@ int mqttrs_initialize_connection(void)
                 {
                     connection_process_started = true;
                 }
+                else
+                {
+                    printf("connect attemp failed\n");
+                    send_syslog_message("mqtt", "Connect attempt failed");
+                }
             }
         }
 
@@ -330,6 +339,8 @@ int mqttrs_initialize_ha_discovery(void)
     if (connection_completed)
     {
         //printf("about to call publish discovery\n");
+        printf("sending home assitant discovery packet\n");
+        send_syslog_message("mqtt", "Sending home assistant discovery packet");        
 
         mqttrs_publish_discovery(mqtt_client, NULL);
         
@@ -398,7 +409,7 @@ void mqttrs_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_stat
         }
         else
         {
-            application_restart(REBOOT_MQTT_F1);
+           mqttrs_request_connection_restart();
         } 
     }
 }
@@ -531,7 +542,7 @@ void mqttrs_pub_request_cb(void *arg, err_t result)
     {
         printf("Publish failed: %d\n", result);
         //send_syslog_message("mqtt", "publish failed");
-        application_restart(REBOOT_MQTT_F2);
+        mqttrs_request_connection_restart();
     } else 
     {
         //printf("Publish success\n");
@@ -663,7 +674,7 @@ void mqttrs_publish_state(int relay, mqtt_client_t *client, void *arg)
     {
         printf("Publish state error: %d\n", err);
         //send_syslog_message("mqtt", "publish state error %d", err);
-        application_restart(REBOOT_MQTT_F3);
+        mqttrs_request_connection_restart();
     }
 
     //printf("published new state. %s = %s\n", state, state_payload);
@@ -882,11 +893,19 @@ void mqttrs_tear_down(void)
 
         if (connection_up)
         {
+            // unsubscribe
+            cyw43_arch_lwip_begin();
+            mqttrs_end_sub(mqtt_client);
+            cyw43_arch_lwip_end(); 
+
+            // disconnect
             cyw43_arch_lwip_begin();
             mqtt_disconnect(mqtt_client);
             cyw43_arch_lwip_end();           
         }
 
+        // free client memory
+        mqtt_client_free(mqtt_client);
         mqtt_client = NULL;
     }
 
@@ -912,4 +931,25 @@ void mqttrs_tear_down(void)
 void mqttrs_request_connection_restart(void)
 {
     connection_restart_request = true;
+}
+
+/*!
+ * \brief Unsubscribe
+ *
+ * \param params unused garbage
+ * 
+ * \return nothing
+ */
+void mqttrs_end_sub(mqtt_client_t *client)
+{
+    int err;
+    static char topic[32];
+
+    // Unsubscribe
+    sprintf(topic, "relay-c-%02x-%02x-%02x-%02x-%02x-%02x/#", web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]); 
+    cyw43_arch_lwip_begin();   
+    err = mqtt_unsubscribe(client, topic, NULL, NULL);    
+    cyw43_arch_lwip_end();
+
+    //printf("unsubscribe result = %d\n", err);
 }
