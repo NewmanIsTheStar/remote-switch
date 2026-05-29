@@ -62,6 +62,7 @@ typedef struct WEB_VARIABLES
   int rmtsw_relay_period_row;
   int rmtsw_relay_day_events[7];
   int rmtsw_relay_grid[8][8];
+  uint32_t rmtsw_last_schedule_modification;
 } WEB_VARIABLES_T;                  //remember to add initialization code when adding to this structure !!!
 
 

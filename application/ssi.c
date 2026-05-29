@@ -3872,8 +3872,15 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         case SSI_rsbulb8:
         {
             if ((iIndex-SSI_rsbulb1) < config.rmtsw_relay_max)
-            {     
-                printed = snprintf(pcInsert, iInsertLen, "%d%s", (iIndex-SSI_rsbulb1+1), web.rmtsw_relay_desired_state[iIndex-SSI_rsbulb1]?"&#x1F7E2;":"&#x1F534;"); 
+            {
+                if (rmtsw_schedule_stable())
+                {     
+                    printed = snprintf(pcInsert, iInsertLen, "%d%s", (iIndex-SSI_rsbulb1+1), web.rmtsw_relay_desired_state[iIndex-SSI_rsbulb1]?"&#x1F7E2;":"&#x1F534;"); 
+                }
+                else
+                {
+                    printed = snprintf(pcInsert, iInsertLen, "%d%s&#x1f512;", (iIndex-SSI_rsbulb1+1), web.rmtsw_relay_desired_state[iIndex-SSI_rsbulb1]?"&#x1F7E2;":"&#x1F534;");
+                }
             }
             else
             {

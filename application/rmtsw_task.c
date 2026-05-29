@@ -108,12 +108,14 @@ void rmtsw_task(void *params)
             // initialize all subsystems that are not already up
             rmtsw_initialize();
 
-            // set relays
-            rmtsw_relay_control();
+            if (rmtsw_schedule_stable())
+            {
+                // set relays
+                rmtsw_relay_control();
+            }
 
             // wait for timeout period or user change
             rmtsw_wait(REMOTE_SWITCH_TASK_LOOP_DELAY);
-            //SLEEP_MS(REMOTE_SWITCH_TASK_LOOP_DELAY); 
         }
         else
         {

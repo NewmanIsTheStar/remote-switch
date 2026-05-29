@@ -77,6 +77,8 @@ int thermostat_relay_lockout_stop(void);
  static inline void rmtsw_gpio_put(uint relay, bool value);
  int rmtsw_generate_relay_status_message(void);
 
+
+
 // external variables
 extern uint32_t unix_time;
 extern NON_VOL_VARIABLES_T config;
@@ -409,4 +411,31 @@ int rmtsw_initialize_queue(void)
     }
 
     gpio_put(config.rmtsw_relay_gpio[relay], value); 
+ }
+
+ /*!
+ * \brief Remember schedule modification time
+ * 
+ * \return true if timeout preempted
+ */
+void rmtsw_mark_schedule_change(void)
+ {
+    web.rmtsw_last_schedule_modification = unix_time;
+ }
+
+  /*!
+ * \brief Check if schdule was recently modified
+ * 
+ * \return true if timeout preempted
+ */
+bool rmtsw_schedule_stable(void)
+ {
+    bool stable = true;
+
+    if ((unix_time - web.rmtsw_last_schedule_modification) < 60)
+    {
+        stable = false;
+    }
+
+    return(stable);
  }

@@ -38,6 +38,7 @@ int rmtsw_sort_schedule(void);
 int rmtsw_wait(TickType_t timeout);
 void rmtsw_queue_send(uint8_t message);
 int rmtsw_initialize_queue(void);
-
+void rmtsw_mark_schedule_change(void);
+bool rmtsw_schedule_stable(void);
 
 #endif

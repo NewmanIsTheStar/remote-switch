@@ -3629,6 +3629,9 @@ const char * cgi_relay_schedule_change_handler(int iIndex, int iNumParams, char 
     // write config changes to flash
     config_changed();
 
+    // tell rmtsw task that scheule may have been modifiy
+    rmtsw_mark_schedule_change();
+
     // Send the next page back to the user
     return "/rs_schedule.shtml";
     
@@ -3747,6 +3750,9 @@ const char * cgi_relay_period_delete_handler(int iIndex, int iNumParams, char *p
 
                     // write config changes to flash
                     config_changed();
+
+                    // tell rmtsw task that scheule has been modifiy
+                    rmtsw_mark_schedule_change();
                 }                
             } 
         }
@@ -3932,6 +3938,9 @@ const char * cgi_relay_copy_handler(int iIndex, int iNumParams, char *pcParam[],
     // write config changes to flash
     config_changed();
  
+    // tell rmtsw task that scheule may have been modifiy
+    rmtsw_mark_schedule_change();
+
     // Send the next page back to the user
     return "/rs_schedule.shtml";    
 }

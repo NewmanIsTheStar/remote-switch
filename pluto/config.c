@@ -267,7 +267,6 @@ int config_validate(void)
             }
             else
             {
-                printf("Initializing system configuration variables\n");
                 config_system_variable_initialize();
             }
         }
