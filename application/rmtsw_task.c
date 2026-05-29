@@ -146,7 +146,7 @@ int rmtsw_validate_gpio_set(void)
         if (!gpio_conflict(config.rmtsw_relay_gpio, config.rmtsw_relay_max))
         {
             // no conflicts
-            i = NUM_ROWS(config.rmtsw_relay_gpio);
+            i = config.rmtsw_relay_max; // was NUM_ROWS(config.rmtsw_relay_gpio);
         }
         else
         {

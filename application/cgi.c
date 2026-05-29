@@ -1953,7 +1953,7 @@ const char * cgi_setpoints_handler(int iIndex, int iNumParams, char *pcParam[], 
     int new_zone_max = 0;
     int len = 0;
        
-    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
     i = 0;
     while (i < iNumParams)
@@ -2144,7 +2144,7 @@ const char * cgi_thermostat_schedule_change_handler(int iIndex, int iNumParams, 
        
     //printf("Got request to change schedule\n");
 
-    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
     i = 0;
     while (i < iNumParams)
@@ -2419,7 +2419,7 @@ const char * cgi_thermostat_period_delete_handler(int iIndex, int iNumParams, ch
 
     //printf("Got request to delete thermostat period. row = %d\n", web.thermostat_period_row);
 
-    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
     i = 0;
     while (i < iNumParams)
@@ -2599,7 +2599,7 @@ const char * cgi_thermostat_period_cancel_handler(int iIndex, int iNumParams, ch
 
     //printf("Got request to cancel editing thermostat period. row = %d\n", web.thermostat_period_row);
 
-    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
     // Send the next page back to the user
     return "/t_schedule.shtml";    
@@ -2633,7 +2633,7 @@ const char * cgi_thermostat_schedule_handler(int iIndex, int iNumParams, char *p
 
     //printf("Got request to display thermostat schedule. row = %d\n", web.thermostat_period_row);
 
-    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
 
     i = 0;
     while (i < iNumParams)
@@ -2781,7 +2781,7 @@ const char * cgi_thermostat_copy_handler(int iIndex, int iNumParams, char *pcPar
 
     //printf("Got request to copy thermostat schedule from day %sd\n", web.thermostat_day);
 
-    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
 
     i = 0;
     while (i < iNumParams)
@@ -3020,7 +3020,7 @@ const char * cgi_gpio_default_handler(int iIndex, int iNumParams, char *pcParam[
     int gpio_value = -1;
        
 
-    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
 
     i = 0;
     while (i < iNumParams)
@@ -3246,7 +3246,7 @@ const char * cgi_remote_switch_relay_handler(int iIndex, int iNumParams, char *p
     int new_zone_max = 0;
     char value_string[32];
        
-    dump_parameters(iIndex, iNumParams, pcParam, pcValue);
+    //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
     i = 0;
     while (i < iNumParams)

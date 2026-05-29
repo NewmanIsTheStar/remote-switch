@@ -1027,8 +1027,6 @@ int time_string_to_mow(char *string, int length, int day)
    sscanf(string,"%d:%d", &hour, &minute);
    sscanf(string,"%d%%3A%d", &hour, &minute);   
 
-   printf(">>>>>AFTER SCANF %d %d\n", hour, minute);
-
    CLIP(day, 0, 6);
    CLIP(hour, 0, 23);
    CLIP(minute, 0, 59);
@@ -1048,10 +1046,11 @@ bool sntp_alive(void)
    static long int poll_counter = 0;
    static long int last_sntp_update_counter= 0;
    
+   poll_counter++;
+
    if (sntp_update_counter != last_sntp_update_counter)
    {
       printf("sntp updates: %d @ poll number %d\n", sntp_update_counter, poll_counter);
-      // an sntp update has occured since the last poll so reset counter
       poll_counter = 0;
       last_sntp_update_counter = sntp_update_counter;
    }
