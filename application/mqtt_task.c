@@ -81,6 +81,7 @@ void mqttrs_publish_relay_state(int relay, mqtt_client_t *client, void *arg);
 void mqttrs_tear_down(void);
 void mqttrs_request_connection_restart(void);
 void mqttrs_end_sub(mqtt_client_t *client);
+int mqttrs_keep_alive(void);
 
 // external variables
 extern uint32_t unix_time;
@@ -97,7 +98,7 @@ static MQTT_INITIALIZATION_T mqtt_initialization_table[] =
     {mqttrs_initialize_ha_states,                 false},                 
 };
 static bool connection_process_started = false;
-static bool discovery_initialized = false;
+static bool discovery_process_started = false;
 static bool states_initialized = false;
 static bool connection_completed = false;
 static bool subscription_complete = false;
@@ -152,6 +153,11 @@ void mqtt_task(void *params)
                 // publish all relay states
                 mqttrs_publish_all_relay_states(mqtt_client, NULL);
             }
+        }
+        else
+        {
+            // keep broker connection alive
+            mqttrs_keep_alive();
         }
 
         if (connection_restart_request)
@@ -270,7 +276,7 @@ int mqttrs_initialize_connection(void)
             ci.client_id = "pi_pico2w_client";
             ci.client_user = config.mqtt_user;
             ci.client_pass = config.mqtt_password;
-            ci.keep_alive = 60;
+            ci.keep_alive = 3600;
 
             cyw43_arch_lwip_begin();
             mqtt_client = mqtt_client_new();
@@ -338,13 +344,12 @@ int mqttrs_initialize_ha_discovery(void)
 
     if (connection_completed)
     {
-        //printf("about to call publish discovery\n");
         printf("sending home assitant discovery packet\n");
         send_syslog_message("mqtt", "Sending home assistant discovery packet");        
 
         mqttrs_publish_discovery(mqtt_client, NULL);
         
-        discovery_initialized = true;
+        discovery_process_started = true;
 
         err = 0;
     }
@@ -776,7 +781,7 @@ void mqttrs_publish_all_relay_states(mqtt_client_t *client, void *arg)
         mqttrs_publish_state(i, client, arg);
 
         // sleep until callback complete or 5 seconds elapse
-        for(j=0; (j < 100) && states_outstanding; j++)
+        for(j=0; (j < 100) && states_outstanding; j++)       // callback decrements states_outstanding
         {
             SLEEP_MS(50);
         }
@@ -953,3 +958,25 @@ void mqttrs_end_sub(mqtt_client_t *client)
 
     //printf("unsubscribe result = %d\n", err);
 }
+
+  /*!
+ * \brief Periodically publish relay states to keep broker connection alive
+ * 
+ * \return true if timeout preempted
+ */
+int mqttrs_keep_alive(void)
+ {
+    int err = 0;
+    static uint32_t last_publication = 0;
+
+    if ((unix_time - last_publication) > (60*30))
+    {
+        if (connection_completed)
+        {
+            last_publication = unix_time;
+            mqttrs_publish_all_relay_states(mqtt_client, NULL); 
+        }
+    }
+
+    return(err);
+ }
