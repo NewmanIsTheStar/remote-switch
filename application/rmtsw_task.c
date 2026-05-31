@@ -90,7 +90,7 @@ void rmtsw_task(void *params)
         config.rmtsw_enable = 1;
     }
 
-    printf("Remote Switch (rmtsw) task started!\n");
+    printf("RMTSW task started!\n");
 
     // set initial status
     memset(web.rmtsw_relay_desired_state, 0, sizeof(web.rmtsw_relay_desired_state));

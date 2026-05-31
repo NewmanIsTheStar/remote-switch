@@ -3333,6 +3333,7 @@ const char * cgi_rs_gpio_max_handler(int iIndex, int iNumParams, char *pcParam[]
                 if ((new_zone_max > 0) && (new_zone_max <= 8))
                 {
                     config.rmtsw_relay_max = new_zone_max;
+                    mqttrs_relay_config_change();
                 }                           
             }              
         }
@@ -3367,7 +3368,7 @@ const char * cgi_rs_gpio_handler(int iIndex, int iNumParams, char *pcParam[], ch
     int gpio_zone = -1;  
     int new_zone_max = 0;
     bool new_normally_closed[8] = {false, false, false, false, false, false, false, false};
-       
+
     //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
     i = 0;
@@ -3442,7 +3443,8 @@ const char * cgi_rs_names_handler(int iIndex, int iNumParams, char *pcParam[], c
     int gpio_zone = -1;  
     int new_zone_max = 0;
     char decoded_string[32];
-       
+    bool relay_config_changed = false;
+
     //dump_parameters(iIndex, iNumParams, pcParam, pcValue);
  
     i = 0;
@@ -3468,10 +3470,17 @@ const char * cgi_rs_names_handler(int iIndex, int iNumParams, char *pcParam[], c
 
                 // copy decoded value to configuration
                 STRNCPY(config.rmtsw_relay_name[gpio_zone], decoded_string, sizeof(config.rmtsw_relay_name[gpio_zone]));
+
+                relay_config_changed = true;
             }             
         }
         i++;
-    }   
+    } 
+    
+    if (relay_config_changed)
+    {
+        mqttrs_relay_config_change();
+    }
 
     config_changed();
 

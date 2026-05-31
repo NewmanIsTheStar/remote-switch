@@ -64,8 +64,9 @@ typedef enum
     MQTT_REASON_TIMEOUT             = 4,
     MQTT_REASON_PUBLISH_FAILED_CB   = 5,
     MQTT_PUBLISH_FAILED_CALL        = 6,
+    MQTT_REASON_CONFIG_CHANGE       = 7,
 
-    NUM_MQTT_REASONS = 7
+    NUM_MQTT_REASONS = 8
 } MQTT_REASON_T;
 
 // prototypes -- mqttrs_ prefix is used for local functions, whereas lwip functions use mqtt_ 
@@ -129,6 +130,7 @@ static mqtt_client_t *mqtt_client;
 static char *homeassistant_discovery_payload = NULL;
 static int connection_backoff_ms = CONNECTION_BACKOFF_MS_DEFAULT;
 static MQTT_REASON_T connection_restart_reason = MQTT_REASON_UNKNOWN;
+static int published_number_of_relays = 0;
 
 /*!
  * \brief Support relay control and monitoring via MQTT
@@ -199,8 +201,11 @@ void mqtt_task(void *params)
 int mqttrs_initialize(void)
 {
     static bool init_complete = false;
+    static int  attempt = 0;
     int err = 0;
     int i;
+
+    attempt++;
 
     for (i=0; i < NUM_ROWS(mqtt_initialization_table); i++)
     {
@@ -211,19 +216,21 @@ int mqttrs_initialize(void)
             if (!mqtt_initialization_table[i].initialization_complete)
             {
                 err++;
-                printf("MQTT Error initializing subsystem %d\n", i);
+                printf("MQTT incomplete initialization of subsystem %d at attempt %d\n", i, attempt);
+                init_complete = false;
             }
         }
     }
 
     if (err)
     {
-        printf("MQTT %d subsystems failed to initialize\n", err);
+        printf("MQTT %d subsystem%s failed to initialize during attempt %d\n", err, err>1?"s":"", attempt);
         
     } else if (!init_complete)
     {
-        printf("MQTT all subsystems sucessfully initialized\n");
+        printf("MQTT all subsystems sucessfully initialized at attempt %d\n", attempt);
         init_complete = true;
+        attempt = 0;
     }
 
     return(err);
@@ -290,7 +297,7 @@ int mqttrs_initialize_connection(void)
             ci.client_id = "pi_pico2w_client";
             ci.client_user = config.mqtt_user;
             ci.client_pass = config.mqtt_password;
-            ci.keep_alive = 15;
+            ci.keep_alive = 30;
 
             cyw43_arch_lwip_begin();
             mqtt_client = mqtt_client_new();
@@ -383,6 +390,13 @@ int mqttrs_initialize_ha_discovery(void)
 int mqttrs_initialize_ha_states(void)
 {
     int err = -1;
+    int j = 0;
+
+    // sleep until discovery_completed or 5 seconds elapse
+    for(j=0; (j < 100) && !discovery_completed; j++) 
+    {
+        SLEEP_MS(50);
+    }
 
     if (discovery_completed)
     {
@@ -580,8 +594,8 @@ void mqttrs_pub_request_cb(void *arg, err_t result)
             {
                 free(homeassistant_discovery_payload);
                 homeassistant_discovery_payload = NULL;
-                //printf("freed discovery payload buffer\n");
                 discovery_completed = true;
+                published_number_of_relays = config.rmtsw_relay_max;
             }
             break;
         case MQTT_CALLBACK_STATE_ID:
@@ -613,12 +627,9 @@ void mqttrs_publish_discovery(mqtt_client_t *client, void *arg)
     //static char discovery_payload[DISCOVERY_PAYLOAD_BUFFER_SIZE];
     static char discovery_topic[60];
     static MQTT_CALLBACK_ID_T discovery_arg = MQTT_CALLBACK_DISCOVERY_ID;
-
-    //printf("Constructing discovery topic\n");
+    
     mqttrs_construct_discovery_topic(discovery_topic, sizeof(discovery_topic));
-    //printf("Topic follows\n%s\n", discovery_topic);    
-
-
+   
     if (!homeassistant_discovery_payload)
     {
         homeassistant_discovery_payload = malloc(DISCOVERY_PAYLOAD_BUFFER_SIZE);
@@ -626,18 +637,23 @@ void mqttrs_publish_discovery(mqtt_client_t *client, void *arg)
 
     if (homeassistant_discovery_payload)
     {    
-        //printf("Constructing discovery payload\n");
         mqttrs_construct_discovery_payload(homeassistant_discovery_payload, DISCOVERY_PAYLOAD_BUFFER_SIZE);
-        //printf("Payload follows\n%s\n", homeassistant_discovery_payload);
-        //printf("size of payload = %d\n", strlen(homeassistant_discovery_payload));
-    
-        // remove device from home assistant
-        retain = 1;
-        cyw43_arch_lwip_begin();
-        err = mqtt_publish(client, discovery_topic, "", 0, qos, retain, mqttrs_pub_request_cb, arg);
-        cyw43_arch_lwip_end();
 
-        SLEEP_MS(1000);
+        if (published_number_of_relays != config.rmtsw_relay_max)
+        {
+            // remove device from home assistant
+            retain = 1;
+            cyw43_arch_lwip_begin();
+            err = mqtt_publish(client, discovery_topic, "", 0, qos, retain, mqttrs_pub_request_cb, arg);
+            cyw43_arch_lwip_end();
+
+            if(err != ERR_OK) 
+            {
+                printf("Publish discovery error while removing device from home assistant: %d\n", err);
+            }
+
+            SLEEP_MS(1000);
+        }
 
         // add device to home assistant
         retain = 1;
@@ -647,7 +663,7 @@ void mqttrs_publish_discovery(mqtt_client_t *client, void *arg)
 
         if(err != ERR_OK) 
         {
-            printf("Publish discovery error: %d\n", err);
+            printf("Publish discovery error while adding device to home asssitant: %d\n", err);
         }
     }
     else
@@ -797,8 +813,8 @@ void mqttrs_publish_all_relay_states(mqtt_client_t *client, void *arg)
         states_outstanding++;
         mqttrs_publish_state(i, client, arg);
 
-        // sleep until callback complete or 5 seconds elapse
-        for(j=0; (j < 100) && states_outstanding; j++)       // callback decrements states_outstanding
+        // sleep until callback decrements states_outstanding to 0 or 5 seconds elapse
+        for(j=0; (j < 100) && states_outstanding; j++) 
         {
             SLEEP_MS(50);
         }
@@ -824,7 +840,7 @@ void mqttrs_publish_relay_state(int relay, mqtt_client_t *client, void *arg)
         states_outstanding = 1;
         mqttrs_publish_state(relay, client, arg);
 
-        // sleep until callback complete or 5 seconds elapse
+        // sleep until callback decrements states_outstanding to 0 or 5 seconds elapse
         for(j=0; (j < 100) && states_outstanding; j++)
         {
             SLEEP_MS(50);
@@ -854,7 +870,7 @@ int mqttrs_wait(TickType_t timeout)
 
     if (xQueueReceive(mqtt_queue, &mqtt_message, timeout) == pdPASS)
     {
-        // got a message
+        // wait terminated because a message was received
         err = 1;
     }
 
@@ -999,3 +1015,16 @@ int mqttrs_keep_alive(void)
 
     return(err);
  }
+
+ /*!
+ * \brief inform mqtt task that the relay configuration changed
+ * 
+ * \return nothing
+ */
+void mqttrs_relay_config_change(void)
+{
+    // trigger republication of discovery
+    published_number_of_relays = 0;
+
+    mqttrs_request_connection_restart(MQTT_REASON_CONFIG_CHANGE);
+}
