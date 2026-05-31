@@ -20,6 +20,7 @@
 #define MASKED_WRITE(dest,src,mask) {(dest) = (((dest) & (~(mask))) | ((src) & (mask)));}
 #define CLIP(x, low, high)  (x=(((x)>(high))?(high):(((x)<(low))?(low):(x))))
 #define SLEEP_MS(x) (vTaskDelay(x));
+#define FORCE_STRING_TERMINATION(x) {x[sizeof(x)-1]=0;}
 
 typedef enum
 {

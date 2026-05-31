@@ -280,22 +280,14 @@ int rmtsw_deinitialize(int (*subsytem_init_func)(void))
  */
 int rmtsw_sanitize_user_config(void)
 {
-    //TODO: sanatize config
-       
-    // // make sure safeguards are valid to prevent short cycling
-    // CLIP(config.heating_to_cooling_lockout_mins, 1, 60);
-    // CLIP(config.minimum_heating_on_mins, 1, 60);
-    // CLIP(config.minimum_cooling_on_mins, 1, 60);
-    // CLIP(config.minimum_heating_off_mins, 1, 60);
-    // CLIP(config.minimum_cooling_off_mins, 1, 60);
-    // if (config.use_archaic_units)
-    // {
-    //     CLIP(config.thermostat_hysteresis, 10, 100);  // 1 F to 10 F
-    // }
-    // else
-    // {
-    //     CLIP(config.thermostat_hysteresis, 5, 50);   // 0.5 C to 5 C       
-    // }
+    int i;
+
+    CLIP(config.rmtsw_relay_max, 0, 8);
+    
+    for(i=0; i<NUM_ROWS(config.rmtsw_relay_name); i++)
+    {
+        FORCE_STRING_TERMINATION(config.rmtsw_relay_name[i]);
+    }
 
     return(0);
 }

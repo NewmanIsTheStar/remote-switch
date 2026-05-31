@@ -120,6 +120,7 @@ static bool discovery_completed = false;
 static bool states_completed = false;
 static int states_outstanding = 0;
 static bool connection_restart_request = false;
+static bool disconnect_completed = false;
 static ip_addr_t broker_ip;
 static int relay_to_switch = -1;
 static int relay_desired_state = -1;
@@ -271,6 +272,10 @@ int mqttrs_deinitialize(int (*subsytem_init_func)(void))
  */
 int mqttrs_sanitize_user_config(void)
 {   
+    // force zero termination
+    config.mqtt_user[sizeof(config.mqtt_user)- 1] = 0;
+    config.mqtt_password[sizeof(config.mqtt_password)- 1] = 0;
+    config.mqtt_broker_address[sizeof(config.mqtt_broker_address)- 1] = 0;
 
     return(0);
 }
@@ -287,14 +292,17 @@ int mqttrs_initialize_connection(void)
     int err = -1;
     static struct mqtt_connect_client_info_t ci;
 
+    // generate unique mqtt client name
+    sprintf(web.mqtt_client_name, "%s-%02x-%02x-%02x-%02x-%02x-%02x", APP_NAME, web.mac[0], web.mac[1], web.mac[2], web.mac[3], web.mac[4], web.mac[5]);
+
     if (config.mqtt_broker_address[0] != 0)
     {
         broker_ip.addr = address_string_to_ip(config.mqtt_broker_address);
    
         if (broker_ip.addr)
-        {
+        {            
             memset(&ci, 0, sizeof(ci));
-            ci.client_id = "pi_pico2w_client";
+            ci.client_id = web.mqtt_client_name;
             ci.client_user = config.mqtt_user;
             ci.client_pass = config.mqtt_password;
             ci.keep_alive = 30;
@@ -429,7 +437,11 @@ void mqttrs_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_stat
         connection_backoff_ms = CONNECTION_BACKOFF_MS_DEFAULT;    
         break;
     case MQTT_CONNECT_DISCONNECTED:
-        mqttrs_request_connection_restart(MQTT_REASON_DISCONNECT);
+        disconnect_completed = true;
+        if (!connection_restart_request)
+        {
+            mqttrs_request_connection_restart(MQTT_REASON_DISCONNECT);
+        }
         break;
     case MQTT_CONNECT_TIMEOUT:
         mqttrs_request_connection_restart(MQTT_REASON_TIMEOUT);
@@ -922,6 +934,7 @@ int mqttrs_initialize_queue(void)
 void mqttrs_tear_down(void)
 {
     u8_t connection_up = 0;
+    int j = 0;
 
     if (mqtt_client != NULL)
     {
@@ -937,9 +950,17 @@ void mqttrs_tear_down(void)
             cyw43_arch_lwip_end(); 
 
             // disconnect
+            disconnect_completed = false;
             cyw43_arch_lwip_begin();
             mqtt_disconnect(mqtt_client);
-            cyw43_arch_lwip_end();           
+            cyw43_arch_lwip_end();    
+            
+            // sleep until disconnect_completed or 5 seconds elapse
+            for(j=0; (j < 100) && !disconnect_completed; j++) 
+            {
+                SLEEP_MS(50);
+            }            
+
         }
 
         // free client memory
@@ -951,6 +972,7 @@ void mqttrs_tear_down(void)
     connection_process_started = false;
     connection_completed = false;
     discovery_completed = false;
+    disconnect_completed = false;
     connection_backoff_ms = CONNECTION_BACKOFF_MS_DEFAULT;
 
     // deinitialize connection related functions (so that they will be rerun)
