@@ -55,6 +55,19 @@ typedef struct
     bool initialization_complete;
 } MQTT_INITIALIZATION_T;
 
+typedef enum
+{
+    MQTT_REASON_UNKNOWN             = 0,
+    MQTT_REASON_CONNECTION_FAILED   = 1,
+    MQTT_REASON_CONNECTION_DROPPED  = 2,
+    MQTT_REASON_DISCONNECT          = 3,
+    MQTT_REASON_TIMEOUT             = 4,
+    MQTT_REASON_PUBLISH_FAILED_CB   = 5,
+    MQTT_PUBLISH_FAILED_CALL        = 6,
+
+    NUM_MQTT_REASONS = 7
+} MQTT_REASON_T;
+
 // prototypes -- mqttrs_ prefix is used for local functions, whereas lwip functions use mqtt_ 
 int mqttrs_sanitize_user_config(void);
 int mqttrs_initialize(void);
@@ -79,7 +92,7 @@ void mqttrs_queue_send(uint8_t message);
 int mqttrs_initialize_queue(void);
 void mqttrs_publish_relay_state(int relay, mqtt_client_t *client, void *arg);
 void mqttrs_tear_down(void);
-void mqttrs_request_connection_restart(void);
+void mqttrs_request_connection_restart(MQTT_REASON_T reason);
 void mqttrs_end_sub(mqtt_client_t *client);
 int mqttrs_keep_alive(void);
 
@@ -115,6 +128,7 @@ static bool mqtt_queue_initialized = false;                 // queue initializat
 static mqtt_client_t *mqtt_client;
 static char *homeassistant_discovery_payload = NULL;
 static int connection_backoff_ms = CONNECTION_BACKOFF_MS_DEFAULT;
+static MQTT_REASON_T connection_restart_reason = MQTT_REASON_UNKNOWN;
 
 /*!
  * \brief Support relay control and monitoring via MQTT
@@ -162,8 +176,8 @@ void mqtt_task(void *params)
 
         if (connection_restart_request)
         {
-            printf("performing teardown\n");
-            send_syslog_message("mqtt", "Performing teardown");
+            printf("performing teardown reason=%d\n", connection_restart_reason);
+            send_syslog_message("mqtt", "Performing teardown reason=%d", connection_restart_reason);
 
             mqttrs_tear_down();
             connection_restart_request = false;
@@ -276,7 +290,7 @@ int mqttrs_initialize_connection(void)
             ci.client_id = "pi_pico2w_client";
             ci.client_user = config.mqtt_user;
             ci.client_pass = config.mqtt_password;
-            ci.keep_alive = 3600;
+            ci.keep_alive = 15;
 
             cyw43_arch_lwip_begin();
             mqtt_client = mqtt_client_new();
@@ -394,28 +408,31 @@ int mqttrs_initialize_ha_states(void)
  */
 void mqttrs_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status)
 {
-    if (status == MQTT_CONNECT_ACCEPTED)
+    switch(status)
     {
-        //printf("MQTT Connected!\n");
+    case MQTT_CONNECT_ACCEPTED:
         connection_completed = true;
-        connection_backoff_ms = CONNECTION_BACKOFF_MS_DEFAULT;
-
-        // // Subscribe to a topic here
-        // mqtt_start_sub(client);
-
-    } else
-    {
+        connection_backoff_ms = CONNECTION_BACKOFF_MS_DEFAULT;    
+        break;
+    case MQTT_CONNECT_DISCONNECTED:
+        mqttrs_request_connection_restart(MQTT_REASON_DISCONNECT);
+        break;
+    case MQTT_CONNECT_TIMEOUT:
+        mqttrs_request_connection_restart(MQTT_REASON_TIMEOUT);
+        break;
+    default:
         printf("MQTT Connection failed: %d\n", status);
 
         // double connection attempt backoff time up to approx 5 minutes
-        if (connection_backoff_ms < 5*60000)
+        if (!connection_completed && (connection_backoff_ms < 5*60000))
         {
             connection_backoff_ms *=2;
         }
         else
         {
-           mqttrs_request_connection_restart();
-        } 
+           mqttrs_request_connection_restart(MQTT_REASON_UNKNOWN);
+        }     
+        break;                        
     }
 }
 
@@ -547,7 +564,7 @@ void mqttrs_pub_request_cb(void *arg, err_t result)
     {
         printf("Publish failed: %d\n", result);
         //send_syslog_message("mqtt", "publish failed");
-        mqttrs_request_connection_restart();
+        mqttrs_request_connection_restart(MQTT_REASON_PUBLISH_FAILED_CB);
     } else 
     {
         //printf("Publish success\n");
@@ -679,7 +696,7 @@ void mqttrs_publish_state(int relay, mqtt_client_t *client, void *arg)
     {
         printf("Publish state error: %d\n", err);
         //send_syslog_message("mqtt", "publish state error %d", err);
-        mqttrs_request_connection_restart();
+        mqttrs_request_connection_restart(MQTT_PUBLISH_FAILED_CALL);
     }
 
     //printf("published new state. %s = %s\n", state, state_payload);
@@ -918,6 +935,7 @@ void mqttrs_tear_down(void)
     connection_process_started = false;
     connection_completed = false;
     discovery_completed = false;
+    connection_backoff_ms = CONNECTION_BACKOFF_MS_DEFAULT;
 
     // deinitialize connection related functions (so that they will be rerun)
     mqttrs_deinitialize(mqttrs_initialize_ha_states);
@@ -933,8 +951,9 @@ void mqttrs_tear_down(void)
  * 
  * \return nothing
  */
-void mqttrs_request_connection_restart(void)
+void mqttrs_request_connection_restart(MQTT_REASON_T reason)
 {
+    connection_restart_reason = reason;
     connection_restart_request = true;
 }
 
