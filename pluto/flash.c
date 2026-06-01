@@ -21,9 +21,6 @@
 #include "config.h"
 #include "flash.h"
 
-#define FLASH_TARGET_OFFSET (PICO_FLASH_SIZE_BYTES - 2*FLASH_SECTOR_SIZE)
-#define FLASH_LEGACY_OFFSET (PICO_FLASH_SIZE_BYTES - FLASH_SECTOR_SIZE)
-
 extern NON_VOL_VARIABLES_T config;
 
 

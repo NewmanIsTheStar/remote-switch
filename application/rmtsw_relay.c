@@ -410,6 +410,11 @@ int rmtsw_initialize_queue(void)
         value = !value;
     }
 
+    if (value)
+    {
+        printf("GPIO %d set to %d\n", config.rmtsw_relay_gpio[relay], value);
+    }
+    
     gpio_put(config.rmtsw_relay_gpio[relay], value); 
  }
 

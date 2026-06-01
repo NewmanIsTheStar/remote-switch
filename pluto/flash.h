@@ -6,6 +6,16 @@
 #ifndef FLASH_H
 #define FLASH_H
 
+/*Explanation
+  The configuration was originally stored in the last sector of flash.
+  The Pi Pico2 W had a hardware bug that needed a work around.
+  That workaround overwrites the last sector of flash when dragging 
+  and dropping the UF2 file onto the Pi Pico -- thus nuking the config.
+  Therefore the config has been moved to the penultimate flash sector.
+*/
+#define FLASH_TARGET_OFFSET (PICO_FLASH_SIZE_BYTES - 2*FLASH_SECTOR_SIZE)
+#define FLASH_LEGACY_OFFSET (PICO_FLASH_SIZE_BYTES - FLASH_SECTOR_SIZE)
+
 typedef enum
 {
     CONFIG_STANDARD     = 0,
