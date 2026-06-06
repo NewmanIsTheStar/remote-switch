@@ -325,7 +325,7 @@ int mqttrs_initialize_connection(void)
                 }
                 else
                 {
-                    printf("connect attemp failed\n");
+                    printf("connect attempt failed\n");
                     send_syslog_message("mqtt", "Connect attempt failed");
                 }
             }
@@ -527,6 +527,7 @@ void mqttrs_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
     }
     else if (flags)
     {
+        printf("unhandled partial publication payload packet \n");
         //send_syslog_message("mqtt", "unhandled partial packet");
     }
 }

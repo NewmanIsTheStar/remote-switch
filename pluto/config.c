@@ -26,6 +26,7 @@
 //#define DISABLE_CONFIG_UPGRADE (1)
 //#define DISABLE_CONFIG_WRITE [1]
 
+
 int config_validate(void);
 void config_system_variable_initialize(void);
 void config_blank_to_v1(void *previous_config);
@@ -112,7 +113,7 @@ bool config_dirty(bool clear_flag)
 }
 
 /*!
- * \brief Copy the configuation from flash into RAM.  Set default values if flash is corrupt.
+ * \brief Copy the configuration from flash into RAM.  Set default values if flash is corrupt.
  * 
  * \return 0 on success, -1 on error
  */
@@ -134,7 +135,7 @@ int config_read(void)
 }
 
 /*!
- * \brief Copy the configuation from RAM into flash if they differ.
+ * \brief Copy the configuration from RAM into flash if they differ.
  * 
  * \return 0 on success, -1 on error
  */
