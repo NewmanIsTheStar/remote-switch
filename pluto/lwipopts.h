@@ -169,4 +169,14 @@ Increase MQTT_VAR_HEADER_BUFFER_LEN: This buffer must hold the topic string and 
 Increase MQTT_OUTPUT_RINGBUF_SIZE: If sending multiple subscription requests in rapid succession, increase this to prevent overflowing the output buffer. 
 */
 
+// This stuff is used to enable shell, basic program editor and picofs
+// #define LWIP_HTTPD_SUPPORT_POST 1
+// #define LWIP_HTTPD_CUSTOM_FILES 1
+
+// // Newman turned on for shell
+// #define LWIP_HTTPD_DYNAMIC_HEADERS  1
+
+// // Newman turned on for websocket shell
+// #define LWIP_HTTPD_SUPPORT_WEBSOCKET 1
+
 #endif

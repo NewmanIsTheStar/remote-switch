@@ -7,8 +7,44 @@
 #ifndef PLUTO_H
 #define PLUTO_H
 
-#include "web.h"
+
+
+#include "pico/cyw43_arch.h"
+#include "pico/types.h"
+#include "pico/stdlib.h"
+//#include "hardware/rtc.h"
+#include "pico/util/datetime.h"
+#include "hardware/watchdog.h"
+
+#include "lwip/netif.h"
+#include "lwip/ip4_addr.h"
+#include "lwip/apps/lwiperf.h"
+#include "lwip/apps/sntp.h"
+#include "lwip/apps/httpd.h"
+#include "dhcpserver.h"
+#include "dnsserver.h"
+
+#include "lwip/sockets.h"
+
+#include "time.h"
+#include "FreeRTOS.h"
+#include "FreeRTOSConfig.h"
+#include "task.h"
+
+// #include "weather.h"
+// #include "led_strip.h"
+#include "cgi.h"
+#include "flash.h"
+#include "utility.h"
 #include "config.h"
+#include "watchdog.h"
+#include "worker_tasks.h"
+#include "wifi.h"
+#include "calendar.h"
+// #include "powerwall.h"
+// #include "shelly.h"
+// #include  "ping_core.h"
+#include "web.h"
 
 //#define PLUTO_VER "01.00.00"          // release version set in CMakeLists.txt
 //#define USE_GIT_HASH_AS_VERSION       // automatically set in CMakeLists.txt for debug builds
@@ -21,6 +57,7 @@
 #define CLIP(x, low, high)  (x=(((x)>(high))?(high):(((x)<(low))?(low):(x))))
 #define SLEEP_MS(x) (vTaskDelay(x));
 #define FORCE_STRING_TERMINATION(x) {x[sizeof(x)-1]=0;}
+#define SAFEAROUND(x) ((x) >= 0 ? (int)((x) + 0.5f) : (int)((x) - 0.5f))
 
 typedef enum
 {

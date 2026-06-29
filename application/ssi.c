@@ -1205,7 +1205,6 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
     int schedule_relay;
 
     switch(iIndex) {
-
         // *** system SSI start ***
         case SSI_time: // time
         {
@@ -1590,8 +1589,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         {
             printed = snprintf(pcInsert, iInsertLen, "%s", web.last_completed_timestring);    
         }
-        break;        
-        
+        break;              
         case SSI_temp: // temp
         {
             if (!config.use_archaic_units)

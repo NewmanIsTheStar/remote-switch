@@ -26,7 +26,7 @@
 //#define DISABLE_CONFIG_UPGRADE (1)
 //#define DISABLE_CONFIG_WRITE [1]
 
-
+bool config_compare_flash_ram(bool stop_at_first_difference);
 int config_validate(void);
 void config_system_variable_initialize(void);
 void config_blank_to_v1(void *previous_config);
@@ -186,12 +186,13 @@ int config_write(void)
     return(err);
 }
 
+
 /*!
  * \brief Compare flash and RAM copies of configuration
  * 
  * \return 0 = no difference, 1 = difference
  */
-bool config_compare_flash_ram(void)
+bool config_compare_flash_ram(bool stop_at_first_difference)
 {
     NON_VOL_VARIABLES_T *non_vol;
     int i;
@@ -204,9 +205,21 @@ bool config_compare_flash_ram(void)
     {
         if (((char *)(XIP_BASE +  FLASH_TARGET_OFFSET))[i] != ((char *)&config)[i])
         {
-            printf("Found byte difference at offset %d so will write flash\n", i);
+            if (!difference_found)
+            {
+                // printf headings
+                printf("     offset\tflash\tram\n");
+            }
+
+            // print difference
+            printf("%08x:\t%02x \t%02x\n", i, ((char *)(XIP_BASE +  FLASH_TARGET_OFFSET))[i], ((char *)&config)[i]);
+            
             difference_found = true;
-            break;
+
+            if (stop_at_first_difference)
+            {
+                break;
+            }
         }
     }
     
@@ -306,6 +319,7 @@ int config_validate(void)
     return(err);
 }
 
+
 /*!
  * \brief Set a default time server in config if all four time server entries are blank
  * 
@@ -334,7 +348,7 @@ void config_system_variable_initialize(void)
 {
     int i;
 
-    printf("Initializing configuration system variables\n");
+    printf("Initializing configuration system variables in RAM\n");
 
     // personality
     config.personality = NO_PERSONALITY;
